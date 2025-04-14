@@ -117,14 +117,18 @@ const LoginPage = () => {
         darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
-      {/* Dark mode toggle */}
+      {/* Creative Dark mode toggle - floating in corner with animation */}
       <motion.button
-        className={`theme-toggle ${
-          darkMode ? "bg-gray-800 text-yellow-300" : "bg-gray-200 text-gray-800"
+        className={`absolute top-8 right-8 sm:top-auto sm:right-auto sm:bottom-8 sm:left-8 p-3 rounded-full z-50 shadow-lg transform rotate-0 ${
+          darkMode
+            ? "bg-indigo-900 text-yellow-300"
+            : "bg-gradient-to-r from-blue-400 to-indigo-500 text-white"
         }`}
         onClick={toggleDarkMode}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.1, rotate: 180, transition: { duration: 0.3 } }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, transition: { delay: 0.5 } }}
       >
         {darkMode ? (
           <svg
@@ -174,14 +178,45 @@ const LoginPage = () => {
         variants={containerVariants}
       >
         <motion.div className="form-header" variants={itemVariants}>
-          <h1 className="form-title">Welcome back</h1>
+          <h1 className="form-title">
+            Welcome <span className="text-gradient">Back</span>
+          </h1>
           <p
             className={`form-subtitle ${
               darkMode ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            Sign in to your CodeMate account
+            Ready to find your perfect code match?
           </p>
+          <div className="flex justify-center mt-4 mb-2">
+            <svg
+              width="60"
+              height="60"
+              viewBox="0 0 512 512"
+              className="mx-auto"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 290C256 290 242 270 228 270C214 270 204 284 204 296C204 320 256 350 256 350C256 350 308 320 308 296C308 284 298 270 284 270C270 270 256 290 256 290Z"
+                fill={darkMode ? "#F43F5E" : "#E11D48"}
+              />
+              <path
+                d="M150 180L100 256L150 332"
+                stroke={darkMode ? "#818CF8" : "#4F46E5"}
+                strokeWidth="24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M362 180L412 256L362 332"
+                stroke={darkMode ? "#818CF8" : "#4F46E5"}
+                strokeWidth="24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
         </motion.div>
 
         <motion.div className="social-buttons" variants={itemVariants}>
@@ -289,7 +324,7 @@ const LoginPage = () => {
               <a
                 href="#"
                 className={`text-xs ${
-                  darkMode ? "text-blue-400" : "text-blue-500"
+                  darkMode ? "text-primary-light" : "text-primary"
                 } hover:underline`}
               >
                 Forgot password?
@@ -356,7 +391,7 @@ const LoginPage = () => {
         >
           Don't have an account?{" "}
           <Link to="/signup" className="form-link">
-            Sign up
+            Create Account
           </Link>
         </motion.div>
       </motion.div>
