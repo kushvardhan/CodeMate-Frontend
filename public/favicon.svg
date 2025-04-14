@@ -3,21 +3,31 @@
   <!-- Background gradient -->
   <rect width="512" height="512" rx="100" fill="url(#paint0_linear)"/>
   
-  <!-- Left code bracket -->
-  <path d="M150 180L100 256L150 332" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Code symbol -->
+  <g stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left code bracket -->
+    <path d="M160 180L110 256L160 332"/>
+    
+    <!-- Right code bracket -->
+    <path d="M352 180L402 256L352 332"/>
+    
+    <!-- Slash in middle -->
+    <path d="M280 160L232 352"/>
+  </g>
   
-  <!-- Right code bracket -->
-  <path d="M362 180L412 256L362 332" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-  
-  <!-- People silhouettes -->
-  <circle cx="190" cy="256" r="40" fill="#E879F9"/>
-  <circle cx="322" cy="256" r="40" fill="#38BDF8"/>
-  
-  <!-- Connection line -->
-  <path d="M230 256H282" stroke="white" stroke-width="12" stroke-linecap="round" stroke-dasharray="12 8"/>
-  
-  <!-- Heart -->
-  <path d="M256 290C256 290 242 270 228 270C214 270 204 284 204 296C204 320 256 350 256 350C256 350 308 320 308 296C308 284 298 270 284 270C270 270 256 290 256 290Z" fill="#F43F5E" fill-opacity="0.8"/>
+  <!-- Two people/developers connecting -->
+  <g>
+    <!-- Person 1 -->
+    <circle cx="180" cy="256" r="30" fill="#38BDF8"/>
+    <!-- Person 2 -->
+    <circle cx="332" cy="256" r="30" fill="#E879F9"/>
+    
+    <!-- Connection line between people -->
+    <path d="M210 256H302" stroke="white" stroke-width="8" stroke-linecap="round" stroke-dasharray="12 8"/>
+    
+    <!-- Handshake symbol -->
+    <path d="M256 256m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0" fill="white"/>
+  </g>
   
   <!-- Gradient definition -->
   <defs>

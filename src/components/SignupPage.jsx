@@ -183,7 +183,7 @@ const SignupPage = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path>
           </svg>
         )}
       </motion.button>
@@ -207,33 +207,60 @@ const SignupPage = () => {
           >
             Join CodeMate and swipe right for your perfect coding partner
           </p>
-          <div className="flex justify-center mt-4 mb-2">
+          <div
+            className="flex items-center justify-center mt-4 mb-6 w-full"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <svg
-              width="60"
-              height="60"
+              width="80"
+              height="80"
               viewBox="0 0 512 512"
-              className="mx-auto"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M256 290C256 290 242 270 228 270C214 270 204 284 204 296C204 320 256 350 256 350C256 350 308 320 308 296C308 284 298 270 284 270C270 270 256 290 256 290Z"
-                fill={darkMode ? "#F43F5E" : "#E11D48"}
-              />
-              <path
-                d="M150 180L100 256L150 332"
+              {/* Code symbol */}
+              <g
                 stroke={darkMode ? "#818CF8" : "#4F46E5"}
                 strokeWidth="24"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              />
-              <path
-                d="M362 180L412 256L362 332"
-                stroke={darkMode ? "#818CF8" : "#4F46E5"}
-                strokeWidth="24"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              >
+                {/* Left code bracket */}
+                <path d="M160 180L110 256L160 332" />
+
+                {/* Right code bracket */}
+                <path d="M352 180L402 256L352 332" />
+
+                {/* Slash in middle */}
+                <path d="M280 160L232 352" />
+              </g>
+
+              {/* Two people/developers connecting */}
+              <g>
+                {/* Person 1 */}
+                <circle cx="180" cy="256" r="30" fill="#38BDF8" />
+                {/* Person 2 */}
+                <circle cx="332" cy="256" r="30" fill="#E879F9" />
+
+                {/* Connection line between people */}
+                <path
+                  d="M210 256H302"
+                  stroke="white"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray="12 8"
+                />
+
+                {/* Handshake symbol */}
+                <path
+                  d="M256 256m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0"
+                  fill="white"
+                />
+              </g>
             </svg>
           </div>
         </motion.div>
@@ -245,6 +272,7 @@ const SignupPage = () => {
                 ? "bg-gray-700 hover:bg-gray-600"
                 : "bg-white hover:bg-gray-100"
             }`}
+            title="Sign up with Google"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -277,6 +305,7 @@ const SignupPage = () => {
                 ? "bg-gray-700 hover:bg-gray-600"
                 : "bg-white hover:bg-gray-100"
             }`}
+            title="Sign up with Facebook"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -297,6 +326,7 @@ const SignupPage = () => {
                 ? "bg-gray-700 hover:bg-gray-600"
                 : "bg-white hover:bg-gray-100"
             }`}
+            title="Sign up with GitHub"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -411,8 +441,6 @@ const SignupPage = () => {
               darkMode ? "bg-blue-600 hover:bg-blue-700" : ""
             }`}
             disabled={isSubmitting}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center">
