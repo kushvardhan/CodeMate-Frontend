@@ -1,8 +1,12 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+axios.defaults.baseURL = "http://localhost:4000";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -70,23 +74,48 @@ const LoginPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
-    setIsSubmitting(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Login form submitted:", formData);
+    try {
+      setIsSubmitting(true);
+      const res = await axios.post("/login", formData, {
+        withCredentials: true,
+      });
+      console.log(res.data);
       setIsSubmitting(false);
-      // Here you would typically redirect the user or show a success message
-    }, 1500);
+
+      setFormData({
+        email: "",
+        password: "",
+      });
+
+      navigate("/");
+    } catch (err) {
+      console.log(err.response?.data?.message || err.message);
+      setIsSubmitting(false);
+
+      // Handle different types of error responses
+      if (err.response?.data?.errors) {
+        // Handle field-specific errors
+        setErrors(err.response.data.errors);
+      } else if (err.response?.data?.message) {
+        // Handle general error message
+        setErrors({ general: err.response.data.message });
+      } else {
+        // Handle unexpected errors
+        setErrors({
+          general:
+            err.message || "An unexpected error occurred. Please try again.",
+        });
+      }
+    }
   };
 
   // Animation variants
@@ -113,77 +142,86 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* Creative Dark mode toggle - floating with animation */}
-      <motion.button
-        className={`absolute top-3 right-3 z-50 p-2 rounded-full ${
-          darkMode ? "text-yellow-300" : "text-amber-400"
-        }`}
-        onClick={toggleDarkMode}
+      {/* Dark mode toggle button - positioned at the top right */}
+      <div
         style={{
-          background: "transparent",
-          filter: darkMode
-            ? "drop-shadow(0 0 4px rgba(253, 224, 71, 0.5))"
-            : "drop-shadow(0 0 6px rgba(251, 191, 36, 0.7))",
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          zIndex: 1000,
+          padding: "8px",
+          backgroundColor: darkMode
+            ? "rgba(17, 24, 39, 0.7)"
+            : "rgba(255, 255, 255, 0.7)",
+          borderRadius: "50%",
+          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
         }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { delay: 0.5 } }}
-        whileHover={{ scale: 1.1 }}
       >
-        {darkMode ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <defs>
-              <radialGradient
-                id="sunGlow"
-                cx="12"
-                cy="12"
-                r="12"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop offset="0%" stopColor="#FCD34D" stopOpacity="0.7" />
-                <stop offset="70%" stopColor="#FCD34D" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <circle cx="12" cy="12" r="12" fill="url(#sunGlow)" />
-            <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
-            <path
-              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <defs>
-              <radialGradient
-                id="moonGlow"
-                cx="12"
-                cy="12"
-                r="10"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop offset="0%" stopColor="#6366F1" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#4F46E5" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <circle cx="12" cy="12" r="10" fill="url(#moonGlow)" />
-            <path
-              d="M10 6a8 8 0 0 0 11.955 6.956C21.474 18.03 17.2 22 12 22 6.477 22 2 17.523 2 12c0-5.2 3.97-9.474 9.044-9.955A7.963 7.963 0 0 0 10 6z"
-              fill="currentColor"
-            />
-          </svg>
-        )}
-      </motion.button>
+        <button
+          onClick={toggleDarkMode}
+          className={`${darkMode ? "text-yellow-300" : "text-amber-400"}`}
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            padding: "4px",
+            borderRadius: "50%",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = darkMode
+              ? "rgba(55, 65, 81, 0.5)"
+              : "rgba(243, 244, 246, 0.7)";
+            e.currentTarget.style.transform = "scale(1.1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          {darkMode ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <defs>
+                <radialGradient
+                  id="sunGlow"
+                  cx="12"
+                  cy="12"
+                  r="12"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor="#FCD34D" stopOpacity="0.7" />
+                  <stop offset="70%" stopColor="#FCD34D" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx="12" cy="12" r="12" fill="url(#sunGlow)" />
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 6a8 8 0 0 0 11.955 6.956C21.474 18.03 17.2 22 12 22 6.477 22 2 17.523 2 12c0-5.2 3.97-9.474 9.044-9.955A7.963 7.963 0 0 0 10 6z"
+                fill="currentColor"
+              />
+            </svg>
+          )}
+        </button>
+      </div>
 
       <div
         className={`min-h-screen flex items-center justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8 ${
@@ -356,6 +394,11 @@ const LoginPage = () => {
           </motion.div>
 
           <motion.form onSubmit={handleSubmit} variants={itemVariants}>
+            {errors.general && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
+                <p className="font-medium">{errors.general}</p>
+              </div>
+            )}
             <div className="form-group">
               <input
                 type="email"

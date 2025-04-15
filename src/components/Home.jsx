@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false);
   
-  // Check for user's preferred color scheme
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(prefersDark);
     
-    // Apply dark mode class to body
     if (prefersDark) {
       document.body.classList.add('dark-mode');
     } else {
