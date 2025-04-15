@@ -1,11 +1,14 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { setUser } from "../slice/UserSlice";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 const LoginPage = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -88,7 +91,8 @@ const LoginPage = () => {
       const res = await axios.post("/login", formData, {
         withCredentials: true,
       });
-      console.log(res.data);
+      console.log(res.data.user);
+      dispatch(setUser(res.data.user));
       setIsSubmitting(false);
 
       setFormData({
