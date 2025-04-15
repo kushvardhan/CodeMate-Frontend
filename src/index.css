@@ -502,21 +502,19 @@ pre,
   top: 0;
   left: 0;
   right: 0;
-  height: 12vh;
+  height: 13vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
   z-index: 50;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   transform: translateZ(0);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  animation: navbarAppear 0.5s ease-out forwards,
-    navbarFloat 5s ease-in-out infinite alternate;
-  position: relative;
-  overflow: hidden;
+  overflow: visible;
+  min-height: 60px;
 }
 
 .navbar-container::before {
@@ -553,17 +551,6 @@ pre,
   }
 }
 
-@keyframes navbarFloat {
-  0% {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-  }
-  100% {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    transform: translateY(-3px);
-  }
-}
-
 .navbar-container.light {
   background-color: rgba(255, 255, 255, 0.85);
   color: var(--color-foreground);
@@ -580,10 +567,11 @@ pre,
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .navbar-center {
-  flex: none;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -601,13 +589,38 @@ pre,
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .navbar-right-mobile {
-  position: absolute;
-  right: 1rem;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  z-index: 60;
+  flex: 0 0 auto;
+  padding-right: 0.5rem;
+}
+
+.navbar-left-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 60;
+  flex: 0 0 auto;
+  padding-left: 0.5rem;
+}
+
+.menu-button-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .navbar-buttons {
@@ -642,45 +655,48 @@ pre,
 
 .logo-text {
   background: linear-gradient(
-    to right,
+    135deg,
     var(--color-primary),
-    var(--color-secondary)
+    var(--color-secondary),
+    #38bdf8
   );
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-weight: 800;
   font-size: 1.8rem;
-  font-family: var(--font-heading);
-  letter-spacing: 1px;
+  font-family: "Poppins", var(--font-heading);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   position: relative;
   transition: all 0.3s ease;
   text-shadow: 0 2px 10px rgba(79, 70, 229, 0.2);
+  display: inline-block;
+  transform: perspective(500px) rotateX(0deg);
+  animation: logoShimmer 8s infinite alternate;
 }
 
-.logo-text::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(
-    to right,
-    var(--color-primary),
-    var(--color-secondary)
-  );
-  transition: width 0.3s ease;
+@keyframes logoShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-.logo-link:hover .logo-text::after {
-  width: 100%;
-}
+/* Removed underline effect */
+
+/* Removed duplicate section */
 
 .logo-link:hover .logo-text {
-  text-shadow: 0 0 8px rgba(79, 70, 229, 0.3);
-  transform: translateY(-1px);
+  text-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+  transform: translateY(-1px) scale(1.02);
+  letter-spacing: 1.8px;
 }
 
 .theme-toggle {
@@ -694,6 +710,8 @@ pre,
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  margin: 0;
+  padding: 0;
 }
 
 .theme-toggle:hover {
@@ -714,6 +732,8 @@ pre,
 
 .menu-dropdown {
   position: relative;
+  z-index: 100;
+  display: inline-block;
 }
 
 .menu-button {
@@ -721,7 +741,6 @@ pre,
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
   cursor: pointer;
   font-weight: 700;
   font-family: var(--font-heading);
@@ -730,63 +749,54 @@ pre,
   transition: all 0.3s ease;
   background: transparent;
   color: var(--color-primary);
-  border: 2px solid transparent;
   position: relative;
-  overflow: hidden;
-}
-
-.menu-button::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-primary);
-  transition: width 0.3s ease;
-}
-
-.menu-button:hover::after {
-  width: 100%;
 }
 
 .menu-button:hover {
   color: var(--color-primary-dark);
-  transform: scale(1.05);
 }
 
 .dark .menu-button {
-  color: white;
-  text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+  color: #c7d2fe;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
-.dark .menu-button::after {
-  background: white;
+.dark .menu-button-mobile {
+  color: #c7d2fe;
+  stroke-width: 3;
 }
 
 .dark .menu-button:hover {
   color: white;
-  transform: scale(1.05);
 }
 
 .menu-icon {
   margin-left: 0.25rem;
+  transition: transform 0.5s ease;
+  display: inline-block;
+}
+
+.menu-dropdown.open .menu-icon {
+  transform: rotate(180deg);
 }
 
 .dropdown-menu {
   position: absolute;
   right: 0;
-  top: calc(100% + 0.5rem);
+  top: 100%;
+  margin-top: 0.5rem;
   width: 12rem;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-md);
-  z-index: 100;
+  z-index: 1000;
   list-style: none;
   padding: 0.5rem 0;
   animation: dropdownFadeIn 0.2s ease-out forwards;
   transform-origin: top right;
-  border: 1px solid var(--color-border);
 }
 
 @keyframes dropdownFadeIn {
@@ -801,15 +811,13 @@ pre,
 }
 
 .dropdown-menu.light {
-  background-color: white;
-  border: 2px solid var(--color-primary-light);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  background-color: #f3f4f6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-menu.dark {
-  background-color: var(--color-dark-card);
-  border: 2px solid var(--color-primary-light);
-  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2);
+  background-color: #1f2937;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-menu li {
@@ -873,6 +881,7 @@ pre,
 
 .logout-link {
   color: var(--color-error) !important;
+  cursor: pointer;
 }
 
 .logout-link::after {
@@ -885,7 +894,199 @@ pre,
 }
 
 .navbar-spacer {
-  height: 12vh;
+  height: 13vh;
+  min-height: 60px;
+}
+
+@media (max-width: 480px) {
+  .navbar-spacer {
+    height: 60px;
+  }
+}
+
+/* Mobile layout - works down to 400px */
+@media (max-width: 767px) and (min-width: 400px) {
+  .navbar-container {
+    padding: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Left side - toggle button */
+  .navbar-left-mobile {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Center - CodeMate logo */
+  .navbar-center-mobile {
+    flex: 1;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Right side - hamburger menu */
+  .navbar-right-mobile {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Button styles */
+  .theme-toggle,
+  .menu-button-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Logo styles */
+  .logo-text {
+    font-size: 1.4rem;
+    white-space: nowrap;
+  }
+
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Very small screens (below 400px) */
+@media (max-width: 399px) {
+  .navbar-container {
+    padding: 0;
+    height: 60px;
+  }
+
+  /* Center the logo */
+  .navbar-center-mobile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 55;
+  }
+
+  /* Right side container for toggle and menu */
+  .navbar-right-mobile-small {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Toggle container */
+  .toggle-container-mobile {
+    margin-bottom: 5px;
+  }
+
+  /* Button styles */
+  .theme-toggle,
+  .menu-button-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Logo styles */
+  .logo-text {
+    font-size: 1.4rem;
+    white-space: nowrap;
+  }
+
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Small screens (350px - 320px) */
+@media (max-width: 350px) {
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .logo-svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .navbar-right-mobile-small {
+    right: 8px;
+  }
+}
+
+/* Very small screens (320px - 300px) */
+@media (max-width: 320px) {
+  .logo-text {
+    font-size: 1rem;
+  }
+
+  .logo-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .theme-toggle,
+  .menu-button-mobile {
+    width: 30px;
+    height: 30px;
+  }
+
+  .navbar-right-mobile-small {
+    right: 6px;
+    gap: 3px;
+  }
+
+  .toggle-container-mobile {
+    margin-bottom: 3px;
+  }
+}
+
+/* Minimum supported width (300px) */
+@media (max-width: 300px) {
+  .logo-text {
+    font-size: 0.9rem;
+  }
+
+  .logo-svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .theme-toggle,
+  .menu-button-mobile {
+    width: 26px;
+    height: 26px;
+  }
+
+  .navbar-right-mobile-small {
+    right: 4px;
+    gap: 2px;
+  }
+
+  .toggle-container-mobile {
+    margin-bottom: 2px;
+  }
 }
 
 /* Animation Classes */
