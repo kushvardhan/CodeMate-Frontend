@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap");
 
 :root {
   /* Fonts */
   --font-sans: "Poppins", sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-alt: "Montserrat", sans-serif;
   --font-mono: "Fira Code", monospace;
 
   /* Primary Colors - Indigo/Purple */
@@ -490,6 +493,184 @@ pre,
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Home Page Specific Styles */
+.nav-link {
+  position: relative;
+  font-family: var(--font-alt);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.card-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.swipe-card {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.swipe-card:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+.swipe-card-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-card-header img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.swipe-card:hover .swipe-card-header img {
+  transform: scale(1.05);
+}
+
+.swipe-card-content {
+  padding: 1rem;
+}
+
+.swipe-card-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.swipe-card-role {
+  font-family: var(--font-alt);
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.swipe-card-bio {
+  font-family: var(--font-sans);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.swipe-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-light);
+  color: white;
+}
+
+.swipe-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.swipe-button {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.swipe-button:hover {
+  transform: translateY(-3px);
+}
+
+.swipe-left {
+  background-color: white;
+  color: var(--color-error);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.swipe-left:hover {
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+}
+
+.swipe-right {
+  background-color: white;
+  color: var(--color-success);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.swipe-right:hover {
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.dark-mode .swipe-left {
+  background-color: var(--color-dark-card);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.dark-mode .swipe-right {
+  background-color: var(--color-dark-card);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.stats-card {
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.stats-title {
+  font-family: var(--font-alt);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-value {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
 }
 
 /* Text Gradient */
