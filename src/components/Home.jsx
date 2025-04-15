@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../context/ThemeContext";
-import Navbar from "./ui/Navbar";
+import Nav from "./ui/Nav";
 
 const Home = () => {
   const { darkMode } = useTheme();
@@ -12,7 +12,7 @@ const Home = () => {
         darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       }`}
     >
-      <Navbar />
+      <Nav />
       <div className="container mx-auto px-4 pt-24 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
