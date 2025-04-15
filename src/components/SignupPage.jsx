@@ -1,11 +1,15 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import { setUser } from "../slice/UserSlice";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 const SignupPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -17,33 +21,9 @@ const SignupPage = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useTheme();
 
-  // Check for user's preferred color scheme
-  useEffect(() => {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setDarkMode(prefersDark);
-
-    // Apply dark mode class to body
-    if (prefersDark) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-
-    // Toggle dark mode class on body
-    if (!darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  };
+  // Theme is now managed by ThemeContext
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -107,7 +87,10 @@ const SignupPage = () => {
       const res = await axios.post("/signup", formData, {
         withCredentials: true,
       });
-      console.log(res.data.data);
+      console.log(res.data.user);
+
+      // Store user data in Redux
+      dispatch(setUser(res.data.user));
       setIsSubmitting(false);
 
       setFormData({
@@ -118,7 +101,8 @@ const SignupPage = () => {
         confirmPassword: "",
       });
 
-      navigate("/login");
+      // Navigate to home page instead of login since user is already logged in
+      navigate("/");
     } catch (err) {
       console.log(err.response?.data?.message || err.message);
       setIsSubmitting(false);
@@ -170,7 +154,7 @@ const SignupPage = () => {
           position: "fixed",
           top: "20px",
           right: "20px",
-          zIndex: 1000,
+          zIndex: 2000,
           padding: "8px",
           backgroundColor: darkMode
             ? "rgba(17, 24, 39, 0.7)"
@@ -246,10 +230,14 @@ const SignupPage = () => {
       </div>
 
       <div
-        className={`min-h-screen flex items-center justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8 ${
+        className={`min-h-screen w-full flex flex-col items-center justify-start py-12 px-4 sm:py-16 sm:px-6 lg:px-8 ${
           darkMode ? "bg-gray-900" : "bg-gray-50"
         }`}
-        style={{ height: "100vh" }}
+        style={{
+          minHeight: "100vh",
+          paddingTop: "6vh",
+          paddingBottom: "6vh",
+        }}
       >
         <motion.div
           className={`form-container ${
