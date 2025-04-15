@@ -9,6 +9,7 @@ const Home = () => {
   const [direction, setDirection] = useState(null);
   const [likedProfiles, setLikedProfiles] = useState([]);
   const [dislikedProfiles, setDislikedProfiles] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Sample developer profiles
   const profiles = [
@@ -163,7 +164,7 @@ const Home = () => {
     <div className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       {/* Navbar for desktop */}
       <motion.nav
-        className={`py-3 px-4 md:px-6 flex justify-between items-center ${
+        className={`h-[8vh] px-4 md:px-6 flex justify-between items-center ${
           darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
         } shadow-md hidden md:flex`}
         initial="hidden"
@@ -180,8 +181,8 @@ const Home = () => {
             transition={{ delay: 0.3 }}
           >
             <svg
-              width="32"
-              height="32"
+              width="24"
+              height="24"
               viewBox="0 0 512 512"
               className="mr-2"
               fill="none"
@@ -203,11 +204,11 @@ const Home = () => {
         </div>
 
         {/* User info and menu */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
           {/* Theme toggle */}
           <motion.button
             onClick={toggleDarkMode}
-            className={`p-2 rounded-full ${
+            className={`p-1.5 rounded-full ${
               darkMode
                 ? "bg-gray-700 text-yellow-300"
                 : "bg-gray-100 text-amber-400"
@@ -221,8 +222,8 @@ const Home = () => {
             {darkMode ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
               >
                 <defs>
@@ -249,8 +250,8 @@ const Home = () => {
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -269,14 +270,14 @@ const Home = () => {
             transition={{ delay: 0.5 }}
           >
             <span
-              className={`mr-2 text-sm font-medium ${
+              className={`mr-2 text-xs font-medium ${
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
               style={{ fontFamily: "var(--font-alt)" }}
             >
               Hey, Alex
             </span>
-            <div className="w-8 h-8 rounded-full overflow-hidden">
+            <div className="w-7 h-7 rounded-full overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 alt="User profile"
@@ -285,23 +286,21 @@ const Home = () => {
             </div>
           </motion.div>
 
-          {/* Menu button */}
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <button
-              className={`p-2 rounded-md ${
+          {/* Menu button with dropdown */}
+          <div className="relative">
+            <motion.button
+              className={`p-1.5 rounded-md ${
                 darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
               }`}
-              onClick={() => alert("Menu clicked")}
+              onClick={() => setMenuOpen(!menuOpen)}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -313,14 +312,81 @@ const Home = () => {
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-            </button>
-          </motion.div>
+            </motion.button>
+
+            {/* Menu dropdown */}
+            <AnimatePresence>
+              {menuOpen && (
+                <motion.div
+                  className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ${
+                    darkMode ? "bg-gray-800" : "bg-white"
+                  } ring-1 ring-black ring-opacity-5 z-50`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Link
+                    to="/requests"
+                    className={`block px-4 py-2 text-sm ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Requests
+                  </Link>
+                  <Link
+                    to="/connections"
+                    className={`block px-4 py-2 text-sm ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Connections
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className={`block px-4 py-2 text-sm ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className={`block px-4 py-2 text-sm ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Settings
+                  </Link>
+                  <div className="border-t border-gray-200 dark:border-gray-600"></div>
+                  <Link
+                    to="/logout"
+                    className={`block px-4 py-2 text-sm ${
+                      darkMode
+                        ? "text-red-400 hover:bg-gray-700"
+                        : "text-red-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    Logout
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </motion.nav>
 
       {/* Navbar for mobile */}
       <motion.nav
-        className={`py-2 px-4 flex justify-between items-center ${
+        className={`h-[8vh] px-4 flex justify-between items-center ${
           darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
         } shadow-md md:hidden`}
         initial="hidden"
@@ -328,11 +394,11 @@ const Home = () => {
         variants={navVariants}
       >
         {/* Profile link */}
-        <Link to="/profile" className="p-2">
+        <Link to="/profile" className="p-1.5">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -349,7 +415,7 @@ const Home = () => {
         {/* Logo */}
         <div className="flex items-center justify-center">
           <motion.div
-            className="text-gradient text-xl font-bold"
+            className="text-gradient text-lg font-bold"
             style={{ fontFamily: "var(--font-heading)" }}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -359,36 +425,105 @@ const Home = () => {
           </motion.div>
         </div>
 
-        {/* Menu button */}
-        <button
-          className={`p-2 ${
-            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-          }`}
-          onClick={() => alert("Menu clicked")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {/* Menu button with dropdown */}
+        <div className="relative">
+          <motion.button
+            className={`p-1.5 ${
+              darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+            }`}
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </motion.button>
+
+          {/* Menu dropdown for mobile */}
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ${
+                  darkMode ? "bg-gray-800" : "bg-white"
+                } ring-1 ring-black ring-opacity-5 z-50`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Link
+                  to="/requests"
+                  className={`block px-4 py-2 text-sm ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Requests
+                </Link>
+                <Link
+                  to="/connections"
+                  className={`block px-4 py-2 text-sm ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Connections
+                </Link>
+                <Link
+                  to="/profile"
+                  className={`block px-4 py-2 text-sm ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  className={`block px-4 py-2 text-sm ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Settings
+                </Link>
+                <div className="border-t border-gray-200 dark:border-gray-600"></div>
+                <Link
+                  to="/logout"
+                  className={`block px-4 py-2 text-sm ${
+                    darkMode
+                      ? "text-red-400 hover:bg-gray-700"
+                      : "text-red-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Logout
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.nav>
 
       {/* Theme toggle button for mobile - positioned below navbar */}
       <div className="md:hidden fixed bottom-4 right-4 z-50">
         <motion.button
           onClick={toggleDarkMode}
-          className={`p-3 rounded-full shadow-lg ${
+          className={`p-2 rounded-full shadow-lg ${
             darkMode ? "bg-gray-700 text-yellow-300" : "bg-white text-amber-400"
           }`}
           whileHover={{ scale: 1.05 }}
@@ -400,8 +535,8 @@ const Home = () => {
           {darkMode ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
             >
               <defs>
@@ -428,8 +563,8 @@ const Home = () => {
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
             >
               <path
