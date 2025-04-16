@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
+const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
   const { darkMode } = useTheme();
 
   // Default user data if not provided
@@ -70,7 +70,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
       opacity: 0,
       rotate: -10, // Less rotation for more natural feel
       transition: {
-        duration: 0.5,
+        duration: 0.2, // Faster transition for instant feel
         ease: [0.23, 1, 0.32, 1],
         type: "tween", // Explicit tween for smoother animation
       },
@@ -80,7 +80,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
       opacity: 0,
       rotate: 10, // Less rotation for more natural feel
       transition: {
-        duration: 0.5,
+        duration: 0.2, // Faster transition for instant feel
         ease: [0.23, 1, 0.32, 1],
         type: "tween", // Explicit tween for smoother animation
       },
@@ -109,8 +109,14 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
   // State to track swipe progress (0-100%)
   const [swipeProgress, setSwipeProgress] = React.useState(0);
 
+  // State to track if we're showing the next card
+  const [showingNextCard, setShowingNextCard] = React.useState(false);
+
   // Handle drag with improved smoothness and reduced jittering
   const handleDrag = (_, info) => {
+    // Don't process drag if we're already showing the next card
+    if (showingNextCard) return;
+
     // Calculate swipe progress as a percentage (0-100)
     const swipeThreshold = 200; // Higher threshold for more deliberate swipes
 
@@ -331,8 +337,12 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
         variants={cardVariants}
         initial="initial"
         animate="animate"
-        whileHover="hover"
-        drag="x"
+        whileHover={
+          showingNextCard ? undefined : "hover"
+        } /* Disable hover animation during transitions */
+        drag={
+          showingNextCard ? false : "x"
+        } /* Disable dragging during transitions */
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.5} // Reduced elasticity to prevent excessive movement
         dragMomentum={true} // Enable momentum for natural feel
@@ -348,6 +358,9 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
         }}
         onDrag={handleDrag}
         onDragEnd={(_, { offset, velocity }) => {
+          // Don't process drag end if we're already showing the next card
+          if (showingNextCard) return;
+
           const swipe = offset.x;
           const swipeVelocity = Math.abs(velocity.x);
           const swipeThreshold = 200; // Higher threshold to prevent accidental swipes
@@ -360,35 +373,38 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
           const isSwipeRight =
             swipe > swipeThreshold || (swipe > 120 && swipeVelocity > 0.8);
 
-          // Trigger appropriate swipe action
+          // Trigger appropriate swipe action immediately
           if (isSwipeLeft) {
-            // Add a small delay before triggering the action
-            // This makes the animation feel more natural
-            requestAnimationFrame(() => {
-              handleSwipeLeft();
-            });
+            // Mark that we're showing the next card
+            setShowingNextCard(true);
+            // Immediately trigger the swipe action
+            handleSwipeLeft();
           } else if (isSwipeRight) {
-            requestAnimationFrame(() => {
-              handleSwipeRight();
-            });
+            // Mark that we're showing the next card
+            setShowingNextCard(true);
+            // Immediately trigger the swipe action
+            handleSwipeRight();
           }
 
-          // Reset states with a slight delay to allow animations to complete
-          // Using requestAnimationFrame for smoother transitions
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              setDragDirection(null);
-              setSwipeProgress(0);
-            }, 150);
-          });
+          // Reset states immediately
+          setDragDirection(null);
+          setSwipeProgress(0);
         }}
         data-drag={dragDirection}
       >
         <div className="dev-card-content">
-          <img
+          <motion.img
             src={userData.image}
             alt={userData.name}
             className="dev-card-image"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            loading="eager" /* Force eager loading */
+            onLoad={(e) => {
+              // Force browser to render the image at full quality immediately
+              e.target.style.opacity = "1";
+            }}
           />
           <div className="dev-card-overlay">
             <div className="dev-card-info">

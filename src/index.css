@@ -1532,10 +1532,14 @@ pre,
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.3s ease-out;
   filter: brightness(0.95) contrast(1.05) saturate(1.05);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  will-change: transform, opacity; /* Hint to browser for optimization */
+  /* Hardware acceleration for smoother transitions */
+  transform: translateZ(0);
+  backface-visibility: hidden;
   /* Additional processing for better text visibility */
   &::after {
     content: "";

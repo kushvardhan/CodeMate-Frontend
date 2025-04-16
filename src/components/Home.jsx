@@ -161,17 +161,37 @@ const Home = () => {
     setUsers(mockUsers);
   }, []);
 
+  // State to track current and next user for smooth transitions
+  const [nextIndex, setNextIndex] = useState(1); // Start with the second user as next
+
+  // Preload all images when component mounts
+  useEffect(() => {
+    if (users.length > 0) {
+      // Preload all images
+      users.forEach((user) => {
+        const img = new Image();
+        img.src = user.image;
+      });
+    }
+  }, [users]);
+
   const handleSwipeLeft = () => {
     console.log("Swiped left (pass)");
     if (currentIndex < users.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      // Immediately update to the next card
+      setCurrentIndex(nextIndex);
+      // Set the next card index
+      setNextIndex((prev) => Math.min(prev + 1, users.length - 1));
     }
   };
 
   const handleSwipeRight = () => {
     console.log("Swiped right (like)");
     if (currentIndex < users.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      // Immediately update to the next card
+      setCurrentIndex(nextIndex);
+      // Set the next card index
+      setNextIndex((prev) => Math.min(prev + 1, users.length - 1));
     }
   };
 
@@ -936,11 +956,19 @@ const Home = () => {
                   delay: 0.3,
                 }}
               >
-                <Card
-                  user={users[currentIndex]}
-                  onSwipeLeft={handleSwipeLeft}
-                  onSwipeRight={handleSwipeRight}
-                />
+                {users[currentIndex] && (
+                  <Card
+                    key={
+                      users[currentIndex].id
+                    } /* Key helps React identify when to re-render */
+                    user={users[currentIndex]}
+                    onSwipeLeft={handleSwipeLeft}
+                    onSwipeRight={handleSwipeRight}
+                    nextUser={
+                      users[nextIndex]
+                    } /* Pass the next user for instant transition */
+                  />
+                )}
               </motion.div>
             </div>
           </div>
