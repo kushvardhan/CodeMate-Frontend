@@ -1323,6 +1323,96 @@ pre,
   transform-origin: top center; /* Make swipe happen from top */
 }
 
+/* Card stack styles */
+.card-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Preview card styles */
+.next-card-preview {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-card {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.8 !important;
+  filter: none !important;
+  background-color: var(--color-card-bg) !important;
+}
+
+/* No more cards message */
+.no-more-cards {
+  background: var(--color-card-bg);
+  border-radius: 24px;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
+  max-width: 90%;
+  width: 400px;
+}
+
+.no-more-cards h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.no-more-cards p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.reset-button {
+  background: linear-gradient(to right, #4f46e5, #9333ea);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Dark mode adjustments */
+.dark .no-more-cards {
+  background: #1e293b;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dark .no-more-cards h2 {
+  background: linear-gradient(to right, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.dark .reset-button {
+  background: linear-gradient(to right, #818cf8, #c084fc);
+}
+
 .swipe-indicators {
   position: absolute;
   top: 0;
@@ -1335,6 +1425,33 @@ pre,
   pointer-events: none;
   z-index: 10;
   transition: opacity 0.3s ease;
+}
+
+/* Tinder-style indicators */
+.tinder-style {
+  padding: 0;
+}
+
+.tinder-indicator {
+  transform: scale(1.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.tinder-icon {
+  width: 80px !important;
+  height: 80px !important;
+  border: 4px solid currentColor !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4) !important;
+  animation: none !important;
+  transform: rotate(-15deg) !important;
+}
+
+.tinder-text {
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px !important;
+  margin-top: 0.5rem !important;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
 .swipe-left-indicator,
@@ -1351,15 +1468,24 @@ pre,
 }
 
 .swipe-left-indicator {
-  margin-left: -6rem; /* Positioned further outside */
+  margin-left: -2rem; /* Positioned inside the card (Tinder-like) */
   color: #ff3b30;
   transform: scale(1.2);
 }
 
 .swipe-right-indicator {
-  margin-right: -6rem; /* Positioned further outside */
+  margin-right: -2rem; /* Positioned inside the card (Tinder-like) */
   color: #34c759;
   transform: scale(1.2);
+}
+
+/* Tinder-like indicator positioning */
+.tinder-indicator.swipe-left-indicator {
+  margin-left: 2rem !important; /* Positioned inside the card (Tinder-like) */
+}
+
+.tinder-indicator.swipe-right-indicator {
+  margin-right: 2rem !important; /* Positioned inside the card (Tinder-like) */
 }
 
 .indicator-icon {
@@ -1487,6 +1613,8 @@ pre,
   -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
+  /* Ensure card is not transparent */
+  opacity: 1 !important;
 }
 
 .dev-card:active {
@@ -1540,6 +1668,8 @@ pre,
   /* Hardware acceleration for smoother transitions */
   transform: translateZ(0);
   backface-visibility: hidden;
+  /* Ensure image is not transparent */
+  opacity: 1 !important;
   /* Additional processing for better text visibility */
   &::after {
     content: "";

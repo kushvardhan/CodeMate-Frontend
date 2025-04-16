@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
+const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
   const { darkMode } = useTheme();
 
   // Default user data if not provided
@@ -46,11 +46,25 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
       opacity: 1,
       y: 0,
       scale: 1,
+      filter: "none" /* Ensure no filter is applied */,
       transition: {
         type: "spring",
         stiffness: 100,
         damping: 15,
         duration: 0.5,
+      },
+    },
+    preview: {
+      opacity: 0.5 /* Lower opacity for background card */,
+      scale: 0.9,
+      y: 40,
+      rotateZ: -2,
+      filter: "blur(2px)",
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 10,
+        duration: 0.3,
       },
     },
     hover: {
@@ -97,14 +111,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
   // State to track drag direction
   const [dragDirection, setDragDirection] = React.useState(null);
 
-  // Handle swipe actions
-  const handleSwipeLeft = () => {
-    onSwipeLeft();
-  };
-
-  const handleSwipeRight = () => {
-    onSwipeRight();
-  };
+  // These functions are now called directly in onDragEnd
 
   // State to track swipe progress (0-100%)
   const [swipeProgress, setSwipeProgress] = React.useState(0);
@@ -112,57 +119,59 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
   // State to track if we're showing the next card
   const [showingNextCard, setShowingNextCard] = React.useState(false);
 
-  // Handle drag with improved smoothness and reduced jittering
+  // Handle drag with Tinder-like behavior
   const handleDrag = (_, info) => {
     // Don't process drag if we're already showing the next card
     if (showingNextCard) return;
 
     // Calculate swipe progress as a percentage (0-100)
-    const swipeThreshold = 200; // Higher threshold for more deliberate swipes
+    const swipeThreshold = 150; // Lower threshold for easier swiping (Tinder-like)
 
-    // Use a more conservative velocity factor to reduce jittering
-    const velocityFactor = Math.min(Math.abs(info.velocity.x) * 0.1, 0.3);
+    // Calculate rotation based on drag distance (Tinder-like)
+    // Max rotation of 15 degrees
+    const rotate = info.offset.x * 0.1; // 0.1 is a sensitivity factor
+
+    // Apply rotation directly to the card
+    const element = document.querySelector(".dev-card");
+    if (element) {
+      // Apply rotation and horizontal movement
+      element.style.transform = `translateX(${info.offset.x}px) rotate(${rotate}deg)`;
+    }
 
     // Calculate progress with dampened velocity influence
     let progress = Math.min(
-      (Math.abs(info.offset.x) / swipeThreshold) * 100 * (1 + velocityFactor),
+      (Math.abs(info.offset.x) / swipeThreshold) * 100,
       100
     );
 
-    // Round progress to nearest 5% to reduce small jitters
-    progress = Math.round(progress / 5) * 5;
-
-    // Set the smoothed progress
+    // Set the progress
     setSwipeProgress(progress);
 
-    // Use a higher threshold (50px) and debounce direction changes
-    // This prevents accidental direction changes and reduces jittering
-    if (info.offset.x > 50) {
+    // Set direction based on drag direction
+    if (info.offset.x > 20) {
       setDragDirection("right");
-    } else if (info.offset.x < -50) {
+    } else if (info.offset.x < -20) {
       setDragDirection("left");
-    } else if (Math.abs(info.offset.x) < 20) {
-      // Only reset direction when very close to center
+    } else {
       setDragDirection(null);
     }
-    // Otherwise keep the current direction (this prevents jittering near thresholds)
   };
 
   return (
     <div className="card-container">
       {/* Swipe indicators */}
-      <div className="swipe-indicators">
+      <div className="swipe-indicators tinder-style">
         <div
-          className="swipe-left-indicator"
+          className="swipe-left-indicator tinder-indicator"
           style={{
             opacity: dragDirection === "left" ? swipeProgress / 100 : 0,
           }}
         >
-          <div className="indicator-icon ignore-icon">
+          <div className="indicator-icon ignore-icon tinder-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -174,20 +183,20 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </div>
-          <span className="indicator-text">IGNORE</span>
+          <span className="indicator-text tinder-text">NOPE</span>
         </div>
 
         <div
-          className="swipe-right-indicator"
+          className="swipe-right-indicator tinder-indicator"
           style={{
             opacity: dragDirection === "right" ? swipeProgress / 100 : 0,
           }}
         >
-          <div className="indicator-icon match-icon">
+          <div className="indicator-icon match-icon tinder-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
+              width="40"
+              height="40"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -198,7 +207,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
           </div>
-          <span className="indicator-text">INTERESTED</span>
+          <span className="indicator-text tinder-text">LIKE</span>
         </div>
       </div>
 
@@ -333,28 +342,26 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
 
       {/* Main card */}
       <motion.div
-        className="dev-card"
+        className={`dev-card ${isPreview ? "preview-card" : ""}`}
         variants={cardVariants}
         initial="initial"
-        animate="animate"
+        animate={isPreview ? "preview" : "animate"}
         whileHover={
-          showingNextCard ? undefined : "hover"
-        } /* Disable hover animation during transitions */
+          showingNextCard || isPreview ? undefined : "hover"
+        } /* Disable hover animation during transitions and for preview */
         drag={
-          showingNextCard ? false : "x"
-        } /* Disable dragging during transitions */
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.5} // Reduced elasticity to prevent excessive movement
-        dragMomentum={true} // Enable momentum for natural feel
+          showingNextCard || isPreview ? false : "x"
+        } /* Disable dragging during transitions and for preview */
+        dragConstraints={{
+          left: -1000,
+          right: 1000,
+        }} /* Allow more movement for Tinder-like feel */
+        dragElastic={1} /* Full elasticity for Tinder-like feel */
+        dragMomentum={true} /* Enable momentum for natural feel */
         dragTransition={{
-          bounceStiffness: 200, // Lower stiffness for smoother motion
-          bounceDamping: 50, // Higher damping to prevent jittering
-          power: 0.1, // Lower power for smoother resistance
-          timeConstant: 500, // Higher time constant for smoother deceleration
-          restDelta: 0.1, // Lower rest delta for smoother stopping
-          modifyTarget: (target) => Math.round(target / 200) * 200, // Even larger grid for smoother movement
-          min: -1000, // Limit drag distance
-          max: 1000, // Limit drag distance
+          power: 0.2 /* More natural power for Tinder-like feel */,
+          timeConstant: 400 /* Faster time constant for Tinder-like feel */,
+          restDelta: 0.5 /* Higher rest delta for Tinder-like feel */,
         }}
         onDrag={handleDrag}
         onDragEnd={(_, { offset, velocity }) => {
@@ -363,31 +370,59 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
 
           const swipe = offset.x;
           const swipeVelocity = Math.abs(velocity.x);
-          const swipeThreshold = 200; // Higher threshold to prevent accidental swipes
+          const swipeThreshold = 100; // Lower threshold for easier swiping
 
-          // Consider both distance and velocity for a more natural feel
-          // This makes quick flicks work even with less distance
-          // But requires more deliberate slow swipes
+          // Get the card element
+          const element = document.querySelector(".dev-card");
+
+          // Consider both distance and velocity for a more natural feel (Tinder-like)
           const isSwipeLeft =
-            swipe < -swipeThreshold || (swipe < -120 && swipeVelocity > 0.8);
+            swipe < -swipeThreshold || (swipe < -50 && swipeVelocity > 1.0);
           const isSwipeRight =
-            swipe > swipeThreshold || (swipe > 120 && swipeVelocity > 0.8);
+            swipe > swipeThreshold || (swipe > 50 && swipeVelocity > 1.0);
 
-          // Trigger appropriate swipe action immediately
           if (isSwipeLeft) {
+            // Tinder-like exit animation for left swipe
+            if (element) {
+              element.style.transition = "transform 0.5s ease-out";
+              element.style.transform = `translateX(-1000px) rotate(-30deg)`;
+            }
+
             // Mark that we're showing the next card
             setShowingNextCard(true);
-            // Immediately trigger the swipe action
-            handleSwipeLeft();
+            // Set the swipe direction for animation
+            setDragDirection("left");
+
+            // Trigger the swipe action after animation
+            setTimeout(() => {
+              onSwipeLeft();
+            }, 200);
           } else if (isSwipeRight) {
+            // Tinder-like exit animation for right swipe
+            if (element) {
+              element.style.transition = "transform 0.5s ease-out";
+              element.style.transform = `translateX(1000px) rotate(30deg)`;
+            }
+
             // Mark that we're showing the next card
             setShowingNextCard(true);
-            // Immediately trigger the swipe action
-            handleSwipeRight();
+            // Set the swipe direction for animation
+            setDragDirection("right");
+
+            // Trigger the swipe action after animation
+            setTimeout(() => {
+              onSwipeRight();
+            }, 200);
+          } else {
+            // Spring back to center if not swiped far enough (Tinder-like)
+            if (element) {
+              element.style.transition =
+                "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+              element.style.transform = "translateX(0) rotate(0deg)";
+            }
           }
 
-          // Reset states immediately
-          setDragDirection(null);
+          // Reset progress
           setSwipeProgress(0);
         }}
         data-drag={dragDirection}
@@ -399,11 +434,14 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, nextUser }) => {
             className="dev-card-image"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             loading="eager" /* Force eager loading */
+            decoding="sync" /* Decode image synchronously */
+            fetchpriority="high" /* High priority fetch */
             onLoad={(e) => {
               // Force browser to render the image at full quality immediately
               e.target.style.opacity = "1";
+              e.target.style.filter = "none";
             }}
           />
           <div className="dev-card-overlay">

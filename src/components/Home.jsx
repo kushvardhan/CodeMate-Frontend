@@ -161,8 +161,8 @@ const Home = () => {
     setUsers(mockUsers);
   }, []);
 
-  // State to track current and next user for smooth transitions
-  const [nextIndex, setNextIndex] = useState(1); // Start with the second user as next
+  // State to track if all cards have been swiped
+  const [allCardsFinished, setAllCardsFinished] = useState(false);
 
   // Preload all images when component mounts
   useEffect(() => {
@@ -178,21 +178,29 @@ const Home = () => {
   const handleSwipeLeft = () => {
     console.log("Swiped left (pass)");
     if (currentIndex < users.length - 1) {
-      // Immediately update to the next card
-      setCurrentIndex(nextIndex);
-      // Set the next card index
-      setNextIndex((prev) => Math.min(prev + 1, users.length - 1));
+      // Move to the next card
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      // No more cards left
+      setAllCardsFinished(true);
     }
   };
 
   const handleSwipeRight = () => {
     console.log("Swiped right (like)");
     if (currentIndex < users.length - 1) {
-      // Immediately update to the next card
-      setCurrentIndex(nextIndex);
-      // Set the next card index
-      setNextIndex((prev) => Math.min(prev + 1, users.length - 1));
+      // Move to the next card
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      // No more cards left
+      setAllCardsFinished(true);
     }
+  };
+
+  // Function to reset and start over
+  const handleReset = () => {
+    setCurrentIndex(0);
+    setAllCardsFinished(false);
   };
 
   const getBackgroundClass = () => {
@@ -946,30 +954,48 @@ const Home = () => {
           {/* Card Section - completely separate from header with fixed positioning */}
           <div className="absolute top-[40%] left-1/2 transform -translate-x-1/2 w-full mt-32">
             <div className="flex justify-center items-center">
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  delay: 0.3,
-                }}
-              >
-                {users[currentIndex] && (
-                  <Card
-                    key={
-                      users[currentIndex].id
-                    } /* Key helps React identify when to re-render */
-                    user={users[currentIndex]}
-                    onSwipeLeft={handleSwipeLeft}
-                    onSwipeRight={handleSwipeRight}
-                    nextUser={
-                      users[nextIndex]
-                    } /* Pass the next user for instant transition */
-                  />
-                )}
-              </motion.div>
+              {allCardsFinished ? (
+                <motion.div
+                  className="no-more-cards"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  <h2>No More Profiles</h2>
+                  <p>You've viewed all available developers</p>
+                  <motion.button
+                    className="reset-button"
+                    onClick={handleReset}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Start Over
+                  </motion.button>
+                </motion.div>
+              ) : (
+                <div className="card-stack">
+                  {/* Next card (visible in background) */}
+                  {currentIndex < users.length - 1 && (
+                    <div className="next-card-preview">
+                      <Card
+                        key={`next-${users[currentIndex + 1].id}`}
+                        user={users[currentIndex + 1]}
+                        isPreview={true}
+                      />
+                    </div>
+                  )}
+
+                  {/* Current card */}
+                  {users[currentIndex] && (
+                    <Card
+                      key={users[currentIndex].id}
+                      user={users[currentIndex]}
+                      onSwipeLeft={handleSwipeLeft}
+                      onSwipeRight={handleSwipeRight}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
