@@ -81,8 +81,8 @@ const Home = () => {
     <div
       className={`min-h-screen transition-all duration-300 ${
         darkMode
-          ? "bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 text-white"
-          : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-900"
+          ? "bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-gray-800/90 text-white"
+          : "bg-gradient-to-br from-blue-50/90 via-indigo-50/90 to-purple-50/90 text-gray-900"
       } ${getBackgroundClass()}`}
     >
       {/* WhatsApp-style background with glowy animated coding icons */}
@@ -98,8 +98,8 @@ const Home = () => {
         {/* Code icons scattered throughout */}
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ top: "10%", left: "15%", fontSize: "24px" }}
-          animate={{ y: [-5, 5, -5], opacity: [0.1, 0.2, 0.1] }}
+          style={{ top: "10%", left: "15%", fontSize: "32px" }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
           transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
         >
           {`{ }`}
@@ -107,8 +107,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ top: "25%", right: "20%", fontSize: "28px" }}
-          animate={{ y: [-8, 8, -8], opacity: [0.1, 0.25, 0.1] }}
+          style={{ top: "25%", right: "20%", fontSize: "36px" }}
+          animate={{ y: [-8, 8, -8], opacity: [0.3, 0.6, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 7,
@@ -121,8 +121,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ top: "40%", left: "25%", fontSize: "22px" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.1, 0.2, 0.1] }}
+          style={{ top: "40%", left: "25%", fontSize: "30px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6,
@@ -135,8 +135,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ top: "60%", right: "25%", fontSize: "26px" }}
-          animate={{ y: [-7, 7, -7], opacity: [0.1, 0.2, 0.1] }}
+          style={{ top: "60%", right: "25%", fontSize: "34px" }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 8,
@@ -149,8 +149,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ bottom: "30%", left: "30%", fontSize: "20px" }}
-          animate={{ y: [-5, 5, -5], opacity: [0.1, 0.2, 0.1] }}
+          style={{ bottom: "30%", left: "30%", fontSize: "28px" }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 5.5,
@@ -163,8 +163,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon code"
-          style={{ bottom: "20%", right: "20%", fontSize: "24px" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.1, 0.2, 0.1] }}
+          style={{ bottom: "20%", right: "20%", fontSize: "32px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6.5,
@@ -178,8 +178,8 @@ const Home = () => {
         {/* People icons */}
         <motion.div
           className="whatsapp-bg-icon people"
-          style={{ top: "15%", right: "35%", fontSize: "28px" }}
-          animate={{ y: [-7, 7, -7], opacity: [0.1, 0.2, 0.1] }}
+          style={{ top: "15%", right: "35%", fontSize: "36px" }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 7,
@@ -188,8 +188,8 @@ const Home = () => {
           }}
         >
           <svg
-            width="28"
-            height="28"
+            width="36"
+            height="36"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -204,8 +204,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon people"
-          style={{ bottom: "40%", left: "15%", fontSize: "26px" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.1, 0.2, 0.1] }}
+          style={{ bottom: "40%", left: "15%", fontSize: "34px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6,
@@ -214,8 +214,8 @@ const Home = () => {
           }}
         >
           <svg
-            width="26"
-            height="26"
+            width="34"
+            height="34"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -233,8 +233,8 @@ const Home = () => {
         {/* Connection icons */}
         <motion.div
           className="whatsapp-bg-icon connection"
-          style={{ top: "50%", right: "10%", fontSize: "24px" }}
-          animate={{ y: [-5, 5, -5], opacity: [0.1, 0.2, 0.1] }}
+          style={{ top: "50%", right: "10%", fontSize: "32px" }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 5.5,
@@ -243,8 +243,8 @@ const Home = () => {
           }}
         >
           <svg
-            width="24"
-            height="24"
+            width="32"
+            height="32"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -259,8 +259,8 @@ const Home = () => {
 
         <motion.div
           className="whatsapp-bg-icon connection"
-          style={{ bottom: "15%", left: "40%", fontSize: "26px" }}
-          animate={{ y: [-7, 7, -7], opacity: [0.1, 0.2, 0.1] }}
+          style={{ bottom: "15%", left: "40%", fontSize: "34px" }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 7.5,
@@ -269,8 +269,8 @@ const Home = () => {
           }}
         >
           <svg
-            width="26"
-            height="26"
+            width="34"
+            height="34"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -283,6 +283,169 @@ const Home = () => {
             <line x1="6" y1="6" x2="6.01" y2="6"></line>
             <line x1="6" y1="18" x2="6.01" y2="18"></line>
           </svg>
+        </motion.div>
+
+        {/* Additional icons */}
+        <motion.div
+          className="whatsapp-bg-icon code"
+          style={{ top: "5%", left: "45%", fontSize: "30px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 6,
+            ease: "easeInOut",
+            delay: 0.8,
+          }}
+        >
+          {`function()`}
+        </motion.div>
+
+        {/* Icons around stats section */}
+        <motion.div
+          className="whatsapp-bg-icon connection"
+          style={{ top: "65%", left: "20%", fontSize: "30px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.4, 0.6, 0.4] }}
+          transition={{
+            repeat: Infinity,
+            duration: 6,
+            ease: "easeInOut",
+            delay: 0.2,
+          }}
+        >
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon code"
+          style={{ top: "75%", right: "25%", fontSize: "32px" }}
+          animate={{ y: [-7, 7, -7], opacity: [0.4, 0.6, 0.4] }}
+          transition={{
+            repeat: Infinity,
+            duration: 7,
+            ease: "easeInOut",
+            delay: 0.7,
+          }}
+        >
+          {`<div/>`}
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon people"
+          style={{ top: "80%", left: "35%", fontSize: "34px" }}
+          animate={{ y: [-8, 8, -8], opacity: [0.4, 0.6, 0.4] }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "easeInOut",
+            delay: 1.2,
+          }}
+        >
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon code"
+          style={{ top: "70%", right: "5%", fontSize: "28px" }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 5.5,
+            ease: "easeInOut",
+            delay: 1.3,
+          }}
+        >
+          {`import {}`}
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon connection"
+          style={{ top: "85%", left: "10%", fontSize: "32px" }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 7,
+            ease: "easeInOut",
+            delay: 0.5,
+          }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon people"
+          style={{ top: "30%", left: "5%", fontSize: "34px" }}
+          animate={{ y: [-8, 8, -8], opacity: [0.3, 0.5, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "easeInOut",
+            delay: 1.7,
+          }}
+        >
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="whatsapp-bg-icon code"
+          style={{ bottom: "45%", right: "45%", fontSize: "32px" }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 6.5,
+            ease: "easeInOut",
+            delay: 0.3,
+          }}
+        >
+          {`const dev = {}`}
         </motion.div>
 
         {/* Infinity symbol with glow */}

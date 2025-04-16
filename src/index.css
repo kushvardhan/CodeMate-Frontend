@@ -2422,42 +2422,43 @@ pre,
 
 .whatsapp-bg-icon {
   position: absolute;
-  opacity: 0.15;
+  opacity: 0.3;
   transform-origin: center;
+  animation: pulse-glow 4s infinite ease-in-out;
 }
 
 .dark .whatsapp-bg-icon {
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 .whatsapp-bg-icon.code {
   color: #4f46e5;
-  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.6));
 }
 
 .whatsapp-bg-icon.people {
   color: #ec4899;
-  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6));
 }
 
 .whatsapp-bg-icon.connection {
   color: #10b981;
-  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
 }
 
 .dark .whatsapp-bg-icon.code {
   color: #818cf8;
-  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.5));
+  filter: drop-shadow(0 0 10px rgba(129, 140, 248, 0.7));
 }
 
 .dark .whatsapp-bg-icon.people {
   color: #f472b6;
-  filter: drop-shadow(0 0 5px rgba(244, 114, 182, 0.5));
+  filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.7));
 }
 
 .dark .whatsapp-bg-icon.connection {
   color: #34d399;
-  filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+  filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.7));
 }
 
 @keyframes float-slow {
@@ -2474,16 +2475,16 @@ pre,
 
 @keyframes pulse-glow {
   0% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.1;
+    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+    opacity: 0.3;
   }
   50% {
-    filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
-    opacity: 0.2;
+    filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.7));
+    opacity: 0.5;
   }
   100% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.1;
+    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+    opacity: 0.3;
   }
 }
 
@@ -2498,42 +2499,43 @@ pre,
 
 .whatsapp-bg-icon {
   position: absolute;
-  opacity: 0.15;
+  opacity: 0.45; /* Increased for light theme */
   transform-origin: center;
+  animation: pulse-glow 4s infinite ease-in-out;
 }
 
 .dark .whatsapp-bg-icon {
-  opacity: 0.2;
+  opacity: 0.5; /* Slightly increased for dark theme */
 }
 
 .whatsapp-bg-icon.code {
   color: #4f46e5;
-  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.6));
 }
 
 .whatsapp-bg-icon.people {
   color: #ec4899;
-  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6));
 }
 
 .whatsapp-bg-icon.connection {
   color: #10b981;
-  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
 }
 
 .dark .whatsapp-bg-icon.code {
   color: #818cf8;
-  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.5));
+  filter: drop-shadow(0 0 10px rgba(129, 140, 248, 0.7));
 }
 
 .dark .whatsapp-bg-icon.people {
   color: #f472b6;
-  filter: drop-shadow(0 0 5px rgba(244, 114, 182, 0.5));
+  filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.7));
 }
 
 .dark .whatsapp-bg-icon.connection {
   color: #34d399;
-  filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+  filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.7));
 }
 
 @keyframes float-slow {
@@ -2550,16 +2552,16 @@ pre,
 
 @keyframes pulse-glow {
   0% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.1;
+    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+    opacity: 0.4;
   }
   50% {
-    filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
-    opacity: 0.2;
+    filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.7));
+    opacity: 0.6;
   }
   100% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.1;
+    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+    opacity: 0.4;
   }
 }
 
