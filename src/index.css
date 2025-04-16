@@ -2499,13 +2499,13 @@ pre,
 
 .whatsapp-bg-icon {
   position: absolute;
-  opacity: 0.45; /* Increased for light theme */
+  opacity: 0.65; /* Significantly increased for light theme */
   transform-origin: center;
   animation: pulse-glow 4s infinite ease-in-out;
 }
 
 .dark .whatsapp-bg-icon {
-  opacity: 0.5; /* Slightly increased for dark theme */
+  opacity: 0.55; /* Slightly increased for dark theme */
 }
 
 .whatsapp-bg-icon.code {
