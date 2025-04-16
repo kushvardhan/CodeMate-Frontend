@@ -2359,6 +2359,28 @@ pre,
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
+/* Code background pattern - WhatsApp style */
+.code-bg-pattern {
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  opacity: 0.07;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.light .code-bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M20 40L26 46L20 52' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 40L6 46L12 52' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 38L15 54' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M60 40L54 46L60 52' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M68 40L74 46L68 52' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 80C43.866 80 47 76.866 47 73C47 69.134 43.866 66 40 66C36.134 66 33 69.134 33 73C33 76.866 36.134 80 40 80Z' stroke='%23EC4899' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M48 86V84C48 81.791 46.209 80 44 80H36C33.791 80 32 81.791 32 84V86' stroke='%23EC4899' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 80C83.866 80 87 76.866 87 73C87 69.134 83.866 66 80 66C76.134 66 73 69.134 73 73C73 76.866 76.134 80 80 80Z' stroke='%230EA5E9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M88 86V84C88 81.791 86.209 80 84 80H76C73.791 80 72 81.791 72 84V86' stroke='%230EA5E9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 20H38.5C37.12 20 36 18.88 36 17.5C36 16.12 37.12 15 38.5 15H40' stroke='%2310B981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M52 20H53.5C54.88 20 56 18.88 56 17.5C56 16.12 54.88 15 53.5 15H52' stroke='%2310B981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 15H52' stroke='%2310B981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 20H78.5C77.12 20 76 18.88 76 17.5C76 16.12 77.12 15 78.5 15H80' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M92 20H93.5C94.88 20 96 18.88 96 17.5C96 16.12 94.88 15 93.5 15H92' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 15H92' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.dark .code-bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M20 40L26 46L20 52' stroke='%23818CF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 40L6 46L12 52' stroke='%23818CF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 38L15 54' stroke='%23818CF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M60 40L54 46L60 52' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M68 40L74 46L68 52' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 80C43.866 80 47 76.866 47 73C47 69.134 43.866 66 40 66C36.134 66 33 69.134 33 73C33 76.866 36.134 80 40 80Z' stroke='%23F472B6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M48 86V84C48 81.791 46.209 80 44 80H36C33.791 80 32 81.791 32 84V86' stroke='%23F472B6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 80C83.866 80 87 76.866 87 73C87 69.134 83.866 66 80 66C76.134 66 73 69.134 73 73C73 76.866 76.134 80 80 80Z' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M88 86V84C88 81.791 86.209 80 84 80H76C73.791 80 72 81.791 72 84V86' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 20H38.5C37.12 20 36 18.88 36 17.5C36 16.12 37.12 15 38.5 15H40' stroke='%2334D399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M52 20H53.5C54.88 20 56 18.88 56 17.5C56 16.12 54.88 15 53.5 15H52' stroke='%2334D399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 15H52' stroke='%2334D399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 20H78.5C77.12 20 76 18.88 76 17.5C76 16.12 77.12 15 78.5 15H80' stroke='%23FBBF24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M92 20H93.5C94.88 20 96 18.88 96 17.5C96 16.12 94.88 15 93.5 15H92' stroke='%23FBBF24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M80 15H92' stroke='%23FBBF24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.12;
+}
+
 /* Glowy icons styles */
 .icon-glow {
   filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.5));
@@ -2387,6 +2409,82 @@ pre,
 
 .dark .connection-icon {
   filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.7));
+}
+
+/* WhatsApp-style background with glowy animated icons */
+.whatsapp-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.whatsapp-bg-icon {
+  position: absolute;
+  opacity: 0.15;
+  transform-origin: center;
+}
+
+.dark .whatsapp-bg-icon {
+  opacity: 0.2;
+}
+
+.whatsapp-bg-icon.code {
+  color: #4f46e5;
+  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+}
+
+.whatsapp-bg-icon.people {
+  color: #ec4899;
+  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
+}
+
+.whatsapp-bg-icon.connection {
+  color: #10b981;
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
+}
+
+.dark .whatsapp-bg-icon.code {
+  color: #818cf8;
+  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.5));
+}
+
+.dark .whatsapp-bg-icon.people {
+  color: #f472b6;
+  filter: drop-shadow(0 0 5px rgba(244, 114, 182, 0.5));
+}
+
+.dark .whatsapp-bg-icon.connection {
+  color: #34d399;
+  filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.1;
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
+    opacity: 0.2;
+  }
+  100% {
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.1;
+  }
 }
 
 /* Infinity symbol styles */
