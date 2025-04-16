@@ -1343,7 +1343,7 @@ pre,
 .tinder-card-stack {
   position: relative;
   width: 100%;
-  max-width: 340px; /* Increased to accommodate larger card */
+  max-width: 320px; /* Base size for all screens */
   height: 100%;
   display: flex;
   justify-content: center;
@@ -1377,11 +1377,27 @@ pre,
     position: relative !important;
     left: 0 !important;
     right: 0 !important;
+    inset: 0 !important;
   }
 
   .dev-card {
     width: 100% !important; /* Full width on small screens */
     transform: translateX(0) !important;
+    max-width: 280px !important; /* Limit width on small screens */
+    margin: 0 auto !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Ensure card container is centered */
+  .tinder-current-card {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
   }
 }
 
@@ -1392,11 +1408,52 @@ pre,
     transform: translateX(0) !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    inset: 0 !important;
   }
 
   .dev-card {
     width: 100% !important;
     min-height: 480px; /* Slightly smaller height */
+    margin: 0 auto !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Ensure card container is centered */
+  .tinder-current-card {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Larger screens - bigger card */
+@media (min-width: 1024px) {
+  .dev-card {
+    width: 130% !important; /* Bigger on large screens */
+    min-height: 580px !important; /* Taller on large screens */
+  }
+
+  .tinder-card-stack {
+    max-width: 400px; /* Larger container for bigger card */
+  }
+}
+
+/* Very large screens - even bigger card */
+@media (min-width: 1440px) {
+  .dev-card {
+    width: 150% !important; /* Even bigger on very large screens */
+    min-height: 620px !important; /* Even taller on very large screens */
+  }
+
+  .tinder-card-stack {
+    max-width: 450px; /* Even larger container for bigger card */
   }
 }
 
@@ -1828,7 +1885,7 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 100%; /* Full width of container */
+  width: 100%; /* Base width for all screens */
   aspect-ratio: 2/3.5; /* Taller aspect ratio */
   min-height: 520px; /* Increased minimum height */
   margin: 0 auto !important; /* Center the card */
@@ -1874,15 +1931,24 @@ pre,
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Drag animation styles */
+/* Drag animation styles - only show when actively dragging */
 .dev-card[data-drag="left"] {
   box-shadow: -10px 10px 30px rgba(255, 59, 48, 0.3),
     -5px 5px 15px rgba(255, 59, 48, 0.2);
+  border: 2px solid rgba(255, 59, 48, 0.5);
 }
 
 .dev-card[data-drag="right"] {
   box-shadow: 10px 10px 30px rgba(52, 199, 89, 0.3),
     5px 5px 15px rgba(52, 199, 89, 0.2);
+  border: 2px solid rgba(52, 199, 89, 0.5);
+}
+
+/* No special styling when at rest or just holding */
+.dev-card[data-drag="none"],
+.dev-card:not([data-drag]) {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
+  border: none;
 }
 
 .dark .dev-card {

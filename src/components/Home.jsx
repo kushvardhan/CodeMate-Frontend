@@ -291,6 +291,31 @@ const Home = () => {
     return "";
   };
 
+  // State to track loading sequence
+  const [loadingSequence, setLoadingSequence] = useState({
+    headingLoaded: false,
+    statsLoaded: false,
+    cardLoaded: false,
+  });
+
+  // Simulate sequential loading
+  useEffect(() => {
+    // First load the heading
+    setTimeout(() => {
+      setLoadingSequence((prev) => ({ ...prev, headingLoaded: true }));
+
+      // Then load the stats
+      setTimeout(() => {
+        setLoadingSequence((prev) => ({ ...prev, statsLoaded: true }));
+
+        // Finally load the card
+        setTimeout(() => {
+          setLoadingSequence((prev) => ({ ...prev, cardLoaded: true }));
+        }, 300); // Delay before showing card
+      }, 200); // Delay before showing stats
+    }, 100); // Delay before showing heading
+  }, []);
+
   return (
     <div
       className={`min-h-screen transition-all duration-300 ${
@@ -996,8 +1021,11 @@ const Home = () => {
           <div className="mb-0">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              animate={{
+                opacity: loadingSequence.headingLoaded ? 1 : 0,
+                y: loadingSequence.headingLoaded ? 0 : 20,
+              }}
+              transition={{ duration: 0.5 }}
               className="text-center max-w-4xl mx-auto"
             >
               <motion.div
@@ -1036,13 +1064,16 @@ const Home = () => {
           </div>
 
           {/* Card Section - perfectly centered on all screen sizes */}
-          <div
+          <motion.div
             className="relative w-full mx-auto mt-16 mb-32 flex justify-center items-center"
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: loadingSequence.cardLoaded ? 1 : 0 }}
+            transition={{ duration: 0.5 }}
           >
             <div
               className="flex justify-center items-center w-full max-w-md mx-auto"
@@ -1105,7 +1136,18 @@ const Home = () => {
                   </div>
                 </motion.div>
               ) : (
-                <div className="tinder-card-stack">
+                <div
+                  className="tinder-card-stack"
+                  style={{
+                    margin: "0 auto",
+                    left: "0",
+                    right: "0",
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   {/* Tinder-style card stack - exactly like Tinder */}
 
                   {/* Next cards in stack (visible behind current card) */}
@@ -1135,13 +1177,16 @@ const Home = () => {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           <motion.div
             className="flex flex-col sm:flex-row justify-center gap-6 md:gap-12 mt-16 mb-12 stats-container w-full max-w-2xl mx-auto flex-wrap"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            animate={{
+              opacity: loadingSequence.statsLoaded ? 1 : 0,
+              y: loadingSequence.statsLoaded ? 0 : 20,
+            }}
+            transition={{ duration: 0.5 }}
             layout
           >
             <motion.div

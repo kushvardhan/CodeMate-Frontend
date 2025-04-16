@@ -185,9 +185,12 @@ const Card = ({
         -Math.abs(info.offset.x) * 0.05
       }px) rotate(${rotate}deg)`;
 
-      // Apply color overlay based on direction (Tinder-like)
-      if (info.offset.x > 50) {
-        // Green overlay for right swipe (like)
+      // Apply color overlay based on direction (Tinder-like), but only when actively moving
+      // Check if there's actual movement (velocity) to determine if actively dragging
+      const isActivelyDragging = Math.abs(info.velocity.x) > 0.1;
+
+      if (info.offset.x > 50 && isActivelyDragging) {
+        // Green overlay for right swipe (like), only when actively dragging
         // Pre-calculate the opacity value to reduce calculations during drag
         const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
         // More pronounced green shadow/glow effect
@@ -195,8 +198,8 @@ const Card = ({
         element.style.borderColor = `rgba(52, 199, 89, ${opacity})`;
         // Add a subtle green border
         element.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
-      } else if (info.offset.x < -50) {
-        // Red overlay for left swipe (nope)
+      } else if (info.offset.x < -50 && isActivelyDragging) {
+        // Red overlay for left swipe (nope), only when actively dragging
         // Pre-calculate the opacity value to reduce calculations during drag
         const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
         // More pronounced red shadow/glow effect
@@ -204,7 +207,7 @@ const Card = ({
         // Add a subtle red border
         element.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
       } else {
-        // Reset overlay
+        // Reset overlay when not actively dragging or near center
         element.style.boxShadow = "";
         element.style.border = "none";
       }
@@ -221,15 +224,21 @@ const Card = ({
       setSwipeProgress(progress);
     }
 
-    // Set direction based on drag direction (Tinder-like)
+    // Set direction based on drag direction (Tinder-like), but only when actively moving
     // Use a larger threshold to reduce flickering between states
-    if (info.offset.x > 30) {
+    // Check if there's actual movement (velocity) to determine if actively dragging
+    const isActivelyDragging = Math.abs(info.velocity.x) > 0.1;
+
+    if (info.offset.x > 30 && isActivelyDragging) {
       if (dragDirection !== "right") setDragDirection("right");
-    } else if (info.offset.x < -30) {
+    } else if (info.offset.x < -30 && isActivelyDragging) {
       if (dragDirection !== "left") setDragDirection("left");
-    } else if (dragDirection !== null && Math.abs(info.offset.x) < 10) {
-      // Only reset when very close to center and direction is already set
-      setDragDirection(null);
+    } else if (
+      dragDirection !== null &&
+      (Math.abs(info.offset.x) < 10 || !isActivelyDragging)
+    ) {
+      // Reset when very close to center or when not actively dragging
+      setDragDirection("none");
     }
   };
 
