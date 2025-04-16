@@ -1339,6 +1339,46 @@ pre,
   transform-style: preserve-3d;
 }
 
+/* Tinder-style card stack - exactly like Tinder */
+.tinder-card-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Next card in stack (behind current card) */
+.tinder-next-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Current card (top of stack) */
+.tinder-current-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+/* Next card styling */
+.next-card {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
 /* Static card stack to prevent stuttering */
 .static-card-stack {
   position: absolute;
@@ -1731,9 +1771,9 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 110%; /* Slightly smaller */
-  aspect-ratio: 2/3.2; /* Slightly shorter */
-  min-height: 480px; /* Slightly smaller minimum height */
+  width: 115%; /* Slightly bigger */
+  aspect-ratio: 2/3.5; /* Taller aspect ratio */
+  min-height: 520px; /* Increased minimum height */
   border-radius: 24px;
   overflow: hidden;
   background-color: var(--color-card-bg);
@@ -1800,7 +1840,7 @@ pre,
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease, opacity 0.3s ease-out;
+  transition: transform 0.3s ease, opacity 0.2s ease-out;
   filter: brightness(0.95) contrast(1.05) saturate(1.05);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -1810,6 +1850,13 @@ pre,
   backface-visibility: hidden;
   /* Ensure image is not transparent */
   opacity: 1 !important;
+}
+
+/* Loaded image state */
+.dev-card-image.loaded {
+  opacity: 1 !important;
+  filter: none !important;
+  transition: none !important;
   /* Additional processing for better text visibility */
   &::after {
     content: "";

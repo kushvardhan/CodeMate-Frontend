@@ -6,8 +6,7 @@ const Card = ({
   user,
   onSwipeLeft,
   onSwipeRight,
-  isPreview = false,
-  isDeepStack = false,
+  isNextCard = false,
   isCardSwiping = false,
   swipeDirection = null,
 }) => {
@@ -62,27 +61,13 @@ const Card = ({
         duration: 0.5,
       },
     },
-    // Tinder-like preview card (second in stack)
-    preview: {
-      opacity: 0.9 /* Tinder uses higher opacity for stack */,
-      scale: 0.95 /* Tinder uses subtle scaling */,
-      y: 15 /* Tinder shows just the top of the next card */,
-      rotateZ: 0 /* Tinder keeps cards straight in the stack */,
-      filter: "blur(0px)" /* Tinder doesn't blur the stack */,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-        duration: 0.2,
-      },
-    },
-    // Tinder-like deep stack card (third in stack)
-    deepStack: {
-      opacity: 0.7,
-      scale: 0.9,
-      y: 30,
-      rotateZ: 0,
-      filter: "blur(0px)",
+    // Tinder-like next card (exactly like Tinder)
+    nextCard: {
+      opacity: 1 /* Fully visible but behind current card */,
+      scale: 1 /* Same size as current card */,
+      y: 0 /* Same position as current card */,
+      rotateZ: 0 /* No rotation */,
+      filter: "blur(0px)" /* No blur */,
       transition: {
         type: "spring",
         stiffness: 300,
@@ -137,21 +122,37 @@ const Card = ({
   // Effect to handle external swipe triggers (from buttons or parent component)
   React.useEffect(() => {
     if (isCardSwiping && swipeDirection) {
-      const element = document.querySelector(".dev-card");
+      // Use document.querySelector with a more specific selector for better performance
+      const element = document.querySelector(".tinder-current-card .dev-card");
       if (element) {
-        // Apply Tinder-like exit animation based on direction
-        element.style.transition =
-          "transform 0.6s ease-out, opacity 0.5s ease-out";
+        // Set will-change to hint browser for optimization
+        element.style.willChange = "transform, opacity, box-shadow, border";
 
-        if (swipeDirection === "left") {
-          element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-          element.style.opacity = "0";
-          element.style.boxShadow = "0 0 15px 5px rgba(255, 59, 48, 0.6)";
-        } else if (swipeDirection === "right") {
-          element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-          element.style.opacity = "0";
-          element.style.boxShadow = "0 0 15px 5px rgba(52, 199, 89, 0.6)";
-        }
+        // Use requestAnimationFrame for smoother animations
+        requestAnimationFrame(() => {
+          // Apply Tinder-like exit animation based on direction
+          element.style.transition =
+            "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+
+          if (swipeDirection === "left") {
+            element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+            element.style.opacity = "0";
+            element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
+            element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
+          } else if (swipeDirection === "right") {
+            element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+            element.style.opacity = "0";
+            element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
+            element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
+          }
+
+          // Clean up after animation completes
+          setTimeout(() => {
+            if (element) {
+              element.style.willChange = "auto";
+            }
+          }, 500);
+        });
       }
     }
   }, [isCardSwiping, swipeDirection]);
@@ -417,16 +418,16 @@ const Card = ({
 
       {/* Main card */}
       <motion.div
-        className={`dev-card ${isPreview ? "preview-card" : ""}`}
+        className={`dev-card ${isNextCard ? "next-card" : ""}`}
         variants={cardVariants}
         initial="initial"
-        animate={isDeepStack ? "deepStack" : isPreview ? "preview" : "animate"}
+        animate={isNextCard ? "nextCard" : "animate"}
         whileHover={
-          showingNextCard || isPreview ? undefined : "hover"
-        } /* Disable hover animation during transitions and for preview */
+          showingNextCard || isNextCard ? undefined : "hover"
+        } /* Disable hover animation during transitions and for next card */
         drag={
-          showingNextCard || isPreview ? false : "x"
-        } /* Disable dragging during transitions and for preview */
+          showingNextCard || isNextCard ? false : "x"
+        } /* Disable dragging for next card */
         dragConstraints={{
           left: -1000,
           right: 1000,
@@ -547,7 +548,7 @@ const Card = ({
             className="dev-card-image"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.1 }} /* Faster transition */
+            transition={{ duration: 0.05 }} /* Even faster transition */
             loading="eager" /* Force eager loading */
             decoding="sync" /* Decode image synchronously */
             fetchpriority="high" /* High priority fetch */
@@ -559,11 +560,19 @@ const Card = ({
               WebkitBackfaceVisibility: "hidden",
               transform: "translateZ(0)" /* Force GPU acceleration */,
               WebkitTransform: "translateZ(0)",
+              objectFit: "cover" /* Ensure image covers the entire card */,
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: 0,
+              left: 0,
             }}
             onLoad={(e) => {
               // Force browser to render the image at full quality immediately
               e.target.style.opacity = "1";
               e.target.style.filter = "none";
+              // Add a class to indicate the image is loaded
+              e.target.classList.add("loaded");
             }}
           />
           <div className="dev-card-overlay">

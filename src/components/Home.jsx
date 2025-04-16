@@ -170,77 +170,116 @@ const Home = () => {
   // State to track the swipe direction for animation
   const [swipeDirection, setSwipeDirection] = useState(null);
 
-  // Preload all images when component mounts
+  // Preload all images when component mounts with high priority
   useEffect(() => {
     if (users.length > 0) {
-      // Preload all images
-      users.forEach((user) => {
-        const img = new Image();
-        img.src = user.image;
+      // Create a promise for each image load
+      const preloadPromises = users.map((user) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // Resolve even on error to prevent hanging
+          img.src = user.image;
+        });
+      });
+
+      // Wait for all images to load
+      Promise.all(preloadPromises).then(() => {
+        console.log("All images preloaded successfully");
       });
     }
   }, [users]);
 
-  // Preload the next few card images to prevent lag
+  // Preload the next few card images with highest priority to prevent lag
   useEffect(() => {
-    // Preload the next 3 images if available
-    for (let i = 1; i <= 3; i++) {
-      if (currentIndex + i < users.length) {
-        const img = new Image();
-        img.src = users[currentIndex + i].image;
+    if (users.length > 0 && currentIndex < users.length) {
+      // Preload current and next image with highest priority
+      const currentImg = new Image();
+      currentImg.fetchPriority = "high";
+      currentImg.decoding = "sync";
+      currentImg.src = users[currentIndex].image;
+
+      // Preload next image if available
+      if (currentIndex + 1 < users.length) {
+        const nextImg = new Image();
+        nextImg.fetchPriority = "high";
+        nextImg.decoding = "sync";
+        nextImg.src = users[currentIndex + 1].image;
+      }
+
+      // Preload additional images with normal priority
+      for (let i = 2; i <= 4; i++) {
+        if (currentIndex + i < users.length) {
+          const img = new Image();
+          img.src = users[currentIndex + i].image;
+        }
       }
     }
   }, [currentIndex, users]);
 
+  // Pre-calculate next index to avoid state updates during animation
+  const nextCardIndex =
+    currentIndex < users.length - 1 ? currentIndex + 1 : null;
+
   const handleSwipeLeft = () => {
     console.log("Swiped left (pass)");
+    // Prevent multiple swipes
+    if (isCardSwiping) return;
+
     // Set swiping state and direction for animation
     setIsCardSwiping(true);
     setSwipeDirection("left");
     setPrevIndex(currentIndex);
 
-    // Immediately prepare the next card in the background
-    // This makes the transition appear instant
+    // Use double RAF for smoother transitions across browsers
+    // First RAF to prepare the browser
     requestAnimationFrame(() => {
-      // Use requestAnimationFrame for smoother transitions
-      if (currentIndex < users.length - 1) {
-        // Move to the next card
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        // No more cards left
-        setAllCardsFinished(true);
-      }
+      // Second RAF to ensure the animation frame is ready
+      requestAnimationFrame(() => {
+        if (nextCardIndex !== null) {
+          // Move to the next card
+          setCurrentIndex(nextCardIndex);
+        } else {
+          // No more cards left
+          setAllCardsFinished(true);
+        }
 
-      // Reset swiping state after a short delay
-      setTimeout(() => {
-        setIsCardSwiping(false);
-      }, 50);
+        // Reset swiping state after animation completes
+        setTimeout(() => {
+          setIsCardSwiping(false);
+        }, 100); // Slightly longer delay for smoother transition
+      });
     });
   };
 
   const handleSwipeRight = () => {
     console.log("Swiped right (like)");
+    // Prevent multiple swipes
+    if (isCardSwiping) return;
+
     // Set swiping state and direction for animation
     setIsCardSwiping(true);
     setSwipeDirection("right");
     setPrevIndex(currentIndex);
 
-    // Immediately prepare the next card in the background
-    // This makes the transition appear instant
+    // Use double RAF for smoother transitions across browsers
+    // First RAF to prepare the browser
     requestAnimationFrame(() => {
-      // Use requestAnimationFrame for smoother transitions
-      if (currentIndex < users.length - 1) {
-        // Move to the next card
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        // No more cards left
-        setAllCardsFinished(true);
-      }
+      // Second RAF to ensure the animation frame is ready
+      requestAnimationFrame(() => {
+        if (nextCardIndex !== null) {
+          // Move to the next card
+          setCurrentIndex(nextCardIndex);
+        } else {
+          // No more cards left
+          setAllCardsFinished(true);
+        }
 
-      // Reset swiping state after a short delay
-      setTimeout(() => {
-        setIsCardSwiping(false);
-      }, 50);
+        // Reset swiping state after animation completes
+        setTimeout(() => {
+          setIsCardSwiping(false);
+        }, 100); // Slightly longer delay for smoother transition
+      });
     });
   };
 
@@ -1044,45 +1083,23 @@ const Home = () => {
                   </div>
                 </motion.div>
               ) : (
-                <div className="card-stack tinder-stack">
-                  {/* Static background cards (don't move during swipe) */}
-                  <div className="static-card-stack">
-                    {/* Card 3 (bottom of stack) */}
-                    {currentIndex < users.length - 2 && (
-                      <div
-                        className="card-preview card-preview-3"
-                        style={{ zIndex: 1 }}
-                      >
-                        <div className="static-card deep-stack-card">
-                          <img
-                            src={users[currentIndex + 2].image}
-                            alt="Background card"
-                            className="static-card-image"
-                          />
-                        </div>
-                      </div>
-                    )}
+                <div className="tinder-card-stack">
+                  {/* Tinder-style card stack - exactly like Tinder */}
 
-                    {/* Card 2 (middle of stack) */}
-                    {currentIndex < users.length - 1 && (
-                      <div
-                        className="card-preview card-preview-2"
-                        style={{ zIndex: 2 }}
-                      >
-                        <div className="static-card preview-stack-card">
-                          <img
-                            src={users[currentIndex + 1].image}
-                            alt="Next card"
-                            className="static-card-image"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Next cards in stack (visible behind current card) */}
+                  {currentIndex < users.length - 1 && (
+                    <div className="tinder-next-card">
+                      <Card
+                        key={`next-${users[currentIndex + 1].id}`}
+                        user={users[currentIndex + 1]}
+                        isNextCard={true}
+                      />
+                    </div>
+                  )}
 
-                  {/* Current card (top of stack) - only this one moves */}
+                  {/* Current card (top of stack) - this one moves */}
                   {users[currentIndex] && (
-                    <div className="card-current" style={{ zIndex: 3 }}>
+                    <div className="tinder-current-card">
                       <Card
                         key={users[currentIndex].id}
                         user={users[currentIndex]}
