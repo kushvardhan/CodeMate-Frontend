@@ -9,6 +9,7 @@ const Card = ({
   isNextCard = false,
   isCardSwiping = false,
   swipeDirection = null,
+  isPreview = false, // Added for profile preview
 }) => {
   const { darkMode } = useTheme();
 
@@ -438,16 +439,18 @@ const Card = ({
 
       {/* Main card */}
       <motion.div
-        className={`dev-card ${isNextCard ? "next-card" : ""}`}
+        className={`dev-card ${isNextCard ? "next-card" : ""} ${
+          isPreview ? "preview-card" : ""
+        }`}
         variants={cardVariants}
         initial="initial"
         animate={isNextCard ? "nextCard" : "animate"}
         whileHover={
-          showingNextCard || isNextCard ? undefined : "hover"
-        } /* Disable hover animation during transitions and for next card */
+          showingNextCard || isNextCard || isPreview ? undefined : "hover"
+        } /* Disable hover animation during transitions, for next card, and for preview */
         drag={
-          showingNextCard || isNextCard ? false : "x"
-        } /* Disable dragging for next card */
+          showingNextCard || isNextCard || isPreview ? false : "x"
+        } /* Disable dragging for next card and preview */
         dragConstraints={{
           left: -1000,
           right: 1000,
@@ -459,106 +462,113 @@ const Card = ({
           timeConstant: 400 /* Faster time constant for Tinder-like feel */,
           restDelta: 0.5 /* Higher rest delta for Tinder-like feel */,
         }}
-        onDrag={handleDrag}
-        onDragEnd={(event, { offset, velocity }) => {
-          // Don't process drag end if we're already showing the next card
-          if (showingNextCard) return;
+        onDrag={!isPreview ? handleDrag : undefined}
+        onDragEnd={
+          !isPreview
+            ? (event, { offset, velocity }) => {
+                // Don't process drag end if we're already showing the next card
+                if (showingNextCard) return;
 
-          const swipe = offset.x;
-          const swipeVelocity = Math.abs(velocity.x);
-          const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
+                const swipe = offset.x;
+                const swipeVelocity = Math.abs(velocity.x);
+                const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
 
-          // Get the card element directly from the event for better performance
-          const element = event.currentTarget;
+                // Get the card element directly from the event for better performance
+                const element = event.currentTarget;
 
-          // Consider both distance and velocity for a more natural feel (Tinder-like)
-          // Tinder allows quick flicks with less distance
-          const isSwipeLeft =
-            swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
-          const isSwipeRight =
-            swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
+                // Consider both distance and velocity for a more natural feel (Tinder-like)
+                // Tinder allows quick flicks with less distance
+                const isSwipeLeft =
+                  swipe < -swipeThreshold ||
+                  (swipe < -40 && swipeVelocity > 0.8);
+                const isSwipeRight =
+                  swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
 
-          if (isSwipeLeft) {
-            // Prevent multiple swipes
-            if (showingNextCard) return;
-            setShowingNextCard(true);
+                if (isSwipeLeft) {
+                  // Prevent multiple swipes
+                  if (showingNextCard) return;
+                  setShowingNextCard(true);
 
-            // Tinder-like exit animation for left swipe with more pronounced red effect
-            if (element) {
-              // Use will-change to hint browser for optimization
-              element.style.willChange =
-                "transform, opacity, box-shadow, border";
-              // Tinder uses a combination of rotation, translation and opacity
-              element.style.transition =
-                "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
-              element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-              element.style.opacity = "0";
-              // More pronounced red shadow/glow effect
-              element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
-              element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
-            }
+                  // Tinder-like exit animation for left swipe with more pronounced red effect
+                  if (element) {
+                    // Use will-change to hint browser for optimization
+                    element.style.willChange =
+                      "transform, opacity, box-shadow, border";
+                    // Tinder uses a combination of rotation, translation and opacity
+                    element.style.transition =
+                      "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+                    element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+                    element.style.opacity = "0";
+                    // More pronounced red shadow/glow effect
+                    element.style.boxShadow =
+                      "0 0 30px 10px rgba(255, 59, 48, 0.8)";
+                    element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
+                  }
 
-            // Set the swipe direction for animation
-            setDragDirection("left");
+                  // Set the swipe direction for animation
+                  setDragDirection("left");
 
-            // Preload next card image to prevent lag
-            if (onSwipeLeft) {
-              // Trigger the swipe action after a short delay
-              // This is faster than Tinder but still allows for the animation
-              setTimeout(() => {
-                onSwipeLeft();
-                // Reset progress after the card is gone
-                setSwipeProgress(0);
-              }, 200);
-            }
-          } else if (isSwipeRight) {
-            // Prevent multiple swipes
-            if (showingNextCard) return;
-            setShowingNextCard(true);
+                  // Preload next card image to prevent lag
+                  if (onSwipeLeft) {
+                    // Trigger the swipe action after a short delay
+                    // This is faster than Tinder but still allows for the animation
+                    setTimeout(() => {
+                      onSwipeLeft();
+                      // Reset progress after the card is gone
+                      setSwipeProgress(0);
+                    }, 200);
+                  }
+                } else if (isSwipeRight) {
+                  // Prevent multiple swipes
+                  if (showingNextCard) return;
+                  setShowingNextCard(true);
 
-            // Tinder-like exit animation for right swipe with more pronounced green effect
-            if (element) {
-              // Use will-change to hint browser for optimization
-              element.style.willChange =
-                "transform, opacity, box-shadow, border";
-              // Tinder uses a combination of rotation, translation and opacity
-              element.style.transition =
-                "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
-              element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-              element.style.opacity = "0";
-              // More pronounced green shadow/glow effect
-              element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
-              element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
-            }
+                  // Tinder-like exit animation for right swipe with more pronounced green effect
+                  if (element) {
+                    // Use will-change to hint browser for optimization
+                    element.style.willChange =
+                      "transform, opacity, box-shadow, border";
+                    // Tinder uses a combination of rotation, translation and opacity
+                    element.style.transition =
+                      "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+                    element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+                    element.style.opacity = "0";
+                    // More pronounced green shadow/glow effect
+                    element.style.boxShadow =
+                      "0 0 30px 10px rgba(52, 199, 89, 0.8)";
+                    element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
+                  }
 
-            // Set the swipe direction for animation
-            setDragDirection("right");
+                  // Set the swipe direction for animation
+                  setDragDirection("right");
 
-            // Preload next card image to prevent lag
-            if (onSwipeRight) {
-              // Trigger the swipe action after a short delay
-              // This is faster than Tinder but still allows for the animation
-              setTimeout(() => {
-                onSwipeRight();
-                // Reset progress after the card is gone
-                setSwipeProgress(0);
-              }, 200);
-            }
-          } else {
-            // Spring back to center if not swiped far enough (Tinder-like)
-            if (element) {
-              // Tinder uses a spring animation for the return
-              element.style.transition =
-                "transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000)";
-              element.style.transform =
-                "translateX(0) translateY(0) rotate(0deg)";
-              element.style.boxShadow = "";
+                  // Preload next card image to prevent lag
+                  if (onSwipeRight) {
+                    // Trigger the swipe action after a short delay
+                    // This is faster than Tinder but still allows for the animation
+                    setTimeout(() => {
+                      onSwipeRight();
+                      // Reset progress after the card is gone
+                      setSwipeProgress(0);
+                    }, 200);
+                  }
+                } else {
+                  // Spring back to center if not swiped far enough (Tinder-like)
+                  if (element) {
+                    // Tinder uses a spring animation for the return
+                    element.style.transition =
+                      "transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000)";
+                    element.style.transform =
+                      "translateX(0) translateY(0) rotate(0deg)";
+                    element.style.boxShadow = "";
 
-              // Reset progress
-              setSwipeProgress(0);
-            }
-          }
-        }}
+                    // Reset progress
+                    setSwipeProgress(0);
+                  }
+                }
+              }
+            : undefined
+        }
         data-drag={dragDirection}
       >
         <div className="dev-card-content">
