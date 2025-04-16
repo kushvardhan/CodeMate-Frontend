@@ -1333,37 +1333,155 @@ pre,
   align-items: center;
 }
 
-/* Preview card styles */
-.next-card-preview {
+/* Tinder-style card stack */
+.tinder-stack {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Static card stack to prevent stuttering */
+.static-card-stack {
   position: absolute;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Static background cards - Tinder-like sizing */
+.static-card {
+  width: 100%; /* Same width as main card */
+  aspect-ratio: 2/3.2;
+  min-height: 480px;
+  border-radius: 24px;
+  overflow: hidden;
+  background-color: var(--color-card-bg);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transform-origin: center center;
+}
+
+/* Deep stack card (third card) */
+.deep-stack-card {
+  opacity: 0.5;
+  transform: scale(0.85) translateY(25px);
+}
+
+/* Preview stack card (second card) */
+.preview-stack-card {
+  opacity: 0.7;
+  transform: scale(0.95) translateY(10px);
+}
+
+/* Static card images */
+.static-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Preview card styles */
+.card-preview {
+  position: absolute;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
+}
+
+/* Tinder-style card positioning */
+.card-preview-2 {
+  transform: translateY(15px) scale(0.95);
+}
+
+.card-preview-3 {
+  transform: translateY(30px) scale(0.9);
+}
+
+.card-current {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
 }
 
 .preview-card {
   pointer-events: none;
   user-select: none;
-  opacity: 0.8 !important;
+  opacity: 1 !important;
   filter: none !important;
   background-color: var(--color-card-bg) !important;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* No more cards message */
-.no-more-cards {
+/* No more cards message - positioned in place of the card */
+.no-more-cards-in-place {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 2/3.2;
+  min-height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  /* Solid background to hide background icons */
   background: var(--color-card-bg);
   border-radius: 24px;
-  padding: 2.5rem;
-  text-align: center;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
-  max-width: 90%;
-  width: 400px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* Match card dimensions */
+  margin: 0 auto;
+  /* Isolate from background icons */
+  isolation: isolate;
 }
 
-.no-more-cards h2 {
+.no-more-cards-content {
+  width: 100%;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-more-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  color: white;
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+  padding: 1.2rem;
+}
+
+.no-more-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+}
+
+.no-more-cards-centered h2 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -1371,46 +1489,68 @@ pre,
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 2px 10px rgba(79, 70, 229, 0.2);
 }
 
-.no-more-cards p {
+.no-more-cards-centered p {
   font-size: 1.2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   opacity: 0.8;
-}
-
-.reset-button {
-  background: linear-gradient(to right, #4f46e5, #9333ea);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.reset-button:hover {
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+  max-width: 80%;
+  line-height: 1.6;
 }
 
 /* Dark mode adjustments */
-.dark .no-more-cards {
+.dark .no-more-cards-centered {
   background: #1e293b;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.dark .no-more-cards h2 {
+.dark .no-more-cards-content {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.8),
+    rgba(15, 23, 42, 0.9)
+  );
+}
+
+.dark .no-more-icon {
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  box-shadow: 0 10px 25px rgba(129, 140, 248, 0.4);
+}
+
+.dark .no-more-cards-centered h2 {
   background: linear-gradient(to right, #818cf8, #c084fc);
   -webkit-background-clip: text;
   background-clip: text;
+  text-shadow: 0 2px 10px rgba(129, 140, 248, 0.3);
 }
 
-.dark .reset-button {
-  background: linear-gradient(to right, #818cf8, #c084fc);
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .no-more-cards-centered {
+    max-width: 90%;
+    padding: 0;
+  }
+
+  .no-more-cards-content {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .no-more-icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1.2rem;
+  }
+
+  .no-more-cards-centered h2 {
+    font-size: 2rem;
+  }
+
+  .no-more-cards-centered p {
+    font-size: 1rem;
+    max-width: 95%;
+  }
 }
 
 .swipe-indicators {
@@ -2299,6 +2439,18 @@ pre,
 .dark-mode .swipe-right {
   background-color: var(--color-dark-card);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Stats container */
+.stats-container {
+  position: relative;
+  margin-top: 2rem !important;
+  margin-bottom: 3rem !important;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
 .stats-card {

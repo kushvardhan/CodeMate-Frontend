@@ -163,6 +163,12 @@ const Home = () => {
 
   // State to track if all cards have been swiped
   const [allCardsFinished, setAllCardsFinished] = useState(false);
+  // State to track if a card is being swiped
+  const [isCardSwiping, setIsCardSwiping] = useState(false);
+  // State to track the previous index for animation
+  const [prevIndex, setPrevIndex] = useState(null);
+  // State to track the swipe direction for animation
+  const [swipeDirection, setSwipeDirection] = useState(null);
 
   // Preload all images when component mounts
   useEffect(() => {
@@ -175,33 +181,70 @@ const Home = () => {
     }
   }, [users]);
 
+  // Preload the next few card images to prevent lag
+  useEffect(() => {
+    // Preload the next 3 images if available
+    for (let i = 1; i <= 3; i++) {
+      if (currentIndex + i < users.length) {
+        const img = new Image();
+        img.src = users[currentIndex + i].image;
+      }
+    }
+  }, [currentIndex, users]);
+
   const handleSwipeLeft = () => {
     console.log("Swiped left (pass)");
-    if (currentIndex < users.length - 1) {
-      // Move to the next card
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      // No more cards left
-      setAllCardsFinished(true);
-    }
+    // Set swiping state and direction for animation
+    setIsCardSwiping(true);
+    setSwipeDirection("left");
+    setPrevIndex(currentIndex);
+
+    // Immediately prepare the next card in the background
+    // This makes the transition appear instant
+    requestAnimationFrame(() => {
+      // Use requestAnimationFrame for smoother transitions
+      if (currentIndex < users.length - 1) {
+        // Move to the next card
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        // No more cards left
+        setAllCardsFinished(true);
+      }
+
+      // Reset swiping state after a short delay
+      setTimeout(() => {
+        setIsCardSwiping(false);
+      }, 50);
+    });
   };
 
   const handleSwipeRight = () => {
     console.log("Swiped right (like)");
-    if (currentIndex < users.length - 1) {
-      // Move to the next card
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      // No more cards left
-      setAllCardsFinished(true);
-    }
+    // Set swiping state and direction for animation
+    setIsCardSwiping(true);
+    setSwipeDirection("right");
+    setPrevIndex(currentIndex);
+
+    // Immediately prepare the next card in the background
+    // This makes the transition appear instant
+    requestAnimationFrame(() => {
+      // Use requestAnimationFrame for smoother transitions
+      if (currentIndex < users.length - 1) {
+        // Move to the next card
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        // No more cards left
+        setAllCardsFinished(true);
+      }
+
+      // Reset swiping state after a short delay
+      setTimeout(() => {
+        setIsCardSwiping(false);
+      }, 50);
+    });
   };
 
-  // Function to reset and start over
-  const handleReset = () => {
-    setCurrentIndex(0);
-    setAllCardsFinished(false);
-  };
+  // We removed the reset button, so users will need to refresh the page to start over
 
   const getBackgroundClass = () => {
     return "";
@@ -956,43 +999,99 @@ const Home = () => {
             <div className="flex justify-center items-center">
               {allCardsFinished ? (
                 <motion.div
-                  className="no-more-cards"
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  className="no-more-cards-in-place"
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                  layoutId="card-container"
                 >
-                  <h2>No More Profiles</h2>
-                  <p>You've viewed all available developers</p>
-                  <motion.button
-                    className="reset-button"
-                    onClick={handleReset}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Start Over
-                  </motion.button>
+                  <div className="no-more-cards-content">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2, duration: 0.5 }}
+                      className="no-more-icon"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                      </svg>
+                    </motion.div>
+                    <motion.h2
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3, duration: 0.5 }}
+                    >
+                      No More Profiles
+                    </motion.h2>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4, duration: 0.5 }}
+                    >
+                      You've viewed all available developers
+                    </motion.p>
+                  </div>
                 </motion.div>
               ) : (
-                <div className="card-stack">
-                  {/* Next card (visible in background) */}
-                  {currentIndex < users.length - 1 && (
-                    <div className="next-card-preview">
+                <div className="card-stack tinder-stack">
+                  {/* Static background cards (don't move during swipe) */}
+                  <div className="static-card-stack">
+                    {/* Card 3 (bottom of stack) */}
+                    {currentIndex < users.length - 2 && (
+                      <div
+                        className="card-preview card-preview-3"
+                        style={{ zIndex: 1 }}
+                      >
+                        <div className="static-card deep-stack-card">
+                          <img
+                            src={users[currentIndex + 2].image}
+                            alt="Background card"
+                            className="static-card-image"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Card 2 (middle of stack) */}
+                    {currentIndex < users.length - 1 && (
+                      <div
+                        className="card-preview card-preview-2"
+                        style={{ zIndex: 2 }}
+                      >
+                        <div className="static-card preview-stack-card">
+                          <img
+                            src={users[currentIndex + 1].image}
+                            alt="Next card"
+                            className="static-card-image"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Current card (top of stack) - only this one moves */}
+                  {users[currentIndex] && (
+                    <div className="card-current" style={{ zIndex: 3 }}>
                       <Card
-                        key={`next-${users[currentIndex + 1].id}`}
-                        user={users[currentIndex + 1]}
-                        isPreview={true}
+                        key={users[currentIndex].id}
+                        user={users[currentIndex]}
+                        onSwipeLeft={handleSwipeLeft}
+                        onSwipeRight={handleSwipeRight}
+                        isCardSwiping={isCardSwiping}
+                        swipeDirection={swipeDirection}
                       />
                     </div>
-                  )}
-
-                  {/* Current card */}
-                  {users[currentIndex] && (
-                    <Card
-                      key={users[currentIndex].id}
-                      user={users[currentIndex]}
-                      onSwipeLeft={handleSwipeLeft}
-                      onSwipeRight={handleSwipeRight}
-                    />
                   )}
                 </div>
               )}
@@ -1000,10 +1099,11 @@ const Home = () => {
           </div>
 
           <motion.div
-            className="flex justify-center gap-12 mt-8 mb-12"
+            className="flex justify-center gap-12 mt-8 mb-12 stats-container"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
+            layout
           >
             <motion.div
               className="stats-card"

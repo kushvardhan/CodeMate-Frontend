@@ -2,7 +2,15 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
+const Card = ({
+  user,
+  onSwipeLeft,
+  onSwipeRight,
+  isPreview = false,
+  isDeepStack = false,
+  isCardSwiping = false,
+  swipeDirection = null,
+}) => {
   const { darkMode } = useTheme();
 
   // Default user data if not provided
@@ -54,17 +62,32 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
         duration: 0.5,
       },
     },
+    // Tinder-like preview card (second in stack)
     preview: {
-      opacity: 0.5 /* Lower opacity for background card */,
-      scale: 0.9,
-      y: 40,
-      rotateZ: -2,
-      filter: "blur(2px)",
+      opacity: 0.9 /* Tinder uses higher opacity for stack */,
+      scale: 0.95 /* Tinder uses subtle scaling */,
+      y: 15 /* Tinder shows just the top of the next card */,
+      rotateZ: 0 /* Tinder keeps cards straight in the stack */,
+      filter: "blur(0px)" /* Tinder doesn't blur the stack */,
       transition: {
         type: "spring",
-        stiffness: 50,
-        damping: 10,
-        duration: 0.3,
+        stiffness: 300,
+        damping: 30,
+        duration: 0.2,
+      },
+    },
+    // Tinder-like deep stack card (third in stack)
+    deepStack: {
+      opacity: 0.7,
+      scale: 0.9,
+      y: 30,
+      rotateZ: 0,
+      filter: "blur(0px)",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        duration: 0.2,
       },
     },
     hover: {
@@ -111,7 +134,27 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
   // State to track drag direction
   const [dragDirection, setDragDirection] = React.useState(null);
 
-  // These functions are now called directly in onDragEnd
+  // Effect to handle external swipe triggers (from buttons or parent component)
+  React.useEffect(() => {
+    if (isCardSwiping && swipeDirection) {
+      const element = document.querySelector(".dev-card");
+      if (element) {
+        // Apply Tinder-like exit animation based on direction
+        element.style.transition =
+          "transform 0.6s ease-out, opacity 0.5s ease-out";
+
+        if (swipeDirection === "left") {
+          element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 15px 5px rgba(255, 59, 48, 0.6)";
+        } else if (swipeDirection === "right") {
+          element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 15px 5px rgba(52, 199, 89, 0.6)";
+        }
+      }
+    }
+  }, [isCardSwiping, swipeDirection]);
 
   // State to track swipe progress (0-100%)
   const [swipeProgress, setSwipeProgress] = React.useState(0);
@@ -119,40 +162,72 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
   // State to track if we're showing the next card
   const [showingNextCard, setShowingNextCard] = React.useState(false);
 
-  // Handle drag with Tinder-like behavior
-  const handleDrag = (_, info) => {
+  // Optimized drag handler to reduce stuttering
+  const handleDrag = (event, info) => {
     // Don't process drag if we're already showing the next card
     if (showingNextCard) return;
 
     // Calculate swipe progress as a percentage (0-100)
-    const swipeThreshold = 150; // Lower threshold for easier swiping (Tinder-like)
+    const swipeThreshold = 100; // Lower threshold for easier swiping (Tinder-like)
 
     // Calculate rotation based on drag distance (Tinder-like)
-    // Max rotation of 15 degrees
-    const rotate = info.offset.x * 0.1; // 0.1 is a sensitivity factor
+    // Max rotation of 20 degrees (Tinder uses about 15-20 degrees)
+    const rotate = Math.min(Math.max(info.offset.x * 0.1, -20), 20); // 0.1 is a sensitivity factor, clamp between -20 and 20 degrees
 
-    // Apply rotation directly to the card
-    const element = document.querySelector(".dev-card");
+    // Get the card element directly from the event target for better performance
+    // This avoids querySelector which can cause performance issues
+    const element = event.currentTarget;
     if (element) {
-      // Apply rotation and horizontal movement
-      element.style.transform = `translateX(${info.offset.x}px) rotate(${rotate}deg)`;
+      // Apply rotation and horizontal movement with slight vertical lift (Tinder-like)
+      // Use transform for better performance
+      element.style.transform = `translateX(${info.offset.x}px) translateY(${
+        -Math.abs(info.offset.x) * 0.05
+      }px) rotate(${rotate}deg)`;
+
+      // Apply color overlay based on direction (Tinder-like)
+      if (info.offset.x > 50) {
+        // Green overlay for right swipe (like)
+        // Pre-calculate the opacity value to reduce calculations during drag
+        const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
+        // More pronounced green shadow/glow effect
+        element.style.boxShadow = `0 0 20px 5px rgba(52, 199, 89, ${opacity})`;
+        element.style.borderColor = `rgba(52, 199, 89, ${opacity})`;
+        // Add a subtle green border
+        element.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
+      } else if (info.offset.x < -50) {
+        // Red overlay for left swipe (nope)
+        // Pre-calculate the opacity value to reduce calculations during drag
+        const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
+        // More pronounced red shadow/glow effect
+        element.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
+        // Add a subtle red border
+        element.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
+      } else {
+        // Reset overlay
+        element.style.boxShadow = "";
+        element.style.border = "none";
+      }
     }
 
-    // Calculate progress with dampened velocity influence
-    let progress = Math.min(
-      (Math.abs(info.offset.x) / swipeThreshold) * 100,
-      100
+    // Calculate progress with dampened velocity influence (Tinder-like)
+    // Use Math.floor to reduce unnecessary state updates for small changes
+    const progress = Math.floor(
+      Math.min((Math.abs(info.offset.x) / swipeThreshold) * 100, 100)
     );
 
-    // Set the progress
-    setSwipeProgress(progress);
+    // Only update state if progress has changed significantly to reduce renders
+    if (Math.abs(progress - swipeProgress) > 5) {
+      setSwipeProgress(progress);
+    }
 
-    // Set direction based on drag direction
-    if (info.offset.x > 20) {
-      setDragDirection("right");
-    } else if (info.offset.x < -20) {
-      setDragDirection("left");
-    } else {
+    // Set direction based on drag direction (Tinder-like)
+    // Use a larger threshold to reduce flickering between states
+    if (info.offset.x > 30) {
+      if (dragDirection !== "right") setDragDirection("right");
+    } else if (info.offset.x < -30) {
+      if (dragDirection !== "left") setDragDirection("left");
+    } else if (dragDirection !== null && Math.abs(info.offset.x) < 10) {
+      // Only reset when very close to center and direction is already set
       setDragDirection(null);
     }
   };
@@ -345,7 +420,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
         className={`dev-card ${isPreview ? "preview-card" : ""}`}
         variants={cardVariants}
         initial="initial"
-        animate={isPreview ? "preview" : "animate"}
+        animate={isDeepStack ? "deepStack" : isPreview ? "preview" : "animate"}
         whileHover={
           showingNextCard || isPreview ? undefined : "hover"
         } /* Disable hover animation during transitions and for preview */
@@ -364,66 +439,104 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
           restDelta: 0.5 /* Higher rest delta for Tinder-like feel */,
         }}
         onDrag={handleDrag}
-        onDragEnd={(_, { offset, velocity }) => {
+        onDragEnd={(event, { offset, velocity }) => {
           // Don't process drag end if we're already showing the next card
           if (showingNextCard) return;
 
           const swipe = offset.x;
           const swipeVelocity = Math.abs(velocity.x);
-          const swipeThreshold = 100; // Lower threshold for easier swiping
+          const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
 
-          // Get the card element
-          const element = document.querySelector(".dev-card");
+          // Get the card element directly from the event for better performance
+          const element = event.currentTarget;
 
           // Consider both distance and velocity for a more natural feel (Tinder-like)
+          // Tinder allows quick flicks with less distance
           const isSwipeLeft =
-            swipe < -swipeThreshold || (swipe < -50 && swipeVelocity > 1.0);
+            swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
           const isSwipeRight =
-            swipe > swipeThreshold || (swipe > 50 && swipeVelocity > 1.0);
+            swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
 
           if (isSwipeLeft) {
-            // Tinder-like exit animation for left swipe
+            // Prevent multiple swipes
+            if (showingNextCard) return;
+            setShowingNextCard(true);
+
+            // Tinder-like exit animation for left swipe with more pronounced red effect
             if (element) {
-              element.style.transition = "transform 0.5s ease-out";
-              element.style.transform = `translateX(-1000px) rotate(-30deg)`;
+              // Use will-change to hint browser for optimization
+              element.style.willChange =
+                "transform, opacity, box-shadow, border";
+              // Tinder uses a combination of rotation, translation and opacity
+              element.style.transition =
+                "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+              element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+              element.style.opacity = "0";
+              // More pronounced red shadow/glow effect
+              element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
+              element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
             }
 
-            // Mark that we're showing the next card
-            setShowingNextCard(true);
             // Set the swipe direction for animation
             setDragDirection("left");
 
-            // Trigger the swipe action after animation
-            setTimeout(() => {
-              onSwipeLeft();
-            }, 200);
+            // Preload next card image to prevent lag
+            if (onSwipeLeft) {
+              // Trigger the swipe action after a short delay
+              // This is faster than Tinder but still allows for the animation
+              setTimeout(() => {
+                onSwipeLeft();
+                // Reset progress after the card is gone
+                setSwipeProgress(0);
+              }, 200);
+            }
           } else if (isSwipeRight) {
-            // Tinder-like exit animation for right swipe
+            // Prevent multiple swipes
+            if (showingNextCard) return;
+            setShowingNextCard(true);
+
+            // Tinder-like exit animation for right swipe with more pronounced green effect
             if (element) {
-              element.style.transition = "transform 0.5s ease-out";
-              element.style.transform = `translateX(1000px) rotate(30deg)`;
+              // Use will-change to hint browser for optimization
+              element.style.willChange =
+                "transform, opacity, box-shadow, border";
+              // Tinder uses a combination of rotation, translation and opacity
+              element.style.transition =
+                "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+              element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+              element.style.opacity = "0";
+              // More pronounced green shadow/glow effect
+              element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
+              element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
             }
 
-            // Mark that we're showing the next card
-            setShowingNextCard(true);
             // Set the swipe direction for animation
             setDragDirection("right");
 
-            // Trigger the swipe action after animation
-            setTimeout(() => {
-              onSwipeRight();
-            }, 200);
+            // Preload next card image to prevent lag
+            if (onSwipeRight) {
+              // Trigger the swipe action after a short delay
+              // This is faster than Tinder but still allows for the animation
+              setTimeout(() => {
+                onSwipeRight();
+                // Reset progress after the card is gone
+                setSwipeProgress(0);
+              }, 200);
+            }
           } else {
             // Spring back to center if not swiped far enough (Tinder-like)
             if (element) {
+              // Tinder uses a spring animation for the return
               element.style.transition =
-                "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-              element.style.transform = "translateX(0) rotate(0deg)";
+                "transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000)";
+              element.style.transform =
+                "translateX(0) translateY(0) rotate(0deg)";
+              element.style.boxShadow = "";
+
+              // Reset progress
+              setSwipeProgress(0);
             }
           }
-
-          // Reset progress
-          setSwipeProgress(0);
         }}
         data-drag={dragDirection}
       >
@@ -434,10 +547,19 @@ const Card = ({ user, onSwipeLeft, onSwipeRight, isPreview = false }) => {
             className="dev-card-image"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.1 }} /* Faster transition */
             loading="eager" /* Force eager loading */
             decoding="sync" /* Decode image synchronously */
             fetchpriority="high" /* High priority fetch */
+            draggable="false" /* Prevent image dragging for better performance */
+            style={{
+              willChange:
+                "transform, opacity" /* Hint browser for optimization */,
+              backfaceVisibility: "hidden" /* Prevent flickering */,
+              WebkitBackfaceVisibility: "hidden",
+              transform: "translateZ(0)" /* Force GPU acceleration */,
+              WebkitTransform: "translateZ(0)",
+            }}
             onLoad={(e) => {
               // Force browser to render the image at full quality immediately
               e.target.style.opacity = "1";
