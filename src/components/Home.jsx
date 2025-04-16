@@ -170,6 +170,317 @@ const Home = () => {
         <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 opacity-10 dark:opacity-5 blur-3xl animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-1/4 right-1/3 w-72 h-72 rounded-full bg-gradient-to-r from-green-400 to-cyan-500 opacity-10 dark:opacity-5 blur-3xl animate-blob animation-delay-4000"></div>
 
+        {/* Colorful glowy icons background */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Code icons */}
+          <motion.div className="absolute top-[10%] left-[15%] transform -translate-x-1/2 -translate-y-1/2">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              className="icon-glow code-icon"
+            >
+              <path
+                d="M16 18L22 12L16 6"
+                stroke="url(#code-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8 6L2 12L8 18"
+                stroke="url(#code-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="code-gradient-1"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#4F46E5" />
+                  <stop offset="100%" stopColor="#818CF8" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute top-[25%] right-[20%] transform translate-x-1/2 -translate-y-1/2"
+            animate={{ y: [0, -10, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+          >
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              className="icon-glow code-icon"
+            >
+              <path
+                d="M7 8L3 12L7 16"
+                stroke="url(#code-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17 8L21 12L17 16"
+                stroke="url(#code-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 4L10 20"
+                stroke="url(#code-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="code-gradient-2"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#8B5CF6" />
+                  <stop offset="100%" stopColor="#C084FC" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          {/* People icons */}
+          <motion.div
+            className="absolute top-[40%] left-[25%] transform -translate-x-1/2 -translate-y-1/2"
+            animate={{ y: [0, 10, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{
+              repeat: Infinity,
+              duration: 6,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          >
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 24 24"
+              className="icon-glow people-icon"
+            >
+              <path
+                d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21"
+                stroke="url(#people-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z"
+                stroke="url(#people-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M23 21V19C22.9986 17.1771 21.765 15.5857 20 15.13"
+                stroke="url(#people-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M16 3.13C17.7699 3.58317 19.0078 5.17799 19.0078 7.005C19.0078 8.83201 17.7699 10.4268 16 10.88"
+                stroke="url(#people-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="people-gradient-1"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#EC4899" />
+                  <stop offset="100%" stopColor="#F472B6" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-[30%] right-[30%] transform translate-x-1/2 translate-y-1/2"
+            animate={{ y: [0, -15, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{
+              repeat: Infinity,
+              duration: 7,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          >
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              className="icon-glow people-icon"
+            >
+              <path
+                d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"
+                stroke="url(#people-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"
+                stroke="url(#people-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="people-gradient-2"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#0EA5E9" />
+                  <stop offset="100%" stopColor="#38BDF8" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          {/* Connection icons */}
+          <motion.div
+            className="absolute top-[60%] left-[20%] transform -translate-x-1/2 -translate-y-1/2"
+            animate={{ y: [0, 8, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{
+              repeat: Infinity,
+              duration: 5.5,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
+          >
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 24 24"
+              className="icon-glow connection-icon"
+            >
+              <path
+                d="M6 9H4.5C3.12 9 2 7.88 2 6.5C2 5.12 3.12 4 4.5 4H6"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M18 9H19.5C20.88 9 22 7.88 22 6.5C22 5.12 20.88 4 19.5 4H18"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 4H18"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 20H4.5C3.12 20 2 18.88 2 17.5C2 16.12 3.12 15 4.5 15H6"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M18 20H19.5C20.88 20 22 18.88 22 17.5C22 16.12 20.88 15 19.5 15H18"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 15H18"
+                stroke="url(#connection-gradient-1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="connection-gradient-1"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#10B981" />
+                  <stop offset="100%" stopColor="#34D399" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-[20%] right-[15%] transform translate-x-1/2 translate-y-1/2"
+            animate={{ y: [0, -12, 0], opacity: [0.7, 1, 0.7] }}
+            transition={{
+              repeat: Infinity,
+              duration: 6.5,
+              ease: "easeInOut",
+              delay: 1.5,
+            }}
+          >
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              className="icon-glow connection-icon"
+            >
+              <path
+                d="M9 11L12 14L22 4"
+                stroke="url(#connection-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16"
+                stroke="url(#connection-gradient-2)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="connection-gradient-2"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#F59E0B" />
+                  <stop offset="100%" stopColor="#FBBF24" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+        </div>
+
         {/* Infinity symbol with glow */}
         <motion.div
           className="absolute top-[75%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
