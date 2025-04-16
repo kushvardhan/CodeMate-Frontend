@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,31 +17,31 @@ const Nav = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initial check
     checkIfMobile();
-    
+
     // Add event listener
     window.addEventListener("resize", checkIfMobile);
-    
+
     // Cleanup
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
-  
+
   // Check if very small screen
   const [isVerySmallScreen, setIsVerySmallScreen] = useState(false);
-  
+
   useEffect(() => {
     const checkScreenSize = () => {
       setIsVerySmallScreen(window.innerWidth < 400);
     };
-    
+
     // Initial check
     checkScreenSize();
-    
+
     // Add event listener
     window.addEventListener("resize", checkScreenSize);
-    
+
     // Cleanup
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
@@ -55,12 +56,12 @@ const Nav = () => {
 
     // Add event listener to document
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -182,28 +183,132 @@ const Nav = () => {
                   </svg>
                 </div>
                 {isMenuOpen && (
-                  <ul
+                  <motion.ul
                     tabIndex={0}
                     className={`dropdown-menu ${darkMode ? "dark" : "light"}`}
+                    initial={{ opacity: 0, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <li>
-                      <Link to="/profile">Profile</Link>
-                    </li>
-                    <li>
-                      <Link to="/connections">Connections</Link>
-                    </li>
-                    <li>
-                      <Link to="/requests">Requests</Link>
-                    </li>
-                    <li>
+                    <motion.li
+                      initial={{ opacity: 0, x: -100 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 80,
+                        damping: 20,
+                        delay: 0.1,
+                      }}
+                    >
+                      <Link to="/profile">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Profile
+                      </Link>
+                    </motion.li>
+                    <motion.li
+                      initial={{ opacity: 0, x: -120 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 80,
+                        damping: 20,
+                        delay: 0.2,
+                      }}
+                    >
+                      <Link to="/connections">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Connections
+                      </Link>
+                    </motion.li>
+                    <motion.li
+                      initial={{ opacity: 0, x: -140 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 80,
+                        damping: 20,
+                        delay: 0.3,
+                      }}
+                    >
+                      <Link to="/requests">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        Requests
+                      </Link>
+                    </motion.li>
+                    <motion.li
+                      initial={{ opacity: 0, x: -160 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 80,
+                        damping: 20,
+                        delay: 0.4,
+                      }}
+                    >
                       <a
                         onClick={() => navigate("/login")}
                         className="logout-link"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                          <polyline points="16 17 21 12 16 7"></polyline>
+                          <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
                         Logout
                       </a>
-                    </li>
-                  </ul>
+                    </motion.li>
+                  </motion.ul>
                 )}
               </div>
             </div>
@@ -254,7 +359,7 @@ const Nav = () => {
                     )}
                   </button>
                 </div>
-                
+
                 {/* CodeMate in center */}
                 <div className="navbar-center-mobile">
                   <Link to="/" className="logo-link">
@@ -295,7 +400,7 @@ const Nav = () => {
                     <span className="logo-text">CodeMate</span>
                   </Link>
                 </div>
-                
+
                 {/* Menu hamburger on right */}
                 <div className="navbar-right-mobile">
                   <div
@@ -329,7 +434,7 @@ const Nav = () => {
                 </div>
               </>
             )}
-            
+
             {/* For screens smaller than 400px */}
             {isVerySmallScreen && (
               <>
@@ -414,7 +519,7 @@ const Nav = () => {
                       )}
                     </button>
                   </div>
-                  
+
                   {/* Menu hamburger below toggle */}
                   <div
                     className={`menu-dropdown ${isMenuOpen ? "open" : ""}`}
@@ -447,31 +552,132 @@ const Nav = () => {
                 </div>
               </>
             )}
-            
+
             {/* Dropdown menu (shared for both layouts) */}
             {isMenuOpen && (
-              <ul
+              <motion.ul
                 tabIndex={0}
                 className={`dropdown-menu ${darkMode ? "dark" : "light"}`}
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <li>
-                  <Link to="/profile">Profile</Link>
-                </li>
-                <li>
-                  <Link to="/connections">Connections</Link>
-                </li>
-                <li>
-                  <Link to="/requests">Requests</Link>
-                </li>
-                <li>
-                  <a
-                    onClick={() => navigate("/login")}
-                    className="logout-link"
-                  >
+                <motion.li
+                  initial={{ opacity: 0, x: -100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 80,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                >
+                  <Link to="/profile">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                  </Link>
+                </motion.li>
+                <motion.li
+                  initial={{ opacity: 0, x: -120 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 80,
+                    damping: 20,
+                    delay: 0.2,
+                  }}
+                >
+                  <Link to="/connections">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Connections
+                  </Link>
+                </motion.li>
+                <motion.li
+                  initial={{ opacity: 0, x: -140 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 80,
+                    damping: 20,
+                    delay: 0.3,
+                  }}
+                >
+                  <Link to="/requests">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Requests
+                  </Link>
+                </motion.li>
+                <motion.li
+                  initial={{ opacity: 0, x: -160 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 80,
+                    damping: 20,
+                    delay: 0.4,
+                  }}
+                >
+                  <a onClick={() => navigate("/login")} className="logout-link">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
                     Logout
                   </a>
-                </li>
-              </ul>
+                </motion.li>
+              </motion.ul>
             )}
           </>
         )}
