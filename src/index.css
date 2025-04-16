@@ -1314,12 +1314,13 @@ pre,
 /* Card Container and Indicators */
 .card-container {
   position: relative;
-  width: 25%;
-  max-width: 320px;
-  min-width: 250px;
+  width: 23%; /* Slightly smaller */
+  max-width: 300px; /* Slightly smaller */
+  min-width: 240px; /* Slightly smaller */
   margin: 0 auto;
   perspective: 1000px;
   height: 100%;
+  transform-origin: top center; /* Make swipe happen from top */
 }
 
 .swipe-indicators {
@@ -1464,20 +1465,22 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 100%;
-  aspect-ratio: 2/3.25; /* Increased length by ~8% total */
-  min-height: 470px; /* Increased minimum height */
+  width: 115%; /* Slightly smaller than before */
+  aspect-ratio: 2/3.3; /* Slightly shorter */
+  min-height: 500px; /* Slightly smaller minimum height */
   border-radius: 24px;
   overflow: hidden;
   background-color: var(--color-card-bg);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s ease;
   position: relative;
   cursor: grab;
   touch-action: pan-y;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform;
+  transform-origin: top center; /* Make swipe happen from top */
 }
 
 .dev-card:active {
@@ -1524,7 +1527,9 @@ pre,
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
-  filter: brightness(0.9) contrast(1.1) saturate(1.1);
+  filter: brightness(0.95) contrast(1.05) saturate(1.05);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   /* Additional processing for better text visibility */
   &::after {
     content: "";
@@ -1552,17 +1557,17 @@ pre,
     to top,
     rgba(0, 0, 0, 0.98) 0%,
     rgba(0, 0, 0, 0.9) 15%,
-    rgba(0, 0, 0, 0.7) 30%,
-    rgba(0, 0, 0, 0.5) 45%,
-    rgba(0, 0, 0, 0.3) 60%,
-    rgba(0, 0, 0, 0.1) 80%,
+    rgba(0, 0, 0, 0.8) 30%,
+    rgba(0, 0, 0, 0.6) 45%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.2) 80%,
+    rgba(0, 0, 0, 0.1) 90%,
     transparent 100%
   );
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* Remove backdrop filter */
   /* Additional overlay for better text visibility */
   &::after {
     content: "";
@@ -1570,10 +1575,11 @@ pre,
     bottom: 0;
     left: 0;
     right: 0;
-    height: 45%;
+    height: 60%;
     background: linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
       transparent 100%
     );
     z-index: 1;
@@ -1613,7 +1619,8 @@ pre,
   line-height: 1.2;
 }
 
-.dev-card-location {
+.dev-card-location,
+.dev-card-age-gender {
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -1624,9 +1631,22 @@ pre,
   color: rgba(255, 255, 255, 0.9);
 }
 
-.dev-card-location svg {
+.dev-card-location svg,
+.dev-card-age-gender svg {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   color: #5ac8fa;
+}
+
+.dev-card-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.1rem;
+}
+
+.dev-card-age-gender svg {
+  color: #ff9500;
 }
 
 .card-content {
@@ -2510,32 +2530,32 @@ pre,
 
 .whatsapp-bg-icon.code {
   color: #4f46e5;
-  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.6));
+  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
 }
 
 .whatsapp-bg-icon.people {
   color: #ec4899;
-  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6));
+  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
 }
 
 .whatsapp-bg-icon.connection {
   color: #10b981;
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
 }
 
 .dark .whatsapp-bg-icon.code {
   color: #818cf8;
-  filter: drop-shadow(0 0 10px rgba(129, 140, 248, 0.7));
+  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.5));
 }
 
 .dark .whatsapp-bg-icon.people {
   color: #f472b6;
-  filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.7));
+  filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.5));
 }
 
 .dark .whatsapp-bg-icon.connection {
   color: #34d399;
-  filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.7));
+  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.5));
 }
 
 @keyframes float-slow {
@@ -2552,16 +2572,16 @@ pre,
 
 @keyframes pulse-glow {
   0% {
-    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
-    opacity: 0.4;
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.3;
   }
   50% {
-    filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.7));
-    opacity: 0.6;
+    filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.5));
+    opacity: 0.5;
   }
   100% {
-    filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
-    opacity: 0.4;
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.3;
   }
 }
 

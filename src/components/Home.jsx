@@ -15,44 +15,146 @@ const Home = () => {
       {
         id: 1,
         name: "Jane Smith",
-        image: "https://randomuser.me/api/portraits/women/44.jpg",
-        address: "San Francisco, CA",
-        description:
-          "Full-stack developer with 5 years of experience in React and Node.js",
+        image:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "San Francisco, CA",
+        bio: "Full-stack developer with 5 years of experience in React and Node.js",
         skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"],
+        age: 28,
+        gender: "Female",
       },
       {
         id: 2,
         name: "John Doe",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        address: "New York, NY",
-        description:
-          "Frontend developer specializing in React and modern JavaScript",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "New York, NY",
+        bio: "Frontend developer specializing in React and modern JavaScript",
         skills: ["React", "JavaScript", "CSS", "HTML", "Redux"],
+        age: 32,
+        gender: "Male",
       },
       {
         id: 3,
         name: "Emily Johnson",
-        image: "https://randomuser.me/api/portraits/women/33.jpg",
-        address: "Austin, TX",
-        description: "Backend developer with expertise in Python and Django",
+        image:
+          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1976&q=100",
+        location: "Austin, TX",
+        bio: "Backend developer with expertise in Python and Django",
         skills: ["Python", "Django", "PostgreSQL", "Docker", "AWS"],
+        age: 26,
+        gender: "Female",
       },
       {
         id: 4,
         name: "Michael Brown",
-        image: "https://randomuser.me/api/portraits/men/22.jpg",
-        address: "Seattle, WA",
-        description: "Mobile developer focused on React Native and Flutter",
+        image:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "Seattle, WA",
+        bio: "Mobile developer focused on React Native and Flutter",
         skills: ["React Native", "Flutter", "JavaScript", "Dart", "Firebase"],
+        age: 30,
+        gender: "Male",
       },
       {
         id: 5,
         name: "Sarah Wilson",
-        image: "https://randomuser.me/api/portraits/women/56.jpg",
-        address: "Chicago, IL",
-        description: "DevOps engineer with strong CI/CD pipeline experience",
+        image:
+          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1976&q=100",
+        location: "Chicago, IL",
+        bio: "DevOps engineer with strong CI/CD pipeline experience",
         skills: ["Docker", "Kubernetes", "Jenkins", "AWS", "Terraform"],
+        age: 29,
+        gender: "Female",
+      },
+      {
+        id: 6,
+        name: "David Chen",
+        image:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "Boston, MA",
+        bio: "Data scientist specializing in machine learning and AI applications",
+        skills: ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "SQL"],
+        age: 34,
+        gender: "Male",
+      },
+      {
+        id: 7,
+        name: "Olivia Martinez",
+        image:
+          "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1976&q=100",
+        location: "Miami, FL",
+        bio: "UX/UI designer with a passion for creating intuitive user experiences",
+        skills: ["Figma", "Adobe XD", "Sketch", "HTML/CSS", "Prototyping"],
+        age: 27,
+        gender: "Female",
+      },
+      {
+        id: 8,
+        name: "James Wilson",
+        image:
+          "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "Denver, CO",
+        bio: "Blockchain developer working on decentralized applications",
+        skills: [
+          "Solidity",
+          "Ethereum",
+          "Web3.js",
+          "Smart Contracts",
+          "JavaScript",
+        ],
+        age: 31,
+        gender: "Male",
+      },
+      {
+        id: 9,
+        name: "Sophia Lee",
+        image:
+          "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1961&q=100",
+        location: "Portland, OR",
+        bio: "Game developer with experience in Unity and Unreal Engine",
+        skills: ["Unity", "C#", "3D Modeling", "Game Design", "Unreal Engine"],
+        age: 29,
+        gender: "Female",
+      },
+      {
+        id: 10,
+        name: "Robert Taylor",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=100",
+        location: "Austin, TX",
+        bio: "Cybersecurity specialist focused on network security and penetration testing",
+        skills: [
+          "Network Security",
+          "Penetration Testing",
+          "Ethical Hacking",
+          "Python",
+          "Linux",
+        ],
+        age: 35,
+        gender: "Male",
+      },
+      {
+        id: 11,
+        name: "Emma Davis",
+        image:
+          "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=100",
+        location: "San Diego, CA",
+        bio: "Cloud architect specializing in AWS and serverless architecture",
+        skills: ["AWS", "Serverless", "Terraform", "CloudFormation", "Node.js"],
+        age: 33,
+        gender: "Female",
+      },
+      {
+        id: 12,
+        name: "Daniel Kim",
+        image:
+          "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=100",
+        location: "Chicago, IL",
+        bio: "iOS developer with expertise in Swift and SwiftUI",
+        skills: ["Swift", "SwiftUI", "Xcode", "Core Data", "Firebase"],
+        age: 28,
+        gender: "Male",
       },
     ];
 
@@ -289,7 +391,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ top: "8%", left: "38%" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6,
@@ -329,7 +431,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ top: "12%", right: "22%" }}
-          animate={{ y: [-7, 7, -7], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 7,
@@ -374,7 +476,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ top: "28%", left: "15%" }}
-          animate={{ y: [-5, 5, -5], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 5.5,
@@ -406,7 +508,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ top: "35%", right: "35%" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6.5,
@@ -449,7 +551,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ top: "60%", left: "28%" }}
-          animate={{ y: [-7, 7, -7], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-7, 7, -7], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 7.5,
@@ -513,7 +615,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ bottom: "35%", right: "18%" }}
-          animate={{ y: [-6, 6, -6], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-6, 6, -6], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 6,
@@ -572,7 +674,7 @@ const Home = () => {
         <motion.div
           className="whatsapp-bg-icon code"
           style={{ bottom: "25%", left: "25%" }}
-          animate={{ y: [-5, 5, -5], opacity: [0.5, 0.7, 0.5] }}
+          animate={{ y: [-5, 5, -5], opacity: [0.3, 0.5, 0.3] }}
           transition={{
             repeat: Infinity,
             duration: 5,
@@ -778,89 +880,69 @@ const Home = () => {
         <Nav />
 
         <div className="container mx-auto px-4 pt-12 pb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-center max-w-4xl mx-auto mt-8 mb-16"
-          >
+          {/* Header Section */}
+          <div className="mb-0">
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                delay: 0.3,
-                duration: 0.6,
-              }}
-              className="relative inline-block heading-glow"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-center max-w-4xl mx-auto"
             >
-              <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition duration-1000 animate-pulse"></div>
-              <h1 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-1 font-heading bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
-                <span className="inline-block">Connect</span>{" "}
-                <span className="inline-block">with</span>{" "}
-                <span className="inline-block">Developers</span>
-                <motion.svg
-                  className="absolute bottom-0 left-0 w-full h-2 text-indigo-500 dark:text-indigo-400 opacity-60 z-0"
-                  viewBox="0 0 100 10"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 0.6 }}
-                  transition={{ delay: 1, duration: 1 }}
-                >
-                  <path
-                    d="M 0,5 C 25,12 75,-2 100,5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
-              </h1>
-              <p className="text-xl md:text-2xl opacity-90 font-alt leading-relaxed relative z-10 mb-4 mt-0">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 font-semibold">
-                  Swipe
-                </span>
-                ,{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 font-semibold">
-                  match
-                </span>
-                , and{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 font-semibold">
-                  collaborate
-                </span>{" "}
-                with talented developers around the world
-              </p>
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  delay: 0.3,
+                  duration: 0.6,
+                }}
+                className="relative inline-block heading-glow"
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition duration-1000 animate-pulse"></div>
+                <h1 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-1 font-heading bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+                  <span className="inline-block">Connect</span>{" "}
+                  <span className="inline-block">with</span>{" "}
+                  <span className="inline-block">Developers</span>
+                </h1>
+                <p className="text-xl md:text-2xl opacity-90 font-alt leading-relaxed relative z-10 mt-0">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 font-semibold">
+                    Swipe
+                  </span>
+                  ,{" "}
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 font-semibold">
+                    match
+                  </span>
+                  , and{" "}
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 font-semibold">
+                    collaborate
+                  </span>{" "}
+                  with talented developers around the world
+                </p>
+              </motion.div>
             </motion.div>
+          </div>
 
-            {/* Decorative dots */}
-            <div className="flex justify-center space-x-2 mb-2">
+          {/* Card Section - completely separate from header with fixed positioning */}
+          <div className="absolute top-[40%] left-1/2 transform -translate-x-1/2 w-full mt-32">
+            <div className="flex justify-center items-center">
               <motion.div
-                className="w-2 h-2 rounded-full bg-blue-500 dark:bg-blue-400"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 1.2 }}
-              />
-              <motion.div
-                className="w-2 h-2 rounded-full bg-indigo-500 dark:bg-indigo-400"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 1.3 }}
-              />
-              <motion.div
-                className="w-2 h-2 rounded-full bg-purple-500 dark:bg-purple-400"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 1.4 }}
-              />
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                  delay: 0.3,
+                }}
+              >
+                <Card
+                  user={users[currentIndex]}
+                  onSwipeLeft={handleSwipeLeft}
+                  onSwipeRight={handleSwipeRight}
+                />
+              </motion.div>
             </div>
-          </motion.div>
-
-          <div className="flex justify-center items-center mb-16">
-            <Card
-              user={users[currentIndex]}
-              onSwipeLeft={handleSwipeLeft}
-              onSwipeRight={handleSwipeRight}
-            />
           </div>
 
           <motion.div

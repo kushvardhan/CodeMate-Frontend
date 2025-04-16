@@ -7,7 +7,7 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
 
   // Default user data if not provided
   const defaultUser = {
-    name: "John Doe",
+    name: "Kush Vardhan",
     bio: "Passionate about creating beautiful and functional web applications. Love working with React, Node.js, and exploring new technologies.",
     skills: ["React", "Node.js", "JavaScript", "TypeScript", "MongoDB"],
     image:
@@ -41,23 +41,42 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
 
   // Card animation variants
   const cardVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    initial: { opacity: 0, y: 30, scale: 0.95 },
+    animate: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        duration: 0.5,
+      },
+    },
     hover: {
       y: -5,
+      scale: 1.03,
       boxShadow: darkMode
-        ? "0 10px 25px -5px rgba(66, 153, 225, 0.3), 0 10px 10px -5px rgba(66, 153, 225, 0.2)"
-        : "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        ? "0 15px 35px -5px rgba(66, 153, 225, 0.4), 0 15px 15px -5px rgba(66, 153, 225, 0.3)"
+        : "0 15px 35px -5px rgba(0, 0, 0, 0.15), 0 15px 15px -5px rgba(0, 0, 0, 0.08)",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        duration: 0.3,
+      },
     },
     swipeLeft: {
-      x: -300,
+      x: -1000,
       opacity: 0,
-      transition: { duration: 0.3 },
+      rotate: -20,
+      transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
     },
     swipeRight: {
-      x: 300,
+      x: 1000,
       opacity: 0,
-      transition: { duration: 0.3 },
+      rotate: 20,
+      transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
     },
   };
 
@@ -295,14 +314,19 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
         whileHover="hover"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.4} // Lower elasticity for more resistance
+        dragElastic={0.7} // Higher elasticity for smoother feel
         dragTransition={{
-          bounceStiffness: 600, // Higher stiffness for more resistance
-          bounceDamping: 20, // Higher damping for less jittering
-          power: 0.5, // Lower power for more resistance
+          bounceStiffness: 300, // Lower stiffness for smoother motion
+          bounceDamping: 40, // Higher damping to prevent jittering
+          power: 0.2, // Lower power for smoother resistance
+          timeConstant: 400, // Higher time constant for smoother deceleration
+          restDelta: 0.2, // Lower rest delta for smoother stopping
+          modifyTarget: (target) => Math.round(target / 100) * 100, // Larger grid for smoother movement
+          min: -1000, // Limit drag distance
+          max: 1000, // Limit drag distance
         }}
         onDrag={handleDrag}
-        onDragEnd={(e, { offset, velocity }) => {
+        onDragEnd={(_, { offset }) => {
           const swipe = offset.x;
           const swipeThreshold = 200; // Even higher threshold for more deliberate swipes
 
@@ -345,6 +369,31 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
                   <span>{userData.location}</span>
+                </div>
+              )}
+
+              {/* Age and Gender */}
+              {userData.age && userData.gender && (
+                <div className="dev-card-info-row">
+                  <div className="dev-card-age-gender">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="8" r="5"></circle>
+                      <path d="M20 21v-2a8 8 0 0 0-16 0v2"></path>
+                    </svg>
+                    <span>
+                      {userData.age}, {userData.gender}
+                    </span>
+                  </div>
                 </div>
               )}
 
