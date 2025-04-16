@@ -2487,6 +2487,82 @@ pre,
   }
 }
 
+/* WhatsApp-style background with glowy animated icons */
+.whatsapp-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.whatsapp-bg-icon {
+  position: absolute;
+  opacity: 0.15;
+  transform-origin: center;
+}
+
+.dark .whatsapp-bg-icon {
+  opacity: 0.2;
+}
+
+.whatsapp-bg-icon.code {
+  color: #4f46e5;
+  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
+}
+
+.whatsapp-bg-icon.people {
+  color: #ec4899;
+  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
+}
+
+.whatsapp-bg-icon.connection {
+  color: #10b981;
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
+}
+
+.dark .whatsapp-bg-icon.code {
+  color: #818cf8;
+  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.5));
+}
+
+.dark .whatsapp-bg-icon.people {
+  color: #f472b6;
+  filter: drop-shadow(0 0 5px rgba(244, 114, 182, 0.5));
+}
+
+.dark .whatsapp-bg-icon.connection {
+  color: #34d399;
+  filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.1;
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
+    opacity: 0.2;
+  }
+  100% {
+    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+    opacity: 0.1;
+  }
+}
+
 /* Infinity symbol styles */
 .infinity-symbol {
   filter: drop-shadow(0 0 15px rgba(79, 70, 229, 0.3));
