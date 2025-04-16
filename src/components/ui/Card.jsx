@@ -551,7 +551,7 @@ const Card = ({
             transition={{ duration: 0.05 }} /* Even faster transition */
             loading="eager" /* Force eager loading */
             decoding="sync" /* Decode image synchronously */
-            fetchpriority="high" /* High priority fetch */
+            fetchPriority="high" /* High priority fetch */
             draggable="false" /* Prevent image dragging for better performance */
             style={{
               willChange:

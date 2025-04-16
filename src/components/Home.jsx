@@ -195,14 +195,16 @@ const Home = () => {
     if (users.length > 0 && currentIndex < users.length) {
       // Preload current and next image with highest priority
       const currentImg = new Image();
-      currentImg.fetchPriority = "high";
+      // Use setAttribute for better browser compatibility
+      currentImg.setAttribute("fetchpriority", "high");
       currentImg.decoding = "sync";
       currentImg.src = users[currentIndex].image;
 
       // Preload next image if available
       if (currentIndex + 1 < users.length) {
         const nextImg = new Image();
-        nextImg.fetchPriority = "high";
+        // Use setAttribute for better browser compatibility
+        nextImg.setAttribute("fetchpriority", "high");
         nextImg.decoding = "sync";
         nextImg.src = users[currentIndex + 1].image;
       }
@@ -1033,9 +1035,27 @@ const Home = () => {
             </motion.div>
           </div>
 
-          {/* Card Section - completely separate from header with fixed positioning */}
-          <div className="absolute top-[40%] left-1/2 transform -translate-x-1/2 w-full mt-32">
-            <div className="flex justify-center items-center">
+          {/* Card Section - perfectly centered on all screen sizes */}
+          <div
+            className="relative w-full mx-auto mt-16 mb-32 flex justify-center items-center"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              className="flex justify-center items-center w-full max-w-md mx-auto"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "0 auto",
+                left: "0",
+                right: "0",
+                position: "relative",
+              }}
+            >
               {allCardsFinished ? (
                 <motion.div
                   className="no-more-cards-in-place"
@@ -1070,6 +1090,7 @@ const Home = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3, duration: 0.5 }}
+                      className="text-white text-2xl font-bold mb-2"
                     >
                       No More Profiles
                     </motion.h2>
@@ -1077,6 +1098,7 @@ const Home = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4, duration: 0.5 }}
+                      className="text-gray-200 text-base"
                     >
                       You've viewed all available developers
                     </motion.p>
@@ -1116,7 +1138,7 @@ const Home = () => {
           </div>
 
           <motion.div
-            className="flex justify-center gap-12 mt-8 mb-12 stats-container"
+            className="flex flex-col sm:flex-row justify-center gap-6 md:gap-12 mt-16 mb-12 stats-container w-full max-w-2xl mx-auto flex-wrap"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
