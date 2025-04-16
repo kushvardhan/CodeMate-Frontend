@@ -524,28 +524,40 @@ const Home = () => {
               className="relative inline-block heading-glow"
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition duration-1000 animate-pulse"></div>
-              <h1 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-6 font-heading bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+              <h1 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-2 font-heading bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
                 <span className="inline-block">Connect</span>{" "}
                 <span className="inline-block">with</span>{" "}
-                <span className="inline-block relative">
-                  Developers
-                  <motion.svg
-                    className="absolute -bottom-2 left-0 w-full h-2 text-indigo-500 dark:text-indigo-400"
-                    viewBox="0 0 100 10"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ delay: 1, duration: 1 }}
-                  >
-                    <path
-                      d="M 0,5 C 25,12 75,-2 100,5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                  </motion.svg>
-                </span>
+                <span className="inline-block">Developers</span>
+                <motion.svg
+                  className="absolute bottom-0 left-0 w-full h-2 text-indigo-500 dark:text-indigo-400 opacity-60 z-0"
+                  viewBox="0 0 100 10"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 0.6 }}
+                  transition={{ delay: 1, duration: 1 }}
+                >
+                  <path
+                    d="M 0,5 C 25,12 75,-2 100,5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </motion.svg>
               </h1>
+              <p className="text-xl md:text-2xl opacity-90 font-alt leading-relaxed relative z-10 mb-6">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 font-semibold">
+                  Swipe
+                </span>
+                ,{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 font-semibold">
+                  match
+                </span>
+                , and{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 font-semibold">
+                  collaborate
+                </span>{" "}
+                with talented developers around the world
+              </p>
             </motion.div>
 
             <div className="relative max-w-2xl mx-auto mb-16">
