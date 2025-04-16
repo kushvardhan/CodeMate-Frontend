@@ -1465,15 +1465,15 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 115%; /* Slightly smaller than before */
-  aspect-ratio: 2/3.3; /* Slightly shorter */
-  min-height: 500px; /* Slightly smaller minimum height */
+  width: 110%; /* Slightly smaller */
+  aspect-ratio: 2/3.2; /* Slightly shorter */
+  min-height: 480px; /* Slightly smaller minimum height */
   border-radius: 24px;
   overflow: hidden;
   background-color: var(--color-card-bg);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    box-shadow 0.4s ease;
+  transition: transform 0.3s ease-out,
+    /* Smoother transition */ box-shadow 0.3s ease-out;
   position: relative;
   cursor: grab;
   touch-action: pan-y;
@@ -1481,6 +1481,12 @@ pre,
   backface-visibility: hidden;
   will-change: transform;
   transform-origin: top center; /* Make swipe happen from top */
+  /* Add hardware acceleration to reduce jittering */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .dev-card:active {

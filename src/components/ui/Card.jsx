@@ -54,29 +54,36 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
       },
     },
     hover: {
-      y: -5,
-      scale: 1.03,
+      y: -3, // Reduced lift effect
+      scale: 1.01, // Significantly reduced scale effect
       boxShadow: darkMode
-        ? "0 15px 35px -5px rgba(66, 153, 225, 0.4), 0 15px 15px -5px rgba(66, 153, 225, 0.3)"
-        : "0 15px 35px -5px rgba(0, 0, 0, 0.15), 0 15px 15px -5px rgba(0, 0, 0, 0.08)",
+        ? "0 12px 30px -5px rgba(66, 153, 225, 0.3), 0 8px 10px -5px rgba(66, 153, 225, 0.2)"
+        : "0 12px 30px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.06)",
       transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-        duration: 0.3,
+        type: "tween", // Changed to tween for smoother effect
+        ease: "easeOut",
+        duration: 0.2,
       },
     },
     swipeLeft: {
       x: -1000,
       opacity: 0,
-      rotate: -20,
-      transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
+      rotate: -10, // Less rotation for more natural feel
+      transition: {
+        duration: 0.5,
+        ease: [0.23, 1, 0.32, 1],
+        type: "tween", // Explicit tween for smoother animation
+      },
     },
     swipeRight: {
       x: 1000,
       opacity: 0,
-      rotate: 20,
-      transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
+      rotate: 10, // Less rotation for more natural feel
+      transition: {
+        duration: 0.5,
+        ease: [0.23, 1, 0.32, 1],
+        type: "tween", // Explicit tween for smoother animation
+      },
     },
   };
 
@@ -102,24 +109,37 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
   // State to track swipe progress (0-100%)
   const [swipeProgress, setSwipeProgress] = React.useState(0);
 
-  // Handle drag
+  // Handle drag with improved smoothness and reduced jittering
   const handleDrag = (_, info) => {
     // Calculate swipe progress as a percentage (0-100)
-    const swipeThreshold = 150; // Higher threshold for more deliberate swipes
-    const progress = Math.min(
-      (Math.abs(info.offset.x) / swipeThreshold) * 100,
+    const swipeThreshold = 200; // Higher threshold for more deliberate swipes
+
+    // Use a more conservative velocity factor to reduce jittering
+    const velocityFactor = Math.min(Math.abs(info.velocity.x) * 0.1, 0.3);
+
+    // Calculate progress with dampened velocity influence
+    let progress = Math.min(
+      (Math.abs(info.offset.x) / swipeThreshold) * 100 * (1 + velocityFactor),
       100
     );
+
+    // Round progress to nearest 5% to reduce small jitters
+    progress = Math.round(progress / 5) * 5;
+
+    // Set the smoothed progress
     setSwipeProgress(progress);
 
-    // Only set direction if we've moved at least 30px to make it more deliberate
-    if (info.offset.x > 30) {
+    // Use a higher threshold (50px) and debounce direction changes
+    // This prevents accidental direction changes and reduces jittering
+    if (info.offset.x > 50) {
       setDragDirection("right");
-    } else if (info.offset.x < -30) {
+    } else if (info.offset.x < -50) {
       setDragDirection("left");
-    } else {
+    } else if (Math.abs(info.offset.x) < 20) {
+      // Only reset direction when very close to center
       setDragDirection(null);
     }
+    // Otherwise keep the current direction (this prevents jittering near thresholds)
   };
 
   return (
@@ -314,32 +334,53 @@ const Card = ({ user, onSwipeLeft, onSwipeRight }) => {
         whileHover="hover"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.7} // Higher elasticity for smoother feel
+        dragElastic={0.5} // Reduced elasticity to prevent excessive movement
+        dragMomentum={true} // Enable momentum for natural feel
         dragTransition={{
-          bounceStiffness: 300, // Lower stiffness for smoother motion
-          bounceDamping: 40, // Higher damping to prevent jittering
-          power: 0.2, // Lower power for smoother resistance
-          timeConstant: 400, // Higher time constant for smoother deceleration
-          restDelta: 0.2, // Lower rest delta for smoother stopping
-          modifyTarget: (target) => Math.round(target / 100) * 100, // Larger grid for smoother movement
+          bounceStiffness: 200, // Lower stiffness for smoother motion
+          bounceDamping: 50, // Higher damping to prevent jittering
+          power: 0.1, // Lower power for smoother resistance
+          timeConstant: 500, // Higher time constant for smoother deceleration
+          restDelta: 0.1, // Lower rest delta for smoother stopping
+          modifyTarget: (target) => Math.round(target / 200) * 200, // Even larger grid for smoother movement
           min: -1000, // Limit drag distance
           max: 1000, // Limit drag distance
         }}
         onDrag={handleDrag}
-        onDragEnd={(_, { offset }) => {
+        onDragEnd={(_, { offset, velocity }) => {
           const swipe = offset.x;
-          const swipeThreshold = 200; // Even higher threshold for more deliberate swipes
+          const swipeVelocity = Math.abs(velocity.x);
+          const swipeThreshold = 200; // Higher threshold to prevent accidental swipes
 
-          // Only trigger swipe if we've moved past the threshold
-          if (swipe < -swipeThreshold) {
-            handleSwipeLeft();
-          } else if (swipe > swipeThreshold) {
-            handleSwipeRight();
+          // Consider both distance and velocity for a more natural feel
+          // This makes quick flicks work even with less distance
+          // But requires more deliberate slow swipes
+          const isSwipeLeft =
+            swipe < -swipeThreshold || (swipe < -120 && swipeVelocity > 0.8);
+          const isSwipeRight =
+            swipe > swipeThreshold || (swipe > 120 && swipeVelocity > 0.8);
+
+          // Trigger appropriate swipe action
+          if (isSwipeLeft) {
+            // Add a small delay before triggering the action
+            // This makes the animation feel more natural
+            requestAnimationFrame(() => {
+              handleSwipeLeft();
+            });
+          } else if (isSwipeRight) {
+            requestAnimationFrame(() => {
+              handleSwipeRight();
+            });
           }
 
-          // Reset states
-          setDragDirection(null);
-          setSwipeProgress(0);
+          // Reset states with a slight delay to allow animations to complete
+          // Using requestAnimationFrame for smoother transitions
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              setDragDirection(null);
+              setSwipeProgress(0);
+            }, 150);
+          });
         }}
         data-drag={dragDirection}
       >
