@@ -128,31 +128,36 @@ const Card = ({
         // Set will-change to hint browser for optimization
         element.style.willChange = "transform, opacity, box-shadow, border";
 
-        // Use requestAnimationFrame for smoother animations
-        requestAnimationFrame(() => {
-          // Apply Tinder-like exit animation based on direction
-          element.style.transition =
-            "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
+        // Force a reflow to ensure smooth animation
+        void element.offsetWidth;
 
-          if (swipeDirection === "left") {
-            element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-            element.style.opacity = "0";
-            element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
-            element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
-          } else if (swipeDirection === "right") {
-            element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-            element.style.opacity = "0";
-            element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
-            element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
+        // Apply Tinder-like exit animation based on direction
+        // Use a longer duration for smoother animation
+        element.style.transition =
+          "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, box-shadow 0.4s ease-out, border 0.4s ease-out";
+
+        if (swipeDirection === "left") {
+          element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
+          element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
+          // Set data attribute for CSS targeting
+          element.setAttribute("data-drag", "left");
+        } else if (swipeDirection === "right") {
+          element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
+          element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
+          // Set data attribute for CSS targeting
+          element.setAttribute("data-drag", "right");
+        }
+
+        // Clean up after animation completes
+        setTimeout(() => {
+          if (element) {
+            element.style.willChange = "auto";
           }
-
-          // Clean up after animation completes
-          setTimeout(() => {
-            if (element) {
-              element.style.willChange = "auto";
-            }
-          }, 500);
-        });
+        }, 600); // Longer timeout to match the longer animation
       }
     }
   }, [isCardSwiping, swipeDirection]);
@@ -185,12 +190,13 @@ const Card = ({
         -Math.abs(info.offset.x) * 0.05
       }px) rotate(${rotate}deg)`;
 
-      // Apply color overlay based on direction (Tinder-like), but only when actively moving
+      // Apply color overlay based on direction (Tinder-like), but ONLY when actively moving
       // Check if there's actual movement (velocity) to determine if actively dragging
-      const isActivelyDragging = Math.abs(info.velocity.x) > 0.1;
+      // Use a higher threshold to ensure we only show colors during definite movement
+      const isActivelyDragging = Math.abs(info.velocity.x) > 0.5;
 
       if (info.offset.x > 50 && isActivelyDragging) {
-        // Green overlay for right swipe (like), only when actively dragging
+        // Green overlay for right swipe (like), only when actively dragging right
         // Pre-calculate the opacity value to reduce calculations during drag
         const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
         // More pronounced green shadow/glow effect
@@ -198,18 +204,24 @@ const Card = ({
         element.style.borderColor = `rgba(52, 199, 89, ${opacity})`;
         // Add a subtle green border
         element.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
+        // Set data attribute for CSS targeting
+        element.setAttribute("data-drag", "right");
       } else if (info.offset.x < -50 && isActivelyDragging) {
-        // Red overlay for left swipe (nope), only when actively dragging
+        // Red overlay for left swipe (nope), only when actively dragging left
         // Pre-calculate the opacity value to reduce calculations during drag
         const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
         // More pronounced red shadow/glow effect
         element.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
         // Add a subtle red border
         element.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
+        // Set data attribute for CSS targeting
+        element.setAttribute("data-drag", "left");
       } else {
         // Reset overlay when not actively dragging or near center
         element.style.boxShadow = "";
         element.style.border = "none";
+        // Reset data attribute
+        element.setAttribute("data-drag", "none");
       }
     }
 
@@ -224,20 +236,19 @@ const Card = ({
       setSwipeProgress(progress);
     }
 
-    // Set direction based on drag direction (Tinder-like), but only when actively moving
+    // Set direction based on drag direction (Tinder-like), but ONLY when actively moving
     // Use a larger threshold to reduce flickering between states
     // Check if there's actual movement (velocity) to determine if actively dragging
-    const isActivelyDragging = Math.abs(info.velocity.x) > 0.1;
+    // Use a higher threshold to ensure we only show colors during definite movement
+    const isActivelyDragging = Math.abs(info.velocity.x) > 0.5;
 
     if (info.offset.x > 30 && isActivelyDragging) {
       if (dragDirection !== "right") setDragDirection("right");
     } else if (info.offset.x < -30 && isActivelyDragging) {
       if (dragDirection !== "left") setDragDirection("left");
-    } else if (
-      dragDirection !== null &&
-      (Math.abs(info.offset.x) < 10 || !isActivelyDragging)
-    ) {
-      // Reset when very close to center or when not actively dragging
+    } else {
+      // Reset when not actively dragging, regardless of position
+      // This ensures the card has no color when at rest or just being held
       setDragDirection("none");
     }
   };

@@ -233,25 +233,22 @@ const Home = () => {
     setSwipeDirection("left");
     setPrevIndex(currentIndex);
 
-    // Use double RAF for smoother transitions across browsers
-    // First RAF to prepare the browser
-    requestAnimationFrame(() => {
-      // Second RAF to ensure the animation frame is ready
-      requestAnimationFrame(() => {
-        if (nextCardIndex !== null) {
-          // Move to the next card
-          setCurrentIndex(nextCardIndex);
-        } else {
-          // No more cards left
-          setAllCardsFinished(true);
-        }
+    // Use a longer timeout to ensure the exit animation completes before changing cards
+    // This prevents the glitching/shifting effect
+    setTimeout(() => {
+      if (nextCardIndex !== null) {
+        // Move to the next card
+        setCurrentIndex(nextCardIndex);
+      } else {
+        // No more cards left
+        setAllCardsFinished(true);
+      }
 
-        // Reset swiping state after animation completes
-        setTimeout(() => {
-          setIsCardSwiping(false);
-        }, 100); // Slightly longer delay for smoother transition
-      });
-    });
+      // Reset swiping state after a longer delay to ensure smooth transition
+      setTimeout(() => {
+        setIsCardSwiping(false);
+      }, 300); // Longer delay for smoother transition
+    }, 400); // Wait for exit animation to complete
   };
 
   const handleSwipeRight = () => {
@@ -264,25 +261,22 @@ const Home = () => {
     setSwipeDirection("right");
     setPrevIndex(currentIndex);
 
-    // Use double RAF for smoother transitions across browsers
-    // First RAF to prepare the browser
-    requestAnimationFrame(() => {
-      // Second RAF to ensure the animation frame is ready
-      requestAnimationFrame(() => {
-        if (nextCardIndex !== null) {
-          // Move to the next card
-          setCurrentIndex(nextCardIndex);
-        } else {
-          // No more cards left
-          setAllCardsFinished(true);
-        }
+    // Use a longer timeout to ensure the exit animation completes before changing cards
+    // This prevents the glitching/shifting effect
+    setTimeout(() => {
+      if (nextCardIndex !== null) {
+        // Move to the next card
+        setCurrentIndex(nextCardIndex);
+      } else {
+        // No more cards left
+        setAllCardsFinished(true);
+      }
 
-        // Reset swiping state after animation completes
-        setTimeout(() => {
-          setIsCardSwiping(false);
-        }, 100); // Slightly longer delay for smoother transition
-      });
-    });
+      // Reset swiping state after a longer delay to ensure smooth transition
+      setTimeout(() => {
+        setIsCardSwiping(false);
+      }, 300); // Longer delay for smoother transition
+    }, 400); // Wait for exit animation to complete
   };
 
   // We removed the reset button, so users will need to refresh the page to start over
@@ -321,7 +315,7 @@ const Home = () => {
       className={`min-h-screen transition-all duration-300 ${
         darkMode
           ? "bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-gray-800/90 text-white"
-          : "bg-gradient-to-br from-blue-50/90 via-indigo-50/90 to-purple-50/90 text-gray-900"
+          : "bg-gradient-to-br from-blue-50/90 via-indigo-50/90 to-purple-50/90 text-gray-900 light"
       } ${getBackgroundClass()}`}
     >
       {/* WhatsApp-style background with glowy animated coding icons */}
@@ -1070,6 +1064,8 @@ const Home = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              position: "relative" /* Ensure relative positioning */,
+              zIndex: 5 /* Lower z-index to prevent overlapping navbar */,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: loadingSequence.cardLoaded ? 1 : 0 }}
@@ -1094,6 +1090,10 @@ const Home = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ type: "spring", stiffness: 100, damping: 15 }}
                   layoutId="card-container"
+                  style={{
+                    position: "relative",
+                    zIndex: 5,
+                  }} /* Ensure proper positioning */
                 >
                   <div className="no-more-cards-content">
                     <motion.div
@@ -1121,7 +1121,9 @@ const Home = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3, duration: 0.5 }}
-                      className="text-white text-2xl font-bold mb-2"
+                      className={`${
+                        darkMode ? "text-white" : "text-gray-800"
+                      } text-2xl font-bold mb-2`}
                     >
                       No More Profiles
                     </motion.h2>
@@ -1129,7 +1131,9 @@ const Home = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4, duration: 0.5 }}
-                      className="text-gray-200 text-base"
+                      className={`${
+                        darkMode ? "text-gray-200" : "text-gray-600"
+                      } text-base`}
                     >
                       You've viewed all available developers
                     </motion.p>

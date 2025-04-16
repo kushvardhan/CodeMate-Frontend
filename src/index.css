@@ -507,7 +507,7 @@ pre,
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  z-index: 50;
+  z-index: 1000; /* Higher z-index to ensure it stays on top */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   transform: translateZ(0);
@@ -1356,6 +1356,12 @@ pre,
   right: 0 !important;
   transform: translateX(0) !important; /* Force center alignment */
   inset: 0 !important;
+  /* Prevent shifting during animations */
+  transform-origin: center center !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  -webkit-transform-style: preserve-3d !important;
+  will-change: transform !important;
 }
 
 /* Ensure centering on all screen sizes */
@@ -1467,6 +1473,12 @@ pre,
   align-items: center;
   z-index: 1;
   pointer-events: none;
+  /* Prevent shifting during animations */
+  transform-origin: center center !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  transform: translateZ(0) !important;
 }
 
 /* Current card (top of stack) */
@@ -1481,6 +1493,12 @@ pre,
   margin: 0 auto !important;
   left: 0 !important;
   right: 0 !important;
+  /* Prevent shifting during animations */
+  transform-origin: center center !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  transform: translateZ(0) !important;
 }
 
 /* Next card styling */
@@ -1572,7 +1590,7 @@ pre,
 
 /* No more cards message - positioned in place of the card */
 .no-more-cards-in-place {
-  position: relative;
+  position: relative; /* Keep as relative to prevent overlapping navbar */
   width: 100%;
   max-width: 300px;
   aspect-ratio: 2/3.5; /* Match card aspect ratio */
@@ -1580,7 +1598,7 @@ pre,
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 5; /* Lower z-index to prevent overlapping navbar */
   /* Solid background to hide background icons */
   background: var(--color-card-bg);
   border-radius: 24px;
@@ -1596,22 +1614,41 @@ pre,
   right: 0;
 }
 
+/* Light theme version of no-more-cards-in-place */
+.light .no-more-cards-in-place {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
 .no-more-cards-content {
   width: 100%;
   height: 100%;
   padding: 3rem 2rem;
   text-align: center;
   position: relative;
+  /* Different background for light and dark themes */
   background: linear-gradient(
     135deg,
     rgba(30, 41, 59, 0.8),
     rgba(15, 23, 42, 0.9)
-  ); /* Dark background for both themes */
+  );
   border-radius: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Light theme version */
+.light .no-more-cards-content {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 240, 250, 0.95)
+  );
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .no-more-icon {
@@ -1895,7 +1932,10 @@ pre,
   border-radius: 24px;
   overflow: hidden;
   background-color: var(--color-card-bg);
+  /* Default shadow with NO color */
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
+  /* NO colored border by default */
+  border: none !important;
   transition: transform 0.3s ease-out,
     /* Smoother transition */ box-shadow 0.3s ease-out;
   position: relative;
@@ -1931,17 +1971,19 @@ pre,
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Drag animation styles - only show when actively dragging */
+/* Drag animation styles - ONLY show when actively dragging */
+/* Left swipe - red effect */
 .dev-card[data-drag="left"] {
   box-shadow: -10px 10px 30px rgba(255, 59, 48, 0.3),
-    -5px 5px 15px rgba(255, 59, 48, 0.2);
-  border: 2px solid rgba(255, 59, 48, 0.5);
+    -5px 5px 15px rgba(255, 59, 48, 0.2) !important;
+  border: 2px solid rgba(255, 59, 48, 0.5) !important;
 }
 
+/* Right swipe - green effect */
 .dev-card[data-drag="right"] {
   box-shadow: 10px 10px 30px rgba(52, 199, 89, 0.3),
-    5px 5px 15px rgba(52, 199, 89, 0.2);
-  border: 2px solid rgba(52, 199, 89, 0.5);
+    5px 5px 15px rgba(52, 199, 89, 0.2) !important;
+  border: 2px solid rgba(52, 199, 89, 0.5) !important;
 }
 
 /* No special styling when at rest or just holding */
