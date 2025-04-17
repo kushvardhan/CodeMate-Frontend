@@ -800,6 +800,8 @@ pre,
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   background: rgba(255, 255, 255, 0.03);
+  /* Fix for menu shifting during staggered animation */
+  min-height: 12rem;
 }
 
 .dropdown-menu::before {

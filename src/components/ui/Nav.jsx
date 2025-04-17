@@ -563,11 +563,11 @@ const Nav = () => {
                 transition={{ duration: 0.2 }}
               >
                 <motion.li
-                  initial={{ opacity: 0, x: -100 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 80,
+                    stiffness: 100,
                     damping: 20,
                     delay: 0.1,
                   }}
@@ -591,11 +591,11 @@ const Nav = () => {
                   </Link>
                 </motion.li>
                 <motion.li
-                  initial={{ opacity: 0, x: -120 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 80,
+                    stiffness: 100,
                     damping: 20,
                     delay: 0.2,
                   }}
@@ -621,11 +621,11 @@ const Nav = () => {
                   </Link>
                 </motion.li>
                 <motion.li
-                  initial={{ opacity: 0, x: -140 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 80,
+                    stiffness: 100,
                     damping: 20,
                     delay: 0.3,
                   }}
@@ -649,11 +649,11 @@ const Nav = () => {
                   </Link>
                 </motion.li>
                 <motion.li
-                  initial={{ opacity: 0, x: -160 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
                     type: "spring",
-                    stiffness: 80,
+                    stiffness: 100,
                     damping: 20,
                     delay: 0.4,
                   }}

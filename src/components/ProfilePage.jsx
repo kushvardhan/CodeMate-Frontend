@@ -64,7 +64,7 @@ const ProfilePage = () => {
         name: `${user.firstName || ""} ${user.lastName || ""}`,
         bio: user.about || "Your bio will appear here",
         skills: user.skills || [],
-        image: user.photoUrl || "https://i.imgur.com/KXZRJj4.png", // Cool, modern, tech-themed avatar suitable for all genders
+        image: user.photoUrl || "https://i.imgur.com/6YQ1Zzt.png", // Clean, geometric profile avatar without text
         location: "Your location",
         age: user.age || 25,
         gender: user.gender || "other",
@@ -78,7 +78,7 @@ const ProfilePage = () => {
       name: `${formData.firstName || ""} ${formData.lastName || ""}`,
       bio: formData.about || "Your bio will appear here",
       skills: formData.skills || [],
-      image: formData.photoUrl || "https://i.imgur.com/KXZRJj4.png", // Cool, modern, tech-themed avatar suitable for all genders
+      image: formData.photoUrl || "https://i.imgur.com/6YQ1Zzt.png", // Clean, geometric profile avatar without text
       location: formData.location || "Your location",
       age: formData.age || 25,
       gender: formData.gender || "other",
