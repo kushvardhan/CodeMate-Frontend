@@ -1,6 +1,6 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
@@ -36,6 +36,15 @@ const ProfilePage = () => {
   // Preview user for card
   const [previewUser, setPreviewUser] = useState(null);
 
+  // Refs for form fields that might have errors
+  const firstNameRef = useRef(null);
+  const genderRef = useRef(null);
+  const ageRef = useRef(null);
+  const locationRef = useRef(null);
+  const photoUrlRef = useRef(null);
+  const aboutRef = useRef(null);
+  const skillsRef = useRef(null);
+
   // Load user data on component mount
   useEffect(() => {
     if (user) {
@@ -55,9 +64,7 @@ const ProfilePage = () => {
         name: `${user.firstName || ""} ${user.lastName || ""}`,
         bio: user.about || "Your bio will appear here",
         skills: user.skills || [],
-        image:
-          user.photoUrl ||
-          "https://png.pngitem.com/pimgs/s/508-5087236_tab-profile-f-user-icon-white-fill-hd.png",
+        image: user.photoUrl || "https://i.imgur.com/KXZRJj4.png", // Cool, modern, tech-themed avatar suitable for all genders
         location: "Your location",
         age: user.age || 25,
         gender: user.gender || "other",
@@ -71,9 +78,7 @@ const ProfilePage = () => {
       name: `${formData.firstName || ""} ${formData.lastName || ""}`,
       bio: formData.about || "Your bio will appear here",
       skills: formData.skills || [],
-      image:
-        formData.photoUrl ||
-        "https://png.pngitem.com/pimgs/s/508-5087236_tab-profile-f-user-icon-white-fill-hd.png",
+      image: formData.photoUrl || "https://i.imgur.com/KXZRJj4.png", // Cool, modern, tech-themed avatar suitable for all genders
       location: formData.location || "Your location",
       age: formData.age || 25,
       gender: formData.gender || "other",
@@ -163,6 +168,47 @@ const ProfilePage = () => {
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
         setIsSubmitting(false);
+
+        // Scroll to the first field with an error
+        setTimeout(() => {
+          if (validationErrors.firstName && firstNameRef.current) {
+            firstNameRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.gender && genderRef.current) {
+            genderRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.age && ageRef.current) {
+            ageRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.location && locationRef.current) {
+            locationRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.photoUrl && photoUrlRef.current) {
+            photoUrlRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.about && aboutRef.current) {
+            aboutRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else if (validationErrors.skills && skillsRef.current) {
+            skillsRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }, 100); // Small delay to ensure the DOM is updated
+
         return;
       }
 
@@ -360,7 +406,7 @@ const ProfilePage = () => {
               {/* Success message is now shown in the popup */}
 
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="form-group" ref={firstNameRef}>
                   <label htmlFor="firstName" className="form-label">
                     First Name
                   </label>
@@ -401,7 +447,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="form-row">
-                  <div className="form-group">
+                  <div className="form-group" ref={genderRef}>
                     <label htmlFor="gender" className="form-label">
                       Gender
                     </label>
@@ -424,7 +470,7 @@ const ProfilePage = () => {
                     )}
                   </div>
 
-                  <div className="form-group">
+                  <div className="form-group" ref={ageRef}>
                     <label htmlFor="age" className="form-label">
                       Age
                     </label>
@@ -446,7 +492,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" ref={locationRef}>
                   <label htmlFor="location" className="form-label">
                     Location
                   </label>
@@ -466,7 +512,7 @@ const ProfilePage = () => {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" ref={photoUrlRef}>
                   <label htmlFor="photoUrl" className="form-label">
                     Profile Photo URL
                   </label>
@@ -486,7 +532,7 @@ const ProfilePage = () => {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" ref={aboutRef}>
                   <label htmlFor="about" className="form-label">
                     About
                   </label>
@@ -506,7 +552,7 @@ const ProfilePage = () => {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" ref={skillsRef}>
                   <label htmlFor="skills" className="form-label">
                     Skills
                   </label>
