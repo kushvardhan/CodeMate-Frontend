@@ -139,12 +139,23 @@ const ProfilePage = () => {
     try {
       // Validate form data
       const validationErrors = {};
+
+      // First name validation - required
       if (!formData.firstName.trim()) {
         validationErrors.firstName = "First name is required";
       }
+
+      // Gender validation - required
+      if (!formData.gender) {
+        validationErrors.gender = "Gender selection is required";
+      }
+
+      // Age validation - optional but must be valid if provided
       if (formData.age && (isNaN(formData.age) || formData.age < 16)) {
         validationErrors.age = "Age must be a number and at least 16";
       }
+
+      // Photo URL validation - optional but must be valid if provided
       if (formData.photoUrl && !isValidUrl(formData.photoUrl)) {
         validationErrors.photoUrl = "Please enter a valid URL";
       }
