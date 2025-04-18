@@ -402,7 +402,7 @@ const Home = () => {
 
         {/* Card component */}
         <motion.div
-          className="card-wrapper relative z-20 flex justify-center items-center w-full max-w-full mx-auto my-10"
+          className="card-wrapper relative z-20 flex justify-center items-center w-full max-w-full mx-auto my-14"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={
             loadingSequence.cardLoaded

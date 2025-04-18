@@ -78,13 +78,13 @@ const Card = ({
       },
     },
     hover: {
-      y: -3, // Reduced lift effect
-      scale: 1.01, // Significantly reduced scale effect
+      y: -2, // Minimal lift effect
+      scale: 1.005, // Very minimal scale effect
       boxShadow: darkMode
-        ? "0 12px 30px -5px rgba(66, 153, 225, 0.3), 0 8px 10px -5px rgba(66, 153, 225, 0.2)"
-        : "0 12px 30px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.06)",
+        ? "0 8px 20px -5px rgba(66, 153, 225, 0.2), 0 5px 8px -5px rgba(66, 153, 225, 0.15)"
+        : "0 8px 20px -5px rgba(0, 0, 0, 0.1), 0 5px 8px -5px rgba(0, 0, 0, 0.05)",
       transition: {
-        type: "tween", // Changed to tween for smoother effect
+        type: "tween", // Smooth tween effect
         ease: "easeOut",
         duration: 0.2,
       },
