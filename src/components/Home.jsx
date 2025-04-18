@@ -359,268 +359,620 @@ const Home = () => {
   }, []);
 
   return (
-    <div
-      className={`min-h-screen transition-all duration-300 ${
-        darkMode
-          ? "bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-gray-800/90 text-white"
-          : "bg-gradient-to-br from-blue-50/90 via-indigo-50/90 to-purple-50/90 text-gray-900 light"
-      }`}
-    >
-      {/* Navigation */}
-      <Nav />
+    <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
+      {/* Background with coding icons - based on reference image */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+        {/* Dark background like in reference image */}
+        <div className="absolute inset-0 bg-[#0A0F18]"></div>
 
-      {/* Main content */}
-      <div className="home-container relative z-10 pt-24 pb-12">
-        {/* Heading and subheading */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          animate={
-            loadingSequence.headingLoaded
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: -20 }
-          }
-          transition={{ duration: 0.5 }}
-        >
-          <motion.h1
-            className="text-3xl md:text-4xl font-bold mb-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Connect with Developers
-          </motion.h1>
-          <motion.p
-            className="text-lg opacity-80"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            Swipe, match, collaborate
-          </motion.p>
-        </motion.div>
+        {/* Programming languages - Scattered across the entire screen like in reference image */}
+        {[
+          "JavaScript",
+          "Python",
+          "Java",
+          "C++",
+          "TypeScript",
+          "PHP",
+          "Go",
+          "Rust",
+          "Scala",
+          "Perl",
+          "R",
+          "Dart",
+          "Swift",
+          "Kotlin",
+          "Ruby",
+          "C#",
+          "HTML",
+          "CSS",
+        ].map((lang, i) => {
+          // Generate random positions that are truly scattered across the entire screen
+          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
+          const randomDelay = Math.floor(Math.random() * 15);
+          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
+          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
-        {/* Card component */}
-        <motion.div
-          className="card-wrapper relative z-20 flex justify-center items-center w-full max-w-full mx-auto my-14"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={
-            loadingSequence.cardLoaded
-              ? { opacity: 1, scale: 1 }
-              : { opacity: 0, scale: 0.9 }
-          }
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {users.length > 0 &&
-          currentIndex < users.length &&
-          !allCardsFinished ? (
-            <div className="tinder-card-stack relative w-full max-w-[340px] mx-auto">
-              {/* Rewind button */}
-              {previousCards.length > 0 && (
-                <motion.button
-                  className="rewind-button absolute top-4 left-4 z-30 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
-                  onClick={handleRewind}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-indigo-600 dark:text-indigo-400"
-                  >
-                    <path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38" />
-                  </svg>
-                </motion.button>
-              )}
+          // Different colors for different languages
+          const colors = {
+            JavaScript: darkMode ? "#F7DF1E" : "#F7DF1E",
+            Python: darkMode ? "#3776AB" : "#3776AB",
+            Java: darkMode ? "#007396" : "#007396",
+            "C++": darkMode ? "#00599C" : "#00599C",
+            TypeScript: darkMode ? "#3178C6" : "#3178C6",
+            PHP: darkMode ? "#777BB4" : "#777BB4",
+            Go: darkMode ? "#00ADD8" : "#00ADD8",
+            Rust: darkMode ? "#DEA584" : "#DEA584",
+            Scala: darkMode ? "#DC322F" : "#DC322F",
+            Perl: darkMode ? "#39457E" : "#39457E",
+            R: darkMode ? "#276DC3" : "#276DC3",
+            Dart: darkMode ? "#0175C2" : "#0175C2",
+            Swift: darkMode ? "#FA7343" : "#FA7343",
+            Kotlin: darkMode ? "#7F52FF" : "#7F52FF",
+            Ruby: darkMode ? "#CC342D" : "#CC342D",
+            "C#": darkMode ? "#239120" : "#239120",
+            HTML: darkMode ? "#E34F26" : "#E34F26",
+            CSS: darkMode ? "#1572B6" : "#1572B6",
+          };
 
-              {/* Static background cards - always centered */}
-              <div className="static-card-stack">
-                {/* Next card (visible behind current card) - always centered */}
-                {currentIndex + 1 < users.length && (
-                  <div className="static-card-position preview-stack-card">
-                    <Card user={users[currentIndex + 1]} isNextCard={true} />
-                  </div>
-                )}
-              </div>
+          return (
+            <motion.div
+              key={`lang-${i}`}
+              className="absolute font-mono font-bold"
+              style={{
+                top: `${randomTop}%`,
+                left: `${randomLeft}%`,
+                fontSize: `${randomSize}px`,
+                opacity: 0.9,
+                color: colors[lang],
+                filter: `drop-shadow(0 0 10px ${colors[lang]})`,
+                zIndex: 0,
+                textShadow: `0 0 15px ${colors[lang]}`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.6, 0.9, 0.6],
+                rotate: [0, randomRotation, 0],
+                scale: [1, 1.08, 1],
+                filter: [
+                  `drop-shadow(0 0 5px ${colors[lang]})`,
+                  `drop-shadow(0 0 15px ${colors[lang]})`,
+                  `drop-shadow(0 0 5px ${colors[lang]})`,
+                ],
+              }}
+              transition={{
+                duration: randomDuration,
+                repeat: Infinity,
+                delay: randomDelay,
+                ease: "easeInOut",
+              }}
+            >
+              {lang}
+            </motion.div>
+          );
+        })}
 
-              {/* Current card */}
-              <div className="tinder-current-card">
-                <Card
-                  user={users[currentIndex]}
-                  onSwipeLeft={handleSwipeLeft}
-                  onSwipeRight={handleSwipeRight}
-                  isCardSwiping={isCardSwiping}
-                  swipeDirection={swipeDirection}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="no-more-cards-in-place">
-              <div className="no-more-cards-content">
-                <div className="no-more-icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="8" y1="12" x2="16" y2="12"></line>
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">No More Profiles</h3>
-                <p className="text-center opacity-80">
-                  You've seen all available profiles.
-                </p>
-              </div>
-            </div>
-          )}
-        </motion.div>
+        {/* Frameworks - Scattered across the entire screen like in reference image */}
+        {[
+          "React",
+          "Angular",
+          "Vue",
+          "Next.js",
+          "Express",
+          "Django",
+          "Spring",
+          "Laravel",
+          "Flask",
+          "Svelte",
+          "Gatsby",
+          "NestJS",
+          "ASP.NET",
+          "Rails",
+        ].map((framework, i) => {
+          // Generate random positions that are truly scattered across the entire screen
+          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
+          const randomDelay = Math.floor(Math.random() * 15);
+          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
+          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
-        {/* Stats cards */}
-        <motion.div
-          className="stats-container"
-          initial={{ opacity: 0, y: 20 }}
-          animate={
-            loadingSequence.statsLoaded
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: 20 }
-          }
-          transition={{ duration: 0.5 }}
-        >
+          // Different colors for different frameworks
+          const colors = {
+            React: darkMode ? "#61DAFB" : "#61DAFB",
+            Angular: darkMode ? "#DD0031" : "#DD0031",
+            Vue: darkMode ? "#4FC08D" : "#4FC08D",
+            "Next.js": darkMode ? "#000000" : "#000000",
+            Express: darkMode ? "#000000" : "#000000",
+            Django: darkMode ? "#092E20" : "#092E20",
+            Spring: darkMode ? "#6DB33F" : "#6DB33F",
+            Laravel: darkMode ? "#FF2D20" : "#FF2D20",
+            Flask: darkMode ? "#000000" : "#000000",
+            Svelte: darkMode ? "#FF3E00" : "#FF3E00",
+            Gatsby: darkMode ? "#663399" : "#663399",
+            NestJS: darkMode ? "#E0234E" : "#E0234E",
+            "ASP.NET": darkMode ? "#512BD4" : "#512BD4",
+            Rails: darkMode ? "#CC0000" : "#CC0000",
+          };
+
+          return (
+            <motion.div
+              key={`framework-${i}`}
+              className="absolute font-mono font-bold"
+              style={{
+                top: `${randomTop}%`,
+                left: `${randomLeft}%`,
+                fontSize: `${randomSize}px`,
+                opacity: 0.9,
+                color: colors[framework],
+                filter: `drop-shadow(0 0 10px ${colors[framework]})`,
+                zIndex: 0,
+                textShadow: `0 0 15px ${colors[framework]}`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.6, 0.9, 0.6],
+                rotate: [0, randomRotation, 0],
+                scale: [1, 1.08, 1],
+                filter: [
+                  `drop-shadow(0 0 5px ${colors[framework]})`,
+                  `drop-shadow(0 0 15px ${colors[framework]})`,
+                  `drop-shadow(0 0 5px ${colors[framework]})`,
+                ],
+              }}
+              transition={{
+                duration: randomDuration,
+                repeat: Infinity,
+                delay: randomDelay,
+                ease: "easeInOut",
+              }}
+            >
+              {framework}
+            </motion.div>
+          );
+        })}
+
+        {/* Tools and libraries - Scattered across the entire screen like in reference image */}
+        {[
+          "Git",
+          "Docker",
+          "Redux",
+          "MongoDB",
+          "AWS",
+          "Tailwind",
+          "Kubernetes",
+          "Redis",
+          "PostgreSQL",
+        ].map((tool, i) => {
+          // Generate random positions that are truly scattered across the entire screen
+          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
+          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
+          const randomDelay = Math.floor(Math.random() * 15);
+          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
+          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
+
+          // Different colors for different tools
+          const colors = {
+            Git: darkMode ? "#F05032" : "#F05032",
+            Docker: darkMode ? "#2496ED" : "#2496ED",
+            Redux: darkMode ? "#764ABC" : "#764ABC",
+            MongoDB: darkMode ? "#47A248" : "#47A248",
+            AWS: darkMode ? "#FF9900" : "#FF9900",
+            Tailwind: darkMode ? "#06B6D4" : "#06B6D4",
+            Kubernetes: darkMode ? "#326CE5" : "#326CE5",
+            Redis: darkMode ? "#DC382D" : "#DC382D",
+            PostgreSQL: darkMode ? "#336791" : "#336791",
+          };
+
+          return (
+            <motion.div
+              key={`tool-${i}`}
+              className="absolute font-mono font-bold"
+              style={{
+                top: `${randomTop}%`,
+                left: `${randomLeft}%`,
+                fontSize: `${randomSize}px`,
+                opacity: 0.9,
+                color: colors[tool],
+                filter: `drop-shadow(0 0 10px ${colors[tool]})`,
+                zIndex: 0,
+                textShadow: `0 0 15px ${colors[tool]}`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.6, 0.9, 0.6],
+                rotate: [0, randomRotation, 0],
+                scale: [1, 1.08, 1],
+                filter: [
+                  `drop-shadow(0 0 5px ${colors[tool]})`,
+                  `drop-shadow(0 0 15px ${colors[tool]})`,
+                  `drop-shadow(0 0 5px ${colors[tool]})`,
+                ],
+              }}
+              transition={{
+                duration: randomDuration,
+                repeat: Infinity,
+                delay: randomDelay,
+                ease: "easeInOut",
+              }}
+            >
+              {tool}
+            </motion.div>
+          );
+        })}
+
+        {/* Code symbols - Scattered across the entire screen like in reference image */}
+        {[...Array(60)].map((_, i) => {
+          // Increased number of symbols even more for better coverage
+          // Generate random positions that are truly scattered across the entire screen
+          const randomTop = Math.floor(Math.random() * 130) - 15; // Allow some to be slightly off-screen
+          const randomLeft = Math.floor(Math.random() * 130) - 15; // Allow some to be slightly off-screen
+          const randomSize = Math.floor(Math.random() * 14) + 16; // Larger size range
+          const randomDelay = Math.floor(Math.random() * 20);
+          const randomDuration = Math.floor(Math.random() * 20) + 25; // Slower animation
+          const randomRotation = Math.floor(Math.random() * 40) - 20; // More rotation
+
+          // Colorful code symbols
+          const symbols = [
+            "{",
+            "}",
+            "[",
+            "]",
+            "(",
+            ")",
+            "</>",
+            "&&",
+            "||",
+            "=>",
+            "!==",
+            "===",
+            "//",
+            "!!",
+            "??",
+            "++",
+            "--",
+            "**",
+            "#",
+            "$",
+            "@",
+            "~",
+            "^",
+            "&",
+            "...",
+            ":::",
+            "::=",
+            "=>>",
+            "<<=",
+            "<>",
+          ];
+
+          // Random colors for symbols
+          const colors = [
+            "#FF5252",
+            "#FF4081",
+            "#E040FB",
+            "#7C4DFF",
+            "#536DFE",
+            "#448AFF",
+            "#40C4FF",
+            "#18FFFF",
+            "#64FFDA",
+            "#69F0AE",
+            "#B2FF59",
+            "#EEFF41",
+            "#FFFF00",
+            "#FFD740",
+            "#FFAB40",
+            "#FF6E40",
+            "#FF5252",
+            "#FF4081",
+            "#E040FB",
+            "#7C4DFF",
+          ];
+
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+          return (
+            <motion.div
+              key={`symbol-${i}`}
+              className="absolute font-mono font-bold"
+              style={{
+                top: `${randomTop}%`,
+                left: `${randomLeft}%`,
+                fontSize: `${randomSize}px`,
+                opacity: 0.9,
+                color: randomColor,
+                filter: `drop-shadow(0 0 12px ${randomColor})`,
+                zIndex: 0,
+                textShadow: `0 0 18px ${randomColor}`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.6, 0.9, 0.6],
+                rotate: [0, randomRotation, 0],
+                scale: [1, 1.08, 1],
+                filter: [
+                  `drop-shadow(0 0 5px ${randomColor})`,
+                  `drop-shadow(0 0 15px ${randomColor})`,
+                  `drop-shadow(0 0 5px ${randomColor})`,
+                ],
+              }}
+              transition={{
+                duration: randomDuration,
+                repeat: Infinity,
+                delay: randomDelay,
+                ease: "easeInOut",
+              }}
+            >
+              {symbols[Math.floor(Math.random() * symbols.length)]}
+            </motion.div>
+          );
+        })}
+      </div>
+      {/* All content positioned on top of background icons */}
+      <div className="content-wrapper relative z-20">
+        {/* Navigation */}
+        <div className="nav-container">
+          <Nav />
+        </div>
+
+        {/* Main content */}
+        <div className="home-container pt-24 pb-12">
+          {/* Heading and subheading */}
           <motion.div
-            className="stats-card"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
+            className="text-center mb-28"
+            initial={{ opacity: 0, y: -20 }}
+            animate={
+              loadingSequence.headingLoaded
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: -20 }
+            }
+            transition={{ duration: 0.5 }}
           >
-            <div className="stats-icon connections">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"></path>
-                <path d="M23 14h-4a2 2 0 0 0-2 2v4"></path>
-                <path d="M23 10V4a2 2 0 0 0-2-2h-6"></path>
-                <path d="M12 12L6 6"></path>
-                <path d="M6 10V6h4"></path>
-              </svg>
-            </div>
-            <h3 className="stats-title">Connections</h3>
+            <motion.h1
+              className="text-3xl md:text-4xl font-bold mb-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              Connect with Developers
+            </motion.h1>
             <motion.p
-              className="stats-value"
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
+              className="text-lg opacity-80"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Swipe, match, collaborate
+            </motion.p>
+          </motion.div>
+
+          {/* Card component */}
+          <motion.div
+            className="card-wrapper relative z-20 flex justify-center items-center w-full max-w-full mx-auto my-14"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={
+              loadingSequence.cardLoaded
+                ? { opacity: 1, scale: 1 }
+                : { opacity: 0, scale: 0.9 }
+            }
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {users.length > 0 &&
+            currentIndex < users.length &&
+            !allCardsFinished ? (
+              <div className="tinder-card-stack relative w-full max-w-[340px] mx-auto">
+                {/* Rewind button */}
+                {previousCards.length > 0 && (
+                  <motion.button
+                    className="rewind-button absolute top-4 left-4 z-30 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+                    onClick={handleRewind}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-indigo-600 dark:text-indigo-400"
+                    >
+                      <path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38" />
+                    </svg>
+                  </motion.button>
+                )}
+
+                {/* Static background cards - always centered */}
+                <div className="static-card-stack">
+                  {/* Next card (visible behind current card) - always centered */}
+                  {currentIndex + 1 < users.length && (
+                    <div className="static-card-position preview-stack-card">
+                      <Card user={users[currentIndex + 1]} isNextCard={true} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Current card */}
+                <div className="tinder-current-card">
+                  <Card
+                    user={users[currentIndex]}
+                    onSwipeLeft={handleSwipeLeft}
+                    onSwipeRight={handleSwipeRight}
+                    isCardSwiping={isCardSwiping}
+                    swipeDirection={swipeDirection}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="no-more-cards-in-place">
+                <div className="no-more-cards-content">
+                  <div className="no-more-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No More Profiles
+                  </h3>
+                  <p className="text-center opacity-80">
+                    You've seen all available profiles.
+                  </p>
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Stats cards */}
+          <motion.div
+            className="stats-container"
+            initial={{ opacity: 0, y: 20 }}
+            animate={
+              loadingSequence.statsLoaded
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 20 }
+            }
+            transition={{ duration: 0.5 }}
+          >
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
             >
-              24
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            className="stats-card"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
-          >
-            <div className="stats-icon pending">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <div className="stats-icon connections-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"></path>
+                  <path d="M23 14h-4a2 2 0 0 0-2 2v4"></path>
+                  <path d="M23 10V4a2 2 0 0 0-2-2h-6"></path>
+                  <path d="M12 12L6 6"></path>
+                  <path d="M6 10V6h4"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Connections</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
               >
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            </div>
-            <h3 className="stats-title">Pending</h3>
-            <motion.p
-              className="stats-value"
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
+                24
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
             >
-              12
-            </motion.p>
+              <div className="stats-icon pending-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Pending</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
+              >
+                12
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+            >
+              <div className="stats-icon messages-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Messages</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+              >
+                8
+              </motion.p>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            className="stats-card"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+            className="mt-24 w-full relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <div className="stats-icon messages">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
+            {/* Decorative elements */}
+            <div className="absolute -top-12 left-0 right-0 h-24 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 left-1/4 w-24 h-24 rounded-full bg-indigo-500/10 dark:bg-indigo-600/10 blur-xl"></div>
+              <div className="absolute top-6 right-1/3 w-32 h-32 rounded-full bg-purple-500/10 dark:bg-purple-600/10 blur-xl"></div>
+              <div className="absolute top-4 right-1/4 w-20 h-20 rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-xl"></div>
+
+              {/* Separator line with enhanced styling */}
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 dark:via-indigo-400/30 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-[1px] w-full shadow-[0_-1px_2px_rgba(79,70,229,0.1)] dark:shadow-[0_-1px_2px_rgba(99,102,241,0.2)]"></div>
             </div>
-            <h3 className="stats-title">Messages</h3>
-            <motion.p
-              className="stats-value"
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
-            >
-              8
-            </motion.p>
           </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="mt-24 w-full relative"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          {/* Decorative elements */}
-          <div className="absolute -top-12 left-0 right-0 h-24 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-24 h-24 rounded-full bg-indigo-500/10 dark:bg-indigo-600/10 blur-xl"></div>
-            <div className="absolute top-6 right-1/3 w-32 h-32 rounded-full bg-purple-500/10 dark:bg-purple-600/10 blur-xl"></div>
-            <div className="absolute top-4 right-1/4 w-20 h-20 rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-xl"></div>
-
-            {/* Separator line with enhanced styling */}
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 dark:via-indigo-400/30 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] w-full shadow-[0_-1px_2px_rgba(79,70,229,0.1)] dark:shadow-[0_-1px_2px_rgba(99,102,241,0.2)]"></div>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

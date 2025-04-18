@@ -1551,9 +1551,9 @@ pre,
   pointer-events: none;
   user-select: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
-  transform: scale(0.95) translateY(10px) !important;
-  opacity: 0.8 !important;
-  filter: blur(1px) !important;
+  transform: scale(0.98) translateY(10px) !important; /* Increased scale for larger background card */
+  opacity: 0.85 !important; /* Increased opacity for better visibility */
+  filter: blur(0.5px) !important; /* Reduced blur for better visibility */
 }
 
 /* Static card stack - these cards don't move */
@@ -1570,7 +1570,8 @@ pre,
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: auto;
+  /* Force center positioning */
+  margin: auto !important;
 }
 
 /* Static background cards - Tinder-like sizing */
@@ -1580,10 +1581,15 @@ pre,
   min-height: 480px;
   border-radius: 24px;
   overflow: hidden;
-  background-color: var(--color-card-bg);
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   transform-origin: center center;
+}
+
+.dark .static-card {
+  background-color: rgba(30, 41, 59, 0.1);
 }
 
 /* Card position in the stack */
@@ -1615,8 +1621,8 @@ pre,
 
 /* Preview stack card (second card) */
 .preview-stack-card {
-  opacity: 0.7;
-  transform: scale(0.95) translateY(10px);
+  opacity: 0.85; /* Increased opacity for better visibility */
+  transform: scale(0.98) translateY(10px); /* Increased scale for larger background card */
 }
 
 /* Static card images */
@@ -3132,14 +3138,14 @@ pre,
 /* Stats container */
 .stats-container {
   position: relative;
-  margin-top: 3rem !important;
+  margin-top: 4rem !important;
   margin-bottom: 3rem !important;
   z-index: 10;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 /* Responsive stats container */
@@ -3151,7 +3157,7 @@ pre,
 }
 
 .stats-card {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.05);
   padding: 1.75rem 1.5rem;
   text-align: center;
   min-width: 140px;
@@ -3159,6 +3165,14 @@ pre,
   overflow: visible;
   transition: all 0.3s ease;
   border: none;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark .stats-card {
+  background-color: rgba(30, 41, 59, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive stats card */
@@ -3230,6 +3244,7 @@ pre,
   transition: all 0.3s ease;
   position: relative;
   color: var(--color-primary);
+  border-radius: 50%;
 }
 
 .stats-icon svg {
@@ -3237,21 +3252,33 @@ pre,
   transition: all 0.3s ease;
 }
 
+.stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dark .stats-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
 .stats-card:hover .stats-icon svg {
-  transform: scale(1.05);
+  transform: scale(1.1);
   filter: drop-shadow(0 0 5px rgba(var(--color-primary-rgb), 0.4));
 }
 
 .connections-icon {
   color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
 }
 
 .pending-icon {
-  color: #f59e0b;
+  color: #a855f7;
+  background-color: rgba(168, 85, 247, 0.1);
 }
 
 .messages-icon {
   color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
 }
 
 .stats-title {
@@ -3282,8 +3309,8 @@ pre,
 }
 
 .pending-icon + .stats-title + .stats-value {
-  color: #f59e0b;
-  text-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
+  color: #a855f7;
+  text-shadow: 0 0 5px rgba(168, 85, 247, 0.2);
 }
 
 .messages-icon + .stats-title + .stats-value {

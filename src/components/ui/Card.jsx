@@ -64,12 +64,12 @@ const Card = ({
     },
     // Tinder-like next card (exactly like Tinder)
     nextCard: {
-      opacity: 0.8 /* Slightly less visible behind current card */,
-      scale: 0.95 /* Slightly smaller than current card */,
+      opacity: 0.85 /* Slightly less visible behind current card */,
+      scale: 0.98 /* Slightly smaller than current card but larger than before */,
       y: 10 /* Slightly lower than current card */,
       x: 0 /* Centered horizontally */,
       rotateZ: 0 /* No rotation */,
-      filter: "blur(1px)" /* Slight blur */,
+      filter: "blur(0.5px)" /* Very slight blur for better visibility */,
       transition: {
         type: "spring",
         stiffness: 300,
@@ -178,9 +178,26 @@ const Card = ({
             element.style.top = "0";
             element.style.bottom = "0";
             element.style.margin = "auto";
+            element.style.position = "relative";
 
             // Force a reflow to ensure the transition is removed
             void element.offsetWidth;
+
+            // Also reset all next cards to ensure they appear in the center
+            const nextCards = document.querySelectorAll(
+              ".next-card, .preview-stack-card"
+            );
+            nextCards.forEach((card) => {
+              card.style.transition = "none";
+              card.style.transform = "scale(0.98) translateY(10px)";
+              card.style.left = "0";
+              card.style.right = "0";
+              card.style.top = "0";
+              card.style.bottom = "0";
+              card.style.margin = "auto";
+              card.style.position = "absolute";
+              void card.offsetWidth;
+            });
           }
         }, 600); // Match timeout to the animation duration
       }
@@ -192,6 +209,67 @@ const Card = ({
 
   // State to track if we're showing the next card
   const [showingNextCard, setShowingNextCard] = React.useState(false);
+
+  // State to track if this is the top card
+  const [isTopCard, setIsTopCard] = React.useState(!isNextCard && !isPreview);
+
+  // Reset the card position when it becomes the top card
+  React.useEffect(() => {
+    setIsTopCard(!isNextCard && !isPreview);
+
+    if (!isNextCard && !isPreview) {
+      setDragDirection("none");
+      setSwipeProgress(0);
+
+      // Ensure the card is in the center position
+      setTimeout(() => {
+        const cardElement = document.querySelector(
+          ".dev-card:not(.next-card):not(.preview-card)"
+        );
+        if (cardElement) {
+          cardElement.style.transition = "none";
+          cardElement.style.transform = "translateX(0) rotate(0) scale(1)";
+          cardElement.style.opacity = "1";
+          cardElement.style.boxShadow = "";
+          cardElement.style.border = "none";
+          cardElement.setAttribute("data-drag", "none");
+          cardElement.style.left = "0";
+          cardElement.style.right = "0";
+          cardElement.style.top = "0";
+          cardElement.style.bottom = "0";
+          cardElement.style.margin = "auto";
+          cardElement.style.position = "relative";
+
+          // Force a reflow to apply the changes immediately
+          void cardElement.offsetWidth;
+
+          // Then add back the transition for smooth animations
+          setTimeout(() => {
+            if (cardElement) {
+              cardElement.style.transition =
+                "transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease, border 0.3s ease";
+            }
+          }, 50);
+
+          // Also reset all next cards to ensure they appear in the center
+          const nextCards = document.querySelectorAll(
+            ".next-card, .preview-stack-card"
+          );
+          nextCards.forEach((card) => {
+            card.style.transition = "none";
+            card.style.transform = "scale(0.98) translateY(10px)";
+            card.style.left = "0";
+            card.style.right = "0";
+            card.style.top = "0";
+            card.style.bottom = "0";
+            card.style.margin = "auto";
+            card.style.position = "absolute";
+            void card.offsetWidth;
+          });
+        }
+      }, 50);
+    }
+  }, [isNextCard, isPreview]);
 
   // Optimized drag handler to reduce stuttering
   const handleDrag = (event, info) => {
@@ -541,6 +619,42 @@ const Card = ({
                       // Reset progress after the card is gone
                       setSwipeProgress(0);
                       setShowingNextCard(false); // Reset for the next card
+
+                      // Reset the transform to ensure the next card appears in the center
+                      if (element && element.isConnected) {
+                        element.style.transition = "none";
+                        element.style.transform =
+                          "translateX(0) rotate(0) scale(1)";
+                        element.style.opacity = "1";
+                        element.style.boxShadow = "";
+                        element.style.border = "none";
+                        element.setAttribute("data-drag", "none");
+                        element.style.left = "0";
+                        element.style.right = "0";
+                        element.style.top = "0";
+                        element.style.bottom = "0";
+                        element.style.margin = "auto";
+                        element.style.position = "relative";
+
+                        // Force a reflow to ensure the transition is removed
+                        void element.offsetWidth;
+
+                        // Also reset all next cards to ensure they appear in the center
+                        const nextCards = document.querySelectorAll(
+                          ".next-card, .preview-stack-card"
+                        );
+                        nextCards.forEach((card) => {
+                          card.style.transition = "none";
+                          card.style.transform = "scale(0.98) translateY(10px)";
+                          card.style.left = "0";
+                          card.style.right = "0";
+                          card.style.top = "0";
+                          card.style.bottom = "0";
+                          card.style.margin = "auto";
+                          card.style.position = "absolute";
+                          void card.offsetWidth;
+                        });
+                      }
                     }, 200);
                   }
                 } else if (isSwipeRight) {
@@ -576,6 +690,42 @@ const Card = ({
                       // Reset progress after the card is gone
                       setSwipeProgress(0);
                       setShowingNextCard(false); // Reset for the next card
+
+                      // Reset the transform to ensure the next card appears in the center
+                      if (element && element.isConnected) {
+                        element.style.transition = "none";
+                        element.style.transform =
+                          "translateX(0) rotate(0) scale(1)";
+                        element.style.opacity = "1";
+                        element.style.boxShadow = "";
+                        element.style.border = "none";
+                        element.setAttribute("data-drag", "none");
+                        element.style.left = "0";
+                        element.style.right = "0";
+                        element.style.top = "0";
+                        element.style.bottom = "0";
+                        element.style.margin = "auto";
+                        element.style.position = "relative";
+
+                        // Force a reflow to ensure the transition is removed
+                        void element.offsetWidth;
+
+                        // Also reset all next cards to ensure they appear in the center
+                        const nextCards = document.querySelectorAll(
+                          ".next-card, .preview-stack-card"
+                        );
+                        nextCards.forEach((card) => {
+                          card.style.transition = "none";
+                          card.style.transform = "scale(0.98) translateY(10px)";
+                          card.style.left = "0";
+                          card.style.right = "0";
+                          card.style.top = "0";
+                          card.style.bottom = "0";
+                          card.style.margin = "auto";
+                          card.style.position = "absolute";
+                          void card.offsetWidth;
+                        });
+                      }
                     }, 200);
                   }
                 } else {
