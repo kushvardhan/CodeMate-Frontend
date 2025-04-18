@@ -1316,13 +1316,13 @@ pre,
 /* Card Container and Indicators */
 .card-container {
   position: relative;
-  width: 23%; /* Slightly smaller */
-  max-width: 300px; /* Slightly smaller */
-  min-width: 240px; /* Slightly smaller */
+  width: 100%; /* Full width of parent */
+  max-width: 340px; /* Slightly larger */
+  min-width: 280px; /* Slightly larger */
   margin: 0 auto;
   perspective: 1000px;
   height: 100%;
-  transform-origin: top center; /* Make swipe happen from top */
+  transform-origin: center center; /* Center origin for better animations */
 }
 
 /* Card stack styles */
@@ -1346,7 +1346,7 @@ pre,
   position: relative;
   width: 100%;
   max-width: 340px; /* Increased to accommodate larger card */
-  height: 100%;
+  height: 550px; /* Fixed height for better positioning */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1508,13 +1508,22 @@ pre,
   backface-visibility: hidden !important;
   -webkit-backface-visibility: hidden !important;
   will-change: transform !important;
-  transform: translateZ(0) !important;
+  transform: translateZ(0) scale(0.95) translateY(10px) !important;
+  opacity: 0.8 !important;
+  /* Ensure the next card is always centered */
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  /* Force center positioning */
+  inset: 0 !important;
 }
 
 /* Current card (top of stack) */
 .tinder-current-card {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  z-index: 10; /* Higher than static cards */
   width: 100%;
   height: 100%;
   display: flex;
@@ -1529,6 +1538,11 @@ pre,
   -webkit-backface-visibility: hidden !important;
   will-change: transform !important;
   transform: translateZ(0) !important;
+  /* Ensure the current card is always centered */
+  top: 0 !important;
+  bottom: 0 !important;
+  /* Force center positioning */
+  inset: 0 !important;
 }
 
 /* Next card styling */
@@ -1537,16 +1551,26 @@ pre,
   pointer-events: none;
   user-select: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+  transform: scale(0.95) translateY(10px) !important;
+  opacity: 0.8 !important;
+  filter: blur(1px) !important;
 }
 
-/* Static card stack to prevent stuttering */
+/* Static card stack - these cards don't move */
 .static-card-stack {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
 
 /* Static background cards - Tinder-like sizing */
@@ -1560,6 +1584,27 @@ pre,
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   transform-origin: center center;
+}
+
+/* Card position in the stack */
+.static-card-position {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  inset: 0;
 }
 
 /* Deep stack card (third card) */
@@ -1600,6 +1645,18 @@ pre,
 
 .card-preview-3 {
   transform: translateY(30px) scale(0.9);
+}
+
+/* Rewind button styling */
+.rewind-button {
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .rewind-button {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .card-current {
@@ -1960,9 +2017,10 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 110%; /* Slightly bigger for better text visibility */
+  width: 100%; /* Full width of container */
   aspect-ratio: 2/3.5; /* Taller aspect ratio */
   min-height: 550px; /* Increased minimum height for better text visibility */
+  max-width: 340px; /* Maximum width to prevent oversizing */
   margin: 0 auto !important; /* Center the card */
   left: 0 !important;
   right: 0 !important;
@@ -1974,15 +2032,15 @@ pre,
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
   /* NO colored border by default */
   border: none !important;
-  transition: transform 0.3s ease-out,
-    /* Smoother transition */ box-shadow 0.3s ease-out;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.5s ease-out, border 0.5s ease-out, opacity 0.5s ease-out;
   position: relative;
   cursor: grab;
   touch-action: pan-y;
   transform-style: preserve-3d;
   backface-visibility: hidden;
-  will-change: transform;
-  transform-origin: top center; /* Make swipe happen from top */
+  will-change: transform, opacity, box-shadow, border;
+  transform-origin: center center; /* Center origin for better animations */
   /* Add hardware acceleration to reduce jittering */
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);

@@ -64,11 +64,12 @@ const Card = ({
     },
     // Tinder-like next card (exactly like Tinder)
     nextCard: {
-      opacity: 1 /* Fully visible but behind current card */,
-      scale: 1 /* Same size as current card */,
-      y: 0 /* Same position as current card */,
+      opacity: 0.8 /* Slightly less visible behind current card */,
+      scale: 0.95 /* Slightly smaller than current card */,
+      y: 10 /* Slightly lower than current card */,
+      x: 0 /* Centered horizontally */,
       rotateZ: 0 /* No rotation */,
-      filter: "blur(0px)" /* No blur */,
+      filter: "blur(1px)" /* Slight blur */,
       transition: {
         type: "spring",
         stiffness: 300,
@@ -133,7 +134,7 @@ const Card = ({
         void element.offsetWidth;
 
         // Apply Tinder-like exit animation based on direction
-        // Use a longer duration for smoother animation
+        // Use a shorter duration for faster animation (like Tinder)
         element.style.transition =
           "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, box-shadow 0.4s ease-out, border 0.4s ease-out";
 
@@ -151,14 +152,37 @@ const Card = ({
           element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
           // Set data attribute for CSS targeting
           element.setAttribute("data-drag", "right");
+        } else if (swipeDirection === "rewind") {
+          // Special animation for rewinding
+          element.style.transform = `translateX(0) rotate(0) scale(1)`;
+          element.style.opacity = "1";
+          element.style.boxShadow = "0 0 30px 10px rgba(99, 102, 241, 0.6)";
+          element.style.border = "3px solid rgba(99, 102, 241, 0.8)";
+          // Set data attribute for CSS targeting
+          element.setAttribute("data-drag", "rewind");
         }
 
         // Clean up after animation completes
         setTimeout(() => {
-          if (element) {
+          if (element && element.isConnected) {
+            // Reset the transform to ensure the next card appears in the center
+            element.style.transition = "none";
+            element.style.transform = "translateX(0) rotate(0) scale(1)";
+            element.style.opacity = "1";
+            element.style.boxShadow = "";
+            element.style.border = "none";
+            element.setAttribute("data-drag", "none");
             element.style.willChange = "auto";
+            element.style.left = "0";
+            element.style.right = "0";
+            element.style.top = "0";
+            element.style.bottom = "0";
+            element.style.margin = "auto";
+
+            // Force a reflow to ensure the transition is removed
+            void element.offsetWidth;
           }
-        }, 600); // Longer timeout to match the longer animation
+        }, 600); // Match timeout to the animation duration
       }
     }
   }, [isCardSwiping, swipeDirection]);
@@ -516,6 +540,7 @@ const Card = ({
                       onSwipeLeft();
                       // Reset progress after the card is gone
                       setSwipeProgress(0);
+                      setShowingNextCard(false); // Reset for the next card
                     }, 200);
                   }
                 } else if (isSwipeRight) {
@@ -550,6 +575,7 @@ const Card = ({
                       onSwipeRight();
                       // Reset progress after the card is gone
                       setSwipeProgress(0);
+                      setShowingNextCard(false); // Reset for the next card
                     }, 200);
                   }
                 } else {

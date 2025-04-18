@@ -8,6 +8,7 @@ const Home = () => {
   const { darkMode } = useContext(ThemeContext);
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [previousCards, setPreviousCards] = useState([]); // Store swiped cards for rewind function
 
   useEffect(() => {
     // Fetch users or use mock data
@@ -233,6 +234,13 @@ const Home = () => {
     setSwipeDirection("left");
     setPrevIndex(currentIndex);
 
+    // Store the current card for rewind function
+    const currentCard = users[currentIndex];
+    setPreviousCards((prev) => [
+      ...prev,
+      { card: currentCard, direction: "left" },
+    ]);
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -247,8 +255,9 @@ const Home = () => {
       // Reset swiping state after a longer delay to ensure smooth transition
       setTimeout(() => {
         setIsCardSwiping(false);
-      }, 300); // Longer delay for smoother transition
-    }, 400); // Wait for exit animation to complete
+        setSwipeDirection(null);
+      }, 500); // Longer delay for smoother transition
+    }, 600); // Wait for exit animation to complete
   };
 
   const handleSwipeRight = () => {
@@ -261,6 +270,13 @@ const Home = () => {
     setSwipeDirection("right");
     setPrevIndex(currentIndex);
 
+    // Store the current card for rewind function
+    const currentCard = users[currentIndex];
+    setPreviousCards((prev) => [
+      ...prev,
+      { card: currentCard, direction: "right" },
+    ]);
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -275,8 +291,46 @@ const Home = () => {
       // Reset swiping state after a longer delay to ensure smooth transition
       setTimeout(() => {
         setIsCardSwiping(false);
-      }, 300); // Longer delay for smoother transition
-    }, 400); // Wait for exit animation to complete
+        setSwipeDirection(null);
+      }, 500); // Longer delay for smoother transition
+    }, 600); // Wait for exit animation to complete
+  };
+
+  // Rewind function to bring back the last card
+  const handleRewind = () => {
+    // Check if there are any previous cards
+    if (previousCards.length === 0) {
+      console.log("No cards to rewind");
+      return;
+    }
+
+    // Prevent rewind during swiping
+    if (isCardSwiping) return;
+
+    // Get the last card
+    const lastCard = previousCards[previousCards.length - 1];
+    console.log(
+      "Rewinding to card:",
+      lastCard.card.name,
+      "Direction was:",
+      lastCard.direction
+    );
+
+    // Remove the last card from previousCards
+    setPreviousCards((prev) => prev.slice(0, -1));
+
+    // Set swiping state for animation
+    setIsCardSwiping(true);
+    setSwipeDirection("rewind");
+
+    // Decrement the index to show the previous card
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+
+    // Reset swiping state after animation
+    setTimeout(() => {
+      setIsCardSwiping(false);
+      setSwipeDirection(null);
+    }, 600); // Match the longer timeout for consistency
   };
 
   // State to track loading sequence
@@ -348,7 +402,7 @@ const Home = () => {
 
         {/* Card component */}
         <motion.div
-          className="card-wrapper relative z-20"
+          className="card-wrapper relative z-20 flex justify-center items-center w-full max-w-full mx-auto my-8"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={
             loadingSequence.cardLoaded
@@ -360,13 +414,43 @@ const Home = () => {
           {users.length > 0 &&
           currentIndex < users.length &&
           !allCardsFinished ? (
-            <div className="tinder-card-stack">
-              {/* Next card (visible behind current card) */}
-              {currentIndex + 1 < users.length && (
-                <div className="tinder-next-card">
-                  <Card user={users[currentIndex + 1]} isNextCard={true} />
-                </div>
+            <div className="tinder-card-stack relative w-full max-w-[340px] mx-auto">
+              {/* Rewind button */}
+              {previousCards.length > 0 && (
+                <motion.button
+                  className="rewind-button absolute top-4 left-4 z-30 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+                  onClick={handleRewind}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-indigo-600 dark:text-indigo-400"
+                  >
+                    <path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38" />
+                  </svg>
+                </motion.button>
               )}
+
+              {/* Static background cards - always centered */}
+              <div className="static-card-stack">
+                {/* Next card (visible behind current card) - always centered */}
+                {currentIndex + 1 < users.length && (
+                  <div className="static-card-position preview-stack-card">
+                    <Card user={users[currentIndex + 1]} isNextCard={true} />
+                  </div>
+                )}
+              </div>
 
               {/* Current card */}
               <div className="tinder-current-card">
@@ -518,6 +602,90 @@ const Home = () => {
               8
             </motion.p>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="mt-20 w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          <footer className="footer sm:footer-horizontal bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-900 dark:to-slate-900 text-white dark:text-gray-200 p-10 rounded-t-3xl shadow-lg">
+            <nav>
+              <h6 className="footer-title">Company</h6>
+              <a className="link link-hover">About us</a>
+              <a className="link link-hover">Contact</a>
+              <a className="link link-hover">Jobs</a>
+              <a className="link link-hover">Press kit</a>
+            </nav>
+            <nav>
+              <h6 className="footer-title">Legal</h6>
+              <a className="link link-hover">Terms of use</a>
+              <a className="link link-hover">Privacy policy</a>
+              <a className="link link-hover">Cookie policy</a>
+            </nav>
+            <form>
+              <h6 className="footer-title">Newsletter</h6>
+              <fieldset className="w-80">
+                <label className="label">
+                  <span className="label-text text-gray-300">
+                    Enter your email address
+                  </span>
+                </label>
+                <div className="join">
+                  <input
+                    type="text"
+                    placeholder="username@site.com"
+                    className="input bg-gray-800 text-white border-gray-700 join-item focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button className="btn bg-indigo-600 hover:bg-indigo-700 text-white border-none join-item">
+                    Subscribe
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+            <nav>
+              <h6 className="footer-title">Social</h6>
+              <div className="grid grid-flow-col gap-4">
+                <a className="hover:scale-110 transition-transform duration-200">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    className="fill-current text-blue-400 hover:text-blue-300"
+                  >
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                  </svg>
+                </a>
+                <a className="hover:scale-110 transition-transform duration-200">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    className="fill-current text-red-500 hover:text-red-400"
+                  >
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                  </svg>
+                </a>
+                <a className="hover:scale-110 transition-transform duration-200">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    className="fill-current text-blue-600 hover:text-blue-500"
+                  >
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+                  </svg>
+                </a>
+              </div>
+            </nav>
+          </footer>
+          <div className="py-4 text-center text-sm text-gray-400 bg-gray-900 dark:bg-gray-950 rounded-b-3xl">
+            <p>© 2023 CodeMate. All rights reserved.</p>
+          </div>
         </motion.div>
       </div>
     </div>

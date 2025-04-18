@@ -1,10 +1,10 @@
 import { AnimatePresence } from "framer-motion";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import LoginPage from "./components/LoginPage";
-import SignupPage from "./components/SignupPage";
 import Home from "./components/Home";
+import LoginPage from "./components/LoginPage";
 import ProfilePage from "./components/ProfilePage";
+import SignupPage from "./components/SignupPage";
 
 // Create router configuration
 const router = createBrowserRouter([
