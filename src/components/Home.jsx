@@ -605,87 +605,375 @@ const Home = () => {
         </motion.div>
 
         <motion.div
-          className="mt-20 w-full"
+          className="mt-16 w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <footer className="footer sm:footer-horizontal bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-900 dark:to-slate-900 text-white dark:text-gray-200 p-10 rounded-t-3xl shadow-lg">
-            <nav>
-              <h6 className="footer-title">Company</h6>
-              <a className="link link-hover">About us</a>
-              <a className="link link-hover">Contact</a>
-              <a className="link link-hover">Jobs</a>
-              <a className="link link-hover">Press kit</a>
-            </nav>
-            <nav>
-              <h6 className="footer-title">Legal</h6>
-              <a className="link link-hover">Terms of use</a>
-              <a className="link link-hover">Privacy policy</a>
-              <a className="link link-hover">Cookie policy</a>
-            </nav>
-            <form>
-              <h6 className="footer-title">Newsletter</h6>
-              <fieldset className="w-80">
-                <label className="label">
-                  <span className="label-text text-gray-300">
-                    Enter your email address
-                  </span>
-                </label>
-                <div className="join">
-                  <input
-                    type="text"
-                    placeholder="username@site.com"
-                    className="input bg-gray-800 text-white border-gray-700 join-item focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                  />
-                  <button className="btn bg-indigo-600 hover:bg-indigo-700 text-white border-none join-item">
-                    Subscribe
-                  </button>
-                </div>
-              </fieldset>
-            </form>
-            <nav>
-              <h6 className="footer-title">Social</h6>
-              <div className="grid grid-flow-col gap-4">
-                <a className="hover:scale-110 transition-transform duration-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current text-blue-400 hover:text-blue-300"
-                  >
-                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-                  </svg>
-                </a>
-                <a className="hover:scale-110 transition-transform duration-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current text-red-500 hover:text-red-400"
-                  >
-                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-                  </svg>
-                </a>
-                <a className="hover:scale-110 transition-transform duration-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current text-blue-600 hover:text-blue-500"
-                  >
-                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-                  </svg>
-                </a>
-              </div>
-            </nav>
-          </footer>
-          <div className="py-4 text-center text-sm text-gray-400 bg-gray-900 dark:bg-gray-950 rounded-b-3xl">
-            <p>© 2023 CodeMate. All rights reserved.</p>
+          {/* Separator line with shadow */}
+          <div className="relative h-4 w-full overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/30 to-indigo-500/20 dark:from-blue-600/20 dark:via-indigo-500/30 dark:to-blue-600/20 h-px top-0"></div>
+            <div className="absolute inset-0 shadow-lg opacity-50"></div>
           </div>
+
+          {/* Footer */}
+          <footer className="bg-gradient-to-br from-slate-100 to-gray-200 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 text-gray-800 dark:text-gray-200 pt-12 pb-6 px-6 shadow-inner">
+            <div className="container mx-auto max-w-6xl">
+              {/* Main footer content */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                {/* Logo and description */}
+                <div className="col-span-1 md:col-span-2 lg:col-span-1">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                  >
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 flex items-center justify-center shadow-md mr-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                        CodeMate
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                      Connect with developers worldwide. Swipe, match, and
+                      collaborate on exciting projects that match your skills
+                      and interests.
+                    </p>
+                    <div className="flex space-x-3 mt-6">
+                      <motion.a
+                        href="https://www.linkedin.com/in/kush-vardhan-48996a251/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center hover:bg-blue-200 dark:hover:bg-blue-800/40 transition-colors duration-300"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+                        </svg>
+                      </motion.a>
+                      <motion.a
+                        href="mailto:kushvardhan39797@gmail.com"
+                        className="w-9 h-9 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center hover:bg-purple-200 dark:hover:bg-purple-800/40 transition-colors duration-300"
+                        whileHover={{ scale: 1.1, rotate: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
+                        </svg>
+                      </motion.a>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Quick Links */}
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                  >
+                    <h4 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                      Quick Links
+                    </h4>
+                    <ul className="space-y-2">
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          Home
+                        </a>
+                      </motion.li>
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          About
+                        </a>
+                      </motion.li>
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          Features
+                        </a>
+                      </motion.li>
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          Contact
+                        </a>
+                      </motion.li>
+                    </ul>
+                  </motion.div>
+                </div>
+
+                {/* Resources */}
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
+                  >
+                    <h4 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                      Resources
+                    </h4>
+                    <ul className="space-y-2">
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-2 w-2 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          Documentation
+                        </a>
+                      </motion.li>
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3 w-3 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          API
+                        </a>
+                      </motion.li>
+                      <motion.li
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <a
+                          href="#"
+                          className="text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-3 w-3 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                          Support
+                        </a>
+                      </motion.li>
+                    </ul>
+                  </motion.div>
+                </div>
+
+                {/* Newsletter */}
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                  >
+                    <h4 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                      Stay Updated
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                      Subscribe to our newsletter for the latest updates and
+                      features.
+                    </p>
+                    <div className="flex">
+                      <input
+                        type="email"
+                        placeholder="Your email"
+                        className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-l-md focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 text-sm w-full"
+                      />
+                      <button className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-3 py-2 rounded-r-md text-sm transition-colors duration-300">
+                        Subscribe
+                      </button>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent mb-6"></div>
+
+              {/* Copyright */}
+              <div className="flex flex-col md:flex-row justify-between items-center text-gray-600 dark:text-gray-400">
+                <motion.p
+                  className="text-sm mb-4 md:mb-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  © {new Date().getFullYear()}{" "}
+                  <span className="font-medium text-indigo-600 dark:text-indigo-400">
+                    Kush Vardhan
+                  </span>
+                  . All rights reserved.
+                </motion.p>
+
+                <motion.div
+                  className="flex space-x-4 text-xs"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <a
+                    href="#"
+                    className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  >
+                    Privacy Policy
+                  </a>
+                  <span>•</span>
+                  <a
+                    href="#"
+                    className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  >
+                    Terms of Service
+                  </a>
+                  <span>•</span>
+                  <a
+                    href="#"
+                    className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  >
+                    Cookies
+                  </a>
+                </motion.div>
+              </div>
+            </div>
+          </footer>
         </motion.div>
       </div>
     </div>
