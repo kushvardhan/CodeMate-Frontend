@@ -3132,7 +3132,7 @@ pre,
 /* Stats container */
 .stats-container {
   position: relative;
-  margin-top: 2rem !important;
+  margin-top: 2.5rem !important;
   margin-bottom: 3rem !important;
   z-index: 10;
   width: 100%;
