@@ -3956,7 +3956,7 @@ pre,
 /* Add styles for the content container */
 .content-container {
   position: absolute; /* Ensure it is positioned relative to the parent */
-  top: 13vh; /* Position it just below the Navbar */
+  top: 2vh; /* Reduced gap from 13vh to 10vh */
   left: 50%; /* Center horizontally */
   transform: translateX(-50%); /* Adjust for centering */
   background-color: transparent; /* Fully transparent background */
@@ -3970,11 +3970,14 @@ pre,
 
 .content-wrapper {
   position: absolute;
-  top: 13vh; /* Position just below the Navbar */
+  top: 2vh; /* Reduced gap from 13vh to 10vh */
   left: 0;
   right: 0;
   z-index: 10; /* Ensure it is above the background elements */
   background-color: transparent; /* Transparent background */
+}
+.Headingandsubheading{
+  margin-bottom:1vw ;
 }
 
 .home-container {

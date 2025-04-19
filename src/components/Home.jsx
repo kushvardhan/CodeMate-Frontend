@@ -684,7 +684,7 @@ const Home = () => {
         <div className="home-container pt-6 pb-12 mx-auto max-w-4xl bg-transparent">
           {/* Heading and subheading */}
           <motion.div
-            className="text-center mb-28 relative z-10"
+            className="Headingandsubheading text-center mb-28 relative z-10"
             initial={{ opacity: 0, y: -20 }}
             animate={
               loadingSequence.headingLoaded
