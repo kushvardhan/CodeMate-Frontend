@@ -360,56 +360,29 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
-  // Programming language icons with their brand colors
+  // Programming language icons with coding-related symbols
   const programmingLanguages = [
-    { name: "⚛️", color: "#61DAFB" }, // React/Atom
-    { name: "🐍", color: "#3776AB" }, // Python
-    { name: "☕", color: "#007396" }, // Java
-    { name: "🔷", color: "#00599C" }, // C++
-    { name: "🟨", color: "#F7DF1E" }, // JavaScript
-    { name: "🔵", color: "#3178C6" }, // TypeScript
-    { name: "🐹", color: "#00ADD8" }, // Go
-    { name: "💎", color: "#CC342D" }, // Ruby
-    { name: "🦊", color: "#FF2D20" }, // Firefox/Laravel
-    { name: "🦄", color: "#7F52FF" }, // Kotlin/Fantasy
-    { name: "🦀", color: "#DEA584" }, // Rust
-    { name: "📱", color: "#FA7343" }, // Swift/Mobile
-    { name: "🎯", color: "#0175C2" }, // Dart
-    { name: "🟩", color: "#239120" }, // C#
-    { name: "🌐", color: "#E34F26" }, // HTML/Web
-    { name: "🎨", color: "#1572B6" }, // CSS/Design
+    { name: "JavaScript", color: "#F7DF1E", symbol: "JS" },
+    { name: "Python", color: "#3776AB", symbol: "Py" },
+    { name: "Java", color: "#007396", symbol: "☕" },
+    { name: "C++", color: "#00599C", symbol: "C++" },
+    // ...add more programming languages...
   ];
 
-  // Framework icons with their brand colors
+  // Framework icons with coding-related symbols
   const frameworks = [
-    { name: "🌊", color: "#4FC08D" }, // Vue/Wave
-    { name: "🅰️", color: "#DD0031" }, // Angular
-    { name: "🎯", color: "#092E20" }, // Django/Target
-    { name: "🌱", color: "#6DB33F" }, // Spring
-    { name: "🚂", color: "#CC0000" }, // Ruby on Rails
-    { name: "🔌", color: "#000000" }, // Express/Plugin
-    { name: "🧪", color: "#000000" }, // Flask/Test
-    { name: "🔥", color: "#FF3E00" }, // Svelte/Fire
-    { name: "🌌", color: "#663399" }, // Gatsby/Space
-    { name: "🐦", color: "#E0234E" }, // NestJS/Bird
-    { name: "🔷", color: "#512BD4" }, // ASP.NET
+    { name: "React", color: "#61DAFB", symbol: "⚛" },
+    { name: "Angular", color: "#DD0031", symbol: "NG" },
+    { name: "Vue", color: "#4FC08D", symbol: "Vue" },
+    // ...add more frameworks...
   ];
 
-  // Tool and library icons with their brand colors
+  // Tool and library icons with coding-related symbols
   const tools = [
-    { name: "📦", color: "#339933" }, // Node.js/Package
-    { name: "🐳", color: "#2496ED" }, // Docker
-    { name: "⚓", color: "#326CE5" }, // Kubernetes/Helm
-    { name: "🔄", color: "#F05032" }, // Git/Branch
-    { name: "🔁", color: "#764ABC" }, // Redux/Cycle
-    { name: "📊", color: "#E10098" }, // GraphQL/Chart
-    { name: "🍃", color: "#47A248" }, // MongoDB/Leaf
-    { name: "🐘", color: "#336791" }, // PostgreSQL
-    { name: "🐬", color: "#4479A1" }, // MySQL
-    { name: "🔥", color: "#FFCA28" }, // Firebase
-    { name: "☁️", color: "#FF9900" }, // AWS/Cloud
-    { name: "🧠", color: "#FF6F00" }, // TensorFlow/Brain
-    { name: "💨", color: "#06B6D4" }, // Tailwind
+    { name: "Git", color: "#F05032", symbol: "Git" },
+    { name: "Docker", color: "#2496ED", symbol: "🐳" },
+    { name: "Kubernetes", color: "#326CE5", symbol: "K8s" },
+    // ...add more tools...
   ];
 
   // Code symbols with random vibrant colors
@@ -629,102 +602,54 @@ const Home = () => {
         {/* Programming languages */}
         {distributedProgrammingLanguages.map((lang, i) => (
           <motion.div
-            key={`lang-${lang.instanceId}-${i}`}
+            key={`lang-${i}`}
             style={{
               ...lang.position,
               fontSize: `${Math.random() * 12 + 14}px`,
               color: lang.color,
-              filter: `drop-shadow(0 0 15px ${lang.color})`,
-              textShadow: `0 0 20px ${lang.color}`,
+              filter: `drop-shadow(0 0 10px ${lang.color})`,
+              textShadow: `0 0 15px ${lang.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0.5, 0.9, 0.5],
-              scale: [0.95, 1.1, 0.95],
-              filter: [
-                `drop-shadow(0 0 8px ${lang.color})`,
-                `drop-shadow(0 0 20px ${lang.color})`,
-                `drop-shadow(0 0 8px ${lang.color})`,
-              ],
-            }}
-            transition={{
-              duration: Math.random() * 20 + 20,
-              repeat: Infinity,
-              delay: Math.random() * 10,
-              ease: "easeInOut",
-            }}
           >
-            {lang.name}
+            {lang.symbol}
           </motion.div>
         ))}
 
         {/* Frameworks */}
         {distributedFrameworks.map((framework, i) => (
           <motion.div
-            key={`framework-${framework.instanceId}-${i}`}
+            key={`framework-${i}`}
             style={{
               ...framework.position,
               fontSize: `${Math.random() * 12 + 14}px`,
               color: framework.color,
-              filter: `drop-shadow(0 0 15px ${framework.color})`,
-              textShadow: `0 0 20px ${framework.color}`,
+              filter: `drop-shadow(0 0 10px ${framework.color})`,
+              textShadow: `0 0 15px ${framework.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0.5, 0.9, 0.5],
-              scale: [0.95, 1.1, 0.95],
-              filter: [
-                `drop-shadow(0 0 8px ${framework.color})`,
-                `drop-shadow(0 0 20px ${framework.color})`,
-                `drop-shadow(0 0 8px ${framework.color})`,
-              ],
-            }}
-            transition={{
-              duration: Math.random() * 20 + 20,
-              repeat: Infinity,
-              delay: Math.random() * 10,
-              ease: "easeInOut",
-            }}
           >
-            {framework.name}
+            {framework.symbol}
           </motion.div>
         ))}
 
         {/* Tools */}
         {distributedTools.map((tool, i) => (
           <motion.div
-            key={`tool-${tool.instanceId}-${i}`}
+            key={`tool-${i}`}
             style={{
               ...tool.position,
               fontSize: `${Math.random() * 12 + 14}px`,
               color: tool.color,
-              filter: `drop-shadow(0 0 15px ${tool.color})`,
-              textShadow: `0 0 20px ${tool.color}`,
+              filter: `drop-shadow(0 0 10px ${tool.color})`,
+              textShadow: `0 0 15px ${tool.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0.5, 0.9, 0.5],
-              scale: [0.95, 1.1, 0.95],
-              filter: [
-                `drop-shadow(0 0 8px ${tool.color})`,
-                `drop-shadow(0 0 20px ${tool.color})`,
-                `drop-shadow(0 0 8px ${tool.color})`,
-              ],
-            }}
-            transition={{
-              duration: Math.random() * 20 + 20,
-              repeat: Infinity,
-              delay: Math.random() * 10,
-              ease: "easeInOut",
-            }}
           >
-            {tool.name}
+            {tool.symbol}
           </motion.div>
         ))}
 
@@ -734,28 +659,28 @@ const Home = () => {
             key={`symbol-${symbol.instanceId}-${i}`}
             style={{
               ...symbol.position,
-              fontSize: `${Math.random() * 6 + 14}px`, // Smaller for code symbols
+              fontSize: `${Math.random() * 6 + 14}px`,
               color: symbol.color,
-              filter: `drop-shadow(0 0 18px ${symbol.color})`, // Stronger glow
-              textShadow: `0 0 25px ${symbol.color}`, // Stronger glow
+              filter: `drop-shadow(0 0 18px ${symbol.color})`,
+              textShadow: `0 0 25px ${symbol.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
             initial={{ opacity: 0 }}
             animate={{
               opacity: [0.5, 0.9, 0.5],
-              scale: [0.95, 1.15, 0.95], // More scale variation
-              rotate: [0, Math.random() * 20 - 10, 0], // Add slight rotation
+              scale: [0.95, 1.15, 0.95],
+              rotate: [0, Math.random() * 20 - 10, 0],
               filter: [
                 `drop-shadow(0 0 10px ${symbol.color})`,
-                `drop-shadow(0 0 25px ${symbol.color})`, // Stronger glow
+                `drop-shadow(0 0 25px ${symbol.color})`,
                 `drop-shadow(0 0 10px ${symbol.color})`,
               ],
             }}
             transition={{
-              duration: Math.random() * 25 + 20, // Longer duration
+              duration: Math.random() * 25 + 20,
               repeat: Infinity,
-              delay: Math.random() * 15, // More varied delays
+              delay: Math.random() * 15,
               ease: "easeInOut",
             }}
           >
@@ -897,11 +822,11 @@ const Home = () => {
           <motion.div
             className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
             initial={{ opacity: 0, y: 20 }}
-            animate={
+            animate(
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            }
+            )
             transition={{ duration: 0.5 }}
           >
             <motion.div

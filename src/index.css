@@ -3939,7 +3939,11 @@ pre,
   background-color: transparent; /* Transparent background */
 }
 .Headingandsubheading {
-  margin-bottom: 1vw;
+  margin-bottom: 2vw;
+}
+
+.stats-card{
+  margin-top: 2vw;
 }
 
 .home-container {
