@@ -3952,3 +3952,35 @@ pre,
     width: 100%;
   }
 }
+
+/* Add styles for the content container */
+.content-container {
+  position: absolute; /* Ensure it is positioned relative to the parent */
+  top: 13vh; /* Position it just below the Navbar */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  background-color: transparent; /* Fully transparent background */
+  z-index: 10; /* Ensure it is above the background elements */
+  width: 90%; /* Adjust width for responsiveness */
+  max-width: 800px; /* Limit maximum width */
+  margin: 0 auto; /* Center horizontally */
+  border-radius: var(--radius-lg); /* Rounded corners */
+  box-shadow: none; /* Remove shadow for a cleaner transparent look */
+}
+
+.content-wrapper {
+  position: absolute;
+  top: 13vh; /* Position just below the Navbar */
+  left: 0;
+  right: 0;
+  z-index: 10; /* Ensure it is above the background elements */
+  background-color: transparent; /* Transparent background */
+}
+
+.home-container {
+  margin: 0 auto;
+  max-width: 1024px; /* Adjust width for responsiveness */
+  padding-top: 1rem; /* Add spacing from the top */
+  padding-bottom: 3rem; /* Add spacing at the bottom */
+  background-color: transparent; /* Transparent background */
+}
