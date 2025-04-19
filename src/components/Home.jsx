@@ -447,209 +447,260 @@ const Home = () => {
     "#7C4DFF",
   ];
 
+  // Create a grid-based distribution system that ensures elements are well-spaced
+  const generateWellSpacedPositions = (count, excludeTopPercentage = 15) => {
+    // Create a grid with more cells than elements to ensure spacing
+    const gridSize = Math.ceil(Math.sqrt(count * 4)); // 4x more cells than elements for even better spacing
+    const cellWidth = 100 / gridSize;
+    const cellHeight = (100 - excludeTopPercentage) / gridSize; // Adjust height to exclude navbar area
+
+    // Create a shuffled array of all possible grid positions
+    const allPositions = [];
+    for (let row = 0; row < gridSize; row++) {
+      for (let col = 0; col < gridSize; col++) {
+        // Calculate position with some randomness within the cell
+        // Add excludeTopPercentage to ensure we start below the navbar
+        const top =
+          excludeTopPercentage +
+          row * cellHeight +
+          (Math.random() * 0.6 + 0.2) * cellHeight;
+        const left = col * cellWidth + (Math.random() * 0.6 + 0.2) * cellWidth;
+
+        allPositions.push({ top: `${top}%`, left: `${left}%` });
+      }
+    }
+
+    // Shuffle the positions array to randomize distribution
+    const shuffled = [...allPositions].sort(() => Math.random() - 0.5);
+
+    // Take only the number of positions we need
+    return shuffled.slice(0, count);
+  };
+
+  // Distribute elements with their colors
+  const distributeElements = (elements, positions) => {
+    return elements.map((element, index) => ({
+      ...element,
+      position: positions[index % positions.length],
+    }));
+  };
+
+  // Generate positions for all elements
+  // Calculate total number of elements and multiply to create more instances
+  // This ensures better coverage across the entire page
+  const totalElements =
+    programmingLanguages.length * 3 + // Triple the programming languages
+    frameworks.length * 3 + // Triple the frameworks
+    tools.length * 3 + // Triple the tools
+    codeSymbols.length * 2; // Double the symbols
+
+  // Generate positions for all elements, excluding top 15% (navbar area)
+  // and concentrating more elements in the 20-90% range (where header, cards and stats are)
+  const allPositions = generateWellSpacedPositions(totalElements, 15);
+
+  // Shuffle and split positions for different element types
+  let positionIndex = 0;
+
+  // Create multiple instances of each element type for better distribution
+  const createMultipleInstances = (elements, count) => {
+    let result = [];
+    for (let i = 0; i < count; i++) {
+      result = [...result, ...elements.map((el) => ({ ...el, instanceId: i }))];
+    }
+    return result;
+  };
+
+  // Distribute programming languages (3 instances of each)
+  const langPositions = allPositions.slice(
+    positionIndex,
+    positionIndex + programmingLanguages.length * 3
+  );
+  positionIndex += programmingLanguages.length * 3;
+  const distributedProgrammingLanguages = distributeElements(
+    createMultipleInstances(programmingLanguages, 3),
+    langPositions
+  );
+
+  // Distribute frameworks (3 instances of each)
+  const frameworkPositions = allPositions.slice(
+    positionIndex,
+    positionIndex + frameworks.length * 3
+  );
+  positionIndex += frameworks.length * 3;
+  const distributedFrameworks = distributeElements(
+    createMultipleInstances(frameworks, 3),
+    frameworkPositions
+  );
+
+  // Distribute tools (3 instances of each)
+  const toolPositions = allPositions.slice(
+    positionIndex,
+    positionIndex + tools.length * 3
+  );
+  positionIndex += tools.length * 3;
+  const distributedTools = distributeElements(
+    createMultipleInstances(tools, 3),
+    toolPositions
+  );
+
+  // Distribute symbols (2 instances of each)
+  const symbolPositions = allPositions.slice(positionIndex);
+  const distributedSymbols = distributeElements(
+    createMultipleInstances(
+      codeSymbols.map((symbol, i) => ({
+        name: symbol,
+        color: symbolColors[i % symbolColors.length],
+      })),
+      2
+    ),
+    symbolPositions
+  );
+
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
-      {/* Background with coding icons - based on reference image */}
+      {/* Background with coding icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Dark background like in reference image */}
         <div className="absolute inset-0 bg-[#0A0F18]"></div>
-        {/* Programming languages - Scattered across the entire screen like in reference image */}
-        {[...Array(3)].map((_, outerIndex) =>
-          programmingLanguages.map((lang, i) => {
-            // Generate random positions that are truly scattered across the entire screen
-            const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
-            const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
-            const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
-            const randomDelay = Math.floor(Math.random() * 20);
-            const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
-            const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
-            return (
-              <motion.div
-                key={`lang-${outerIndex}-${i}`}
-                className="absolute font-mono font-bold"
-                style={{
-                  top: `${randomTop}%`,
-                  left: `${randomLeft}%`,
-                  fontSize: `${randomSize}px`,
-                  opacity: 0.9,
-                  color: lang.color,
-                  filter: `drop-shadow(0 0 15px ${lang.color})`,
-                  zIndex: -1,
-                  textShadow: `0 0 20px ${lang.color}`,
-                }}
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: [0.5, 0.9, 0.5],
-                  rotate: [0, randomRotation, 0],
-                  scale: [0.95, 1.1, 0.95],
-                  filter: [
-                    `drop-shadow(0 0 8px ${lang.color})`,
-                    `drop-shadow(0 0 20px ${lang.color})`,
-                    `drop-shadow(0 0 8px ${lang.color})`,
-                  ],
-                }}
-                transition={{
-                  duration: randomDuration,
-                  repeat: Infinity,
-                  delay: randomDelay,
-                  ease: "easeInOut",
-                }}
-              >
-                {lang.name}
-              </motion.div>
-            );
-          })
-        )}
-        )
-        {/* Frameworks - Scattered across the entire screen like in reference image */}
-        {frameworks.map((framework, i) => {
-          // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
-          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
-          const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
-          const randomDelay = Math.floor(Math.random() * 20);
-          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
-          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
+        {/* Programming languages */}
+        {distributedProgrammingLanguages.map((lang, i) => (
+          <motion.div
+            key={`lang-${lang.instanceId}-${i}`}
+            style={{
+              ...lang.position,
+              fontSize: `${Math.random() * 12 + 14}px`,
+              color: lang.color,
+              filter: `drop-shadow(0 0 15px ${lang.color})`,
+              textShadow: `0 0 20px ${lang.color}`,
+              position: "absolute",
+            }}
+            className="font-mono font-bold"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: [0.5, 0.9, 0.5],
+              scale: [0.95, 1.1, 0.95],
+              filter: [
+                `drop-shadow(0 0 8px ${lang.color})`,
+                `drop-shadow(0 0 20px ${lang.color})`,
+                `drop-shadow(0 0 8px ${lang.color})`,
+              ],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 20,
+              repeat: Infinity,
+              delay: Math.random() * 10,
+              ease: "easeInOut",
+            }}
+          >
+            {lang.name}
+          </motion.div>
+        ))}
 
-          return (
-            <motion.div
-              key={`framework-${i}`}
-              className="absolute font-mono font-bold"
-              style={{
-                top: `${randomTop}%`,
-                left: `${randomLeft}%`,
-                fontSize: `${randomSize}px`,
-                opacity: 0.9,
-                color: framework.color,
-                filter: `drop-shadow(0 0 15px ${framework.color})`,
-                zIndex: -1,
-                textShadow: `0 0 20px ${framework.color}`,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0.5, 0.9, 0.5],
-                rotate: [0, randomRotation, 0],
-                scale: [0.95, 1.1, 0.95],
-                filter: [
-                  `drop-shadow(0 0 8px ${framework.color})`,
-                  `drop-shadow(0 0 20px ${framework.color})`,
-                  `drop-shadow(0 0 8px ${framework.color})`,
-                ],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Infinity,
-                delay: randomDelay,
-                ease: "easeInOut",
-              }}
-            >
-              {framework.name}
-            </motion.div>
-          );
-        })}
-        {/* Tools and libraries - Scattered across the entire screen like in reference image */}
-        {tools.map((tool, i) => {
-          // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
-          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
-          const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
-          const randomDelay = Math.floor(Math.random() * 20);
-          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
-          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
+        {/* Frameworks */}
+        {distributedFrameworks.map((framework, i) => (
+          <motion.div
+            key={`framework-${framework.instanceId}-${i}`}
+            style={{
+              ...framework.position,
+              fontSize: `${Math.random() * 12 + 14}px`,
+              color: framework.color,
+              filter: `drop-shadow(0 0 15px ${framework.color})`,
+              textShadow: `0 0 20px ${framework.color}`,
+              position: "absolute",
+            }}
+            className="font-mono font-bold"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: [0.5, 0.9, 0.5],
+              scale: [0.95, 1.1, 0.95],
+              filter: [
+                `drop-shadow(0 0 8px ${framework.color})`,
+                `drop-shadow(0 0 20px ${framework.color})`,
+                `drop-shadow(0 0 8px ${framework.color})`,
+              ],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 20,
+              repeat: Infinity,
+              delay: Math.random() * 10,
+              ease: "easeInOut",
+            }}
+          >
+            {framework.name}
+          </motion.div>
+        ))}
 
-          return (
-            <motion.div
-              key={`tool-${i}`}
-              className="absolute font-mono font-bold"
-              style={{
-                top: `${randomTop}%`,
-                left: `${randomLeft}%`,
-                fontSize: `${randomSize}px`,
-                opacity: 0.9,
-                color: tool.color,
-                filter: `drop-shadow(0 0 15px ${tool.color})`,
-                zIndex: -1,
-                textShadow: `0 0 20px ${tool.color}`,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0.5, 0.9, 0.5],
-                rotate: [0, randomRotation, 0],
-                scale: [0.95, 1.1, 0.95],
-                filter: [
-                  `drop-shadow(0 0 8px ${tool.color})`,
-                  `drop-shadow(0 0 20px ${tool.color})`,
-                  `drop-shadow(0 0 8px ${tool.color})`,
-                ],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Infinity,
-                delay: randomDelay,
-                ease: "easeInOut",
-              }}
-            >
-              {tool.name}
-            </motion.div>
-          );
-        })}
-        {/* Code symbols - Scattered across the entire screen like in reference image */}
-        {[...Array(120)].map((_, i) => {
-          // Increased number of symbols even more for better coverage
-          // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
-          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
-          const randomSize = Math.floor(Math.random() * 16) + 14; // Varied size range
-          const randomDelay = Math.floor(Math.random() * 20);
-          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
-          const randomRotation = Math.floor(Math.random() * 40) - 20; // More rotation
+        {/* Tools */}
+        {distributedTools.map((tool, i) => (
+          <motion.div
+            key={`tool-${tool.instanceId}-${i}`}
+            style={{
+              ...tool.position,
+              fontSize: `${Math.random() * 12 + 14}px`,
+              color: tool.color,
+              filter: `drop-shadow(0 0 15px ${tool.color})`,
+              textShadow: `0 0 20px ${tool.color}`,
+              position: "absolute",
+            }}
+            className="font-mono font-bold"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: [0.5, 0.9, 0.5],
+              scale: [0.95, 1.1, 0.95],
+              filter: [
+                `drop-shadow(0 0 8px ${tool.color})`,
+                `drop-shadow(0 0 20px ${tool.color})`,
+                `drop-shadow(0 0 8px ${tool.color})`,
+              ],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 20,
+              repeat: Infinity,
+              delay: Math.random() * 10,
+              ease: "easeInOut",
+            }}
+          >
+            {tool.name}
+          </motion.div>
+        ))}
 
-          // Random colors for symbols
-          const randomColor =
-            symbolColors[Math.floor(Math.random() * symbolColors.length)];
-          const randomSymbol =
-            codeSymbols[Math.floor(Math.random() * codeSymbols.length)];
-
-          return (
-            <motion.div
-              key={`symbol-${i}`}
-              className="absolute font-mono font-bold"
-              style={{
-                top: `${randomTop}%`,
-                left: `${randomLeft}%`,
-                fontSize: `${randomSize}px`,
-                opacity: 0.9,
-                color: randomColor,
-                filter: `drop-shadow(0 0 18px ${randomColor})`,
-                zIndex: -1,
-                textShadow: `0 0 25px ${randomColor}`,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0.5, 0.9, 0.5],
-                rotate: [0, randomRotation, 0],
-                scale: [0.95, 1.15, 0.95],
-                filter: [
-                  `drop-shadow(0 0 10px ${randomColor})`,
-                  `drop-shadow(0 0 25px ${randomColor})`,
-                  `drop-shadow(0 0 10px ${randomColor})`,
-                ],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Infinity,
-                delay: randomDelay,
-                ease: "easeInOut",
-              }}
-            >
-              {randomSymbol}
-            </motion.div>
-          );
-        })}
+        {/* Code symbols */}
+        {distributedSymbols.map((symbol, i) => (
+          <motion.div
+            key={`symbol-${symbol.instanceId}-${i}`}
+            style={{
+              ...symbol.position,
+              fontSize: `${Math.random() * 14 + 16}px`, // Slightly larger
+              color: symbol.color,
+              filter: `drop-shadow(0 0 18px ${symbol.color})`, // Stronger glow
+              textShadow: `0 0 25px ${symbol.color}`, // Stronger glow
+              position: "absolute",
+            }}
+            className="font-mono font-bold"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: [0.5, 0.9, 0.5],
+              scale: [0.95, 1.15, 0.95], // More scale variation
+              rotate: [0, Math.random() * 20 - 10, 0], // Add slight rotation
+              filter: [
+                `drop-shadow(0 0 10px ${symbol.color})`,
+                `drop-shadow(0 0 25px ${symbol.color})`, // Stronger glow
+                `drop-shadow(0 0 10px ${symbol.color})`,
+              ],
+            }}
+            transition={{
+              duration: Math.random() * 25 + 20, // Longer duration
+              repeat: Infinity,
+              delay: Math.random() * 15, // More varied delays
+              ease: "easeInOut",
+            }}
+          >
+            {symbol.name}
+          </motion.div>
+        ))}
       </div>
 
-      {/* All content positioned on top of background icons */}
+      {/* Main content */}
       <div className="content-wrapper absolute top-[13vh] left-0 right-0 z-10 bg-transparent">
         {/* Navigation */}
         <div className="nav-container">
