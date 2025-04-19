@@ -5,6 +5,7 @@ import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
 const Home = () => {
+  // eslint-disable-next-line no-unused-vars
   const { darkMode } = useContext(ThemeContext); // Used for theme-specific colors in background elements
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -367,11 +368,6 @@ const Home = () => {
     { name: "C++", color: "#00599C" },
     { name: "TypeScript", color: "#3178C6" },
     { name: "PHP", color: "#777BB4" },
-    { name: "Go", color: "#00ADD8" },
-    { name: "Rust", color: "#DEA584" },
-    { name: "Scala", color: "#DC322F" },
-    { name: "Perl", color: "#39457E" },
-    { name: "R", color: "#276DC3" },
     { name: "Dart", color: "#0175C2" },
     { name: "Swift", color: "#FA7343" },
     { name: "Kotlin", color: "#7F52FF" },
@@ -388,9 +384,6 @@ const Home = () => {
     { name: "Vue", color: "#4FC08D" },
     { name: "Next.js", color: "#000000" },
     { name: "Express", color: "#000000" },
-    { name: "Django", color: "#092E20" },
-    { name: "Spring", color: "#6DB33F" },
-    { name: "Laravel", color: "#FF2D20" },
     { name: "Flask", color: "#000000" },
     { name: "Svelte", color: "#FF3E00" },
     { name: "Gatsby", color: "#663399" },
@@ -408,21 +401,12 @@ const Home = () => {
     { name: "AWS", color: "#FF9900" },
     { name: "Tailwind", color: "#06B6D4" },
     { name: "Kubernetes", color: "#326CE5" },
-    { name: "Redis", color: "#DC382D" },
-    { name: "PostgreSQL", color: "#336791" },
   ];
 
   // Code symbols with random vibrant colors
   const codeSymbols = [
     "{",
     "}",
-    "[",
-    "]",
-    "(",
-    ")",
-    "</>",
-    "&&",
-    "||",
     "=>",
     "!==",
     "===",
@@ -430,18 +414,11 @@ const Home = () => {
     "!!",
     "??",
     "++",
-    "--",
-    "**",
-    "#",
-    "$",
     "@",
     "~",
     "^",
     "&",
     "...",
-    ":::",
-    "::=",
-    "=>>",
     "<<=",
     "<>",
   ];
@@ -476,62 +453,63 @@ const Home = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {/* Dark background like in reference image */}
         <div className="absolute inset-0 bg-[#0A0F18]"></div>
-
         {/* Programming languages - Scattered across the entire screen like in reference image */}
-        {programmingLanguages.map((lang, i) => {
-          // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
-          const randomDelay = Math.floor(Math.random() * 15);
-          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
-          const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
+        {[...Array(3)].map((_, outerIndex) =>
+          programmingLanguages.map((lang, i) => {
+            // Generate random positions that are truly scattered across the entire screen
+            const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
+            const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
+            const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
+            const randomDelay = Math.floor(Math.random() * 20);
+            const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
+            const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
-          return (
-            <motion.div
-              key={`lang-${i}`}
-              className="absolute font-mono font-bold"
-              style={{
-                top: `${randomTop}%`,
-                left: `${randomLeft}%`,
-                fontSize: `${randomSize}px`,
-                opacity: 0.9,
-                color: lang.color,
-                filter: `drop-shadow(0 0 10px ${lang.color})`,
-                zIndex: -1,
-                textShadow: `0 0 15px ${lang.color}`,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0.6, 0.9, 0.6],
-                rotate: [0, randomRotation, 0],
-                scale: [1, 1.08, 1],
-                filter: [
-                  `drop-shadow(0 0 5px ${lang.color})`,
-                  `drop-shadow(0 0 15px ${lang.color})`,
-                  `drop-shadow(0 0 5px ${lang.color})`,
-                ],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Infinity,
-                delay: randomDelay,
-                ease: "easeInOut",
-              }}
-            >
-              {lang.name}
-            </motion.div>
-          );
-        })}
-
+            return (
+              <motion.div
+                key={`lang-${outerIndex}-${i}`}
+                className="absolute font-mono font-bold"
+                style={{
+                  top: `${randomTop}%`,
+                  left: `${randomLeft}%`,
+                  fontSize: `${randomSize}px`,
+                  opacity: 0.9,
+                  color: lang.color,
+                  filter: `drop-shadow(0 0 15px ${lang.color})`,
+                  zIndex: -1,
+                  textShadow: `0 0 20px ${lang.color}`,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: [0.5, 0.9, 0.5],
+                  rotate: [0, randomRotation, 0],
+                  scale: [0.95, 1.1, 0.95],
+                  filter: [
+                    `drop-shadow(0 0 8px ${lang.color})`,
+                    `drop-shadow(0 0 20px ${lang.color})`,
+                    `drop-shadow(0 0 8px ${lang.color})`,
+                  ],
+                }}
+                transition={{
+                  duration: randomDuration,
+                  repeat: Infinity,
+                  delay: randomDelay,
+                  ease: "easeInOut",
+                }}
+              >
+                {lang.name}
+              </motion.div>
+            );
+          })
+        )}
+        )
         {/* Frameworks - Scattered across the entire screen like in reference image */}
         {frameworks.map((framework, i) => {
           // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
-          const randomDelay = Math.floor(Math.random() * 15);
-          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
+          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
+          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
+          const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
+          const randomDelay = Math.floor(Math.random() * 20);
+          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
           const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
           return (
@@ -544,19 +522,19 @@ const Home = () => {
                 fontSize: `${randomSize}px`,
                 opacity: 0.9,
                 color: framework.color,
-                filter: `drop-shadow(0 0 10px ${framework.color})`,
+                filter: `drop-shadow(0 0 15px ${framework.color})`,
                 zIndex: -1,
-                textShadow: `0 0 15px ${framework.color}`,
+                textShadow: `0 0 20px ${framework.color}`,
               }}
               initial={{ opacity: 0 }}
               animate={{
-                opacity: [0.6, 0.9, 0.6],
+                opacity: [0.5, 0.9, 0.5],
                 rotate: [0, randomRotation, 0],
-                scale: [1, 1.08, 1],
+                scale: [0.95, 1.1, 0.95],
                 filter: [
-                  `drop-shadow(0 0 5px ${framework.color})`,
-                  `drop-shadow(0 0 15px ${framework.color})`,
-                  `drop-shadow(0 0 5px ${framework.color})`,
+                  `drop-shadow(0 0 8px ${framework.color})`,
+                  `drop-shadow(0 0 20px ${framework.color})`,
+                  `drop-shadow(0 0 8px ${framework.color})`,
                 ],
               }}
               transition={{
@@ -570,15 +548,14 @@ const Home = () => {
             </motion.div>
           );
         })}
-
         {/* Tools and libraries - Scattered across the entire screen like in reference image */}
         {tools.map((tool, i) => {
           // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomLeft = Math.floor(Math.random() * 120) - 10; // Allow some to be slightly off-screen
-          const randomSize = Math.floor(Math.random() * 10) + 16; // Larger size range
-          const randomDelay = Math.floor(Math.random() * 15);
-          const randomDuration = Math.floor(Math.random() * 15) + 25; // Slower animation
+          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
+          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
+          const randomSize = Math.floor(Math.random() * 12) + 14; // Varied size range
+          const randomDelay = Math.floor(Math.random() * 20);
+          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
           const randomRotation = Math.floor(Math.random() * 20) - 10; // More rotation
 
           return (
@@ -591,19 +568,19 @@ const Home = () => {
                 fontSize: `${randomSize}px`,
                 opacity: 0.9,
                 color: tool.color,
-                filter: `drop-shadow(0 0 10px ${tool.color})`,
+                filter: `drop-shadow(0 0 15px ${tool.color})`,
                 zIndex: -1,
-                textShadow: `0 0 15px ${tool.color}`,
+                textShadow: `0 0 20px ${tool.color}`,
               }}
               initial={{ opacity: 0 }}
               animate={{
-                opacity: [0.6, 0.9, 0.6],
+                opacity: [0.5, 0.9, 0.5],
                 rotate: [0, randomRotation, 0],
-                scale: [1, 1.08, 1],
+                scale: [0.95, 1.1, 0.95],
                 filter: [
-                  `drop-shadow(0 0 5px ${tool.color})`,
-                  `drop-shadow(0 0 15px ${tool.color})`,
-                  `drop-shadow(0 0 5px ${tool.color})`,
+                  `drop-shadow(0 0 8px ${tool.color})`,
+                  `drop-shadow(0 0 20px ${tool.color})`,
+                  `drop-shadow(0 0 8px ${tool.color})`,
                 ],
               }}
               transition={{
@@ -617,16 +594,15 @@ const Home = () => {
             </motion.div>
           );
         })}
-
         {/* Code symbols - Scattered across the entire screen like in reference image */}
-        {[...Array(80)].map((_, i) => {
+        {[...Array(120)].map((_, i) => {
           // Increased number of symbols even more for better coverage
           // Generate random positions that are truly scattered across the entire screen
-          const randomTop = Math.floor(Math.random() * 130) - 15; // Allow some to be slightly off-screen
-          const randomLeft = Math.floor(Math.random() * 130) - 15; // Allow some to be slightly off-screen
-          const randomSize = Math.floor(Math.random() * 14) + 16; // Larger size range
+          const randomTop = Math.floor(Math.random() * 200) - 20; // Allow more vertical distribution
+          const randomLeft = Math.floor(Math.random() * 200) - 20; // Allow more horizontal distribution
+          const randomSize = Math.floor(Math.random() * 16) + 14; // Varied size range
           const randomDelay = Math.floor(Math.random() * 20);
-          const randomDuration = Math.floor(Math.random() * 20) + 25; // Slower animation
+          const randomDuration = Math.floor(Math.random() * 20) + 20; // More varied animation speeds
           const randomRotation = Math.floor(Math.random() * 40) - 20; // More rotation
 
           // Random colors for symbols
@@ -645,19 +621,19 @@ const Home = () => {
                 fontSize: `${randomSize}px`,
                 opacity: 0.9,
                 color: randomColor,
-                filter: `drop-shadow(0 0 12px ${randomColor})`,
+                filter: `drop-shadow(0 0 18px ${randomColor})`,
                 zIndex: -1,
-                textShadow: `0 0 18px ${randomColor}`,
+                textShadow: `0 0 25px ${randomColor}`,
               }}
               initial={{ opacity: 0 }}
               animate={{
-                opacity: [0.6, 0.9, 0.6],
+                opacity: [0.5, 0.9, 0.5],
                 rotate: [0, randomRotation, 0],
-                scale: [1, 1.08, 1],
+                scale: [0.95, 1.15, 0.95],
                 filter: [
-                  `drop-shadow(0 0 5px ${randomColor})`,
-                  `drop-shadow(0 0 15px ${randomColor})`,
-                  `drop-shadow(0 0 5px ${randomColor})`,
+                  `drop-shadow(0 0 10px ${randomColor})`,
+                  `drop-shadow(0 0 25px ${randomColor})`,
+                  `drop-shadow(0 0 10px ${randomColor})`,
                 ],
               }}
               transition={{
@@ -800,6 +776,121 @@ const Home = () => {
                 </div>
               </div>
             )}
+          </motion.div>
+
+          {/* Stats cards */}
+          <motion.div
+            className="stats-container"
+            initial={{ opacity: 0, y: 20 }}
+            animate={
+              loadingSequence.statsLoaded
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 20 }
+            }
+            transition={{ duration: 0.5 }}
+          >
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
+            >
+              <div className="stats-icon connections-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"></path>
+                  <path d="M23 14h-4a2 2 0 0 0-2 2v4"></path>
+                  <path d="M23 10V4a2 2 0 0 0-2-2h-6"></path>
+                  <path d="M12 12L6 6"></path>
+                  <path d="M6 10V6h4"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Connections</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
+              >
+                24
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
+            >
+              <div className="stats-icon pending-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Pending</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
+              >
+                12
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              className="stats-card"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+            >
+              <div className="stats-icon messages-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h3 className="stats-title">Messages</h3>
+              <motion.p
+                className="stats-value"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+              >
+                8
+              </motion.p>
+            </motion.div>
           </motion.div>
         </div>
       </div>
