@@ -447,15 +447,18 @@ const Home = () => {
     "#7C4DFF",
   ];
 
-  // Create a grid-based distribution system that ensures elements are well-spaced
+  // Create a distribution system that ensures elements are well-spaced and reach the bottom of the page
   const generateWellSpacedPositions = (count, excludeTopPercentage = 15) => {
     // Create a grid with more cells than elements to ensure spacing
-    const gridSize = Math.ceil(Math.sqrt(count * 4)); // 4x more cells than elements for even better spacing
+    const gridSize = Math.ceil(Math.sqrt(count * 3)); // 3x more cells than elements for spacing
     const cellWidth = 100 / gridSize;
     const cellHeight = (100 - excludeTopPercentage) / gridSize; // Adjust height to exclude navbar area
 
     // Create a shuffled array of all possible grid positions
     const allPositions = [];
+
+    // Ensure we have positions at the bottom of the page
+    // by creating a more uniform distribution from top to bottom
     for (let row = 0; row < gridSize; row++) {
       for (let col = 0; col < gridSize; col++) {
         // Calculate position with some randomness within the cell
@@ -466,8 +469,25 @@ const Home = () => {
           (Math.random() * 0.6 + 0.2) * cellHeight;
         const left = col * cellWidth + (Math.random() * 0.6 + 0.2) * cellWidth;
 
+        // Add position to our array
         allPositions.push({ top: `${top}%`, left: `${left}%` });
       }
+    }
+
+    // Add some extra positions specifically at the bottom of the page
+    for (let i = 0; i < Math.ceil(count * 0.2); i++) {
+      // Add 20% more positions at the bottom
+      const top = 85 + Math.random() * 10; // Between 85% and 95% of page height
+      const left = Math.random() * 100; // Anywhere horizontally
+      allPositions.push({ top: `${top}%`, left: `${left}%` });
+    }
+
+    // Add positions specifically around the stats div (which is at the bottom of the content)
+    for (let i = 0; i < Math.ceil(count * 0.3); i++) {
+      // Add 30% more positions around stats
+      const top = 75 + Math.random() * 15; // Between 75% and 90% of page height (stats area)
+      const left = 20 + Math.random() * 60; // More centered horizontally (20%-80%)
+      allPositions.push({ top: `${top}%`, left: `${left}%` });
     }
 
     // Shuffle the positions array to randomize distribution
@@ -486,13 +506,13 @@ const Home = () => {
   };
 
   // Generate positions for all elements
-  // Calculate total number of elements and multiply to create more instances
-  // This ensures better coverage across the entire page
+  // Calculate total number of elements with fewer instances to reduce clutter
+  // while still ensuring good coverage across the entire page
   const totalElements =
-    programmingLanguages.length * 3 + // Triple the programming languages
-    frameworks.length * 3 + // Triple the frameworks
-    tools.length * 3 + // Triple the tools
-    codeSymbols.length * 2; // Double the symbols
+    programmingLanguages.length * 1.5 + // 1.5x the programming languages
+    frameworks.length * 1.5 + // 1.5x the frameworks
+    tools.length * 1.5 + // 1.5x the tools
+    codeSymbols.length; // Keep original number of symbols
 
   // Generate positions for all elements, excluding top 15% (navbar area)
   // and concentrating more elements in the 20-90% range (where header, cards and stats are)
@@ -501,58 +521,86 @@ const Home = () => {
   // Shuffle and split positions for different element types
   let positionIndex = 0;
 
-  // Create multiple instances of each element type for better distribution
+  // Create multiple instances of each element type but with reduced numbers to avoid clutter
   const createMultipleInstances = (elements, count) => {
-    let result = [];
-    for (let i = 0; i < count; i++) {
-      result = [...result, ...elements.map((el) => ({ ...el, instanceId: i }))];
+    // If count is not a whole number, randomly select elements to duplicate
+    if (count % 1 !== 0) {
+      const wholeCount = Math.floor(count);
+      const fraction = count - wholeCount;
+      const extraCount = Math.round(elements.length * fraction);
+
+      let result = [];
+      // Add whole count instances of all elements
+      for (let i = 0; i < wholeCount; i++) {
+        result = [
+          ...result,
+          ...elements.map((el) => ({ ...el, instanceId: i })),
+        ];
+      }
+
+      // Add fraction of elements as an extra instance
+      const shuffled = [...elements].sort(() => Math.random() - 0.5);
+      const extraElements = shuffled.slice(0, extraCount);
+      result = [
+        ...result,
+        ...extraElements.map((el) => ({ ...el, instanceId: wholeCount })),
+      ];
+
+      return result;
+    } else {
+      // For whole numbers, just create that many instances
+      let result = [];
+      for (let i = 0; i < count; i++) {
+        result = [
+          ...result,
+          ...elements.map((el) => ({ ...el, instanceId: i })),
+        ];
+      }
+      return result;
     }
-    return result;
   };
 
-  // Distribute programming languages (3 instances of each)
+  // Distribute programming languages (1.5 instances of each - less cluttered)
   const langPositions = allPositions.slice(
     positionIndex,
-    positionIndex + programmingLanguages.length * 3
+    positionIndex + Math.ceil(programmingLanguages.length * 1.5)
   );
-  positionIndex += programmingLanguages.length * 3;
+  positionIndex += Math.ceil(programmingLanguages.length * 1.5);
   const distributedProgrammingLanguages = distributeElements(
-    createMultipleInstances(programmingLanguages, 3),
+    createMultipleInstances(programmingLanguages, 1.5),
     langPositions
   );
 
-  // Distribute frameworks (3 instances of each)
+  // Distribute frameworks (1.5 instances of each - less cluttered)
   const frameworkPositions = allPositions.slice(
     positionIndex,
-    positionIndex + frameworks.length * 3
+    positionIndex + Math.ceil(frameworks.length * 1.5)
   );
-  positionIndex += frameworks.length * 3;
+  positionIndex += Math.ceil(frameworks.length * 1.5);
   const distributedFrameworks = distributeElements(
-    createMultipleInstances(frameworks, 3),
+    createMultipleInstances(frameworks, 1.5),
     frameworkPositions
   );
 
-  // Distribute tools (3 instances of each)
+  // Distribute tools (1.5 instances of each - less cluttered)
   const toolPositions = allPositions.slice(
     positionIndex,
-    positionIndex + tools.length * 3
+    positionIndex + Math.ceil(tools.length * 1.5)
   );
-  positionIndex += tools.length * 3;
+  positionIndex += Math.ceil(tools.length * 1.5);
   const distributedTools = distributeElements(
-    createMultipleInstances(tools, 3),
+    createMultipleInstances(tools, 1.5),
     toolPositions
   );
 
-  // Distribute symbols (2 instances of each)
+  // Distribute symbols (1 instance of each - less cluttered)
   const symbolPositions = allPositions.slice(positionIndex);
   const distributedSymbols = distributeElements(
-    createMultipleInstances(
-      codeSymbols.map((symbol, i) => ({
-        name: symbol,
-        color: symbolColors[i % symbolColors.length],
-      })),
-      2
-    ),
+    codeSymbols.map((symbol, i) => ({
+      name: symbol,
+      color: symbolColors[i % symbolColors.length],
+      instanceId: 0,
+    })),
     symbolPositions
   );
 
@@ -711,7 +759,7 @@ const Home = () => {
         <div className="home-container pt-6 pb-12 mx-auto max-w-4xl bg-transparent">
           {/* Heading and subheading */}
           <motion.div
-            className="Headingandsubheading text-center mb-28 relative z-10"
+            className="Headingandsubheading text-center mb-28 relative z-10 p-4 rounded-lg"
             initial={{ opacity: 0, y: -20 }}
             animate={
               loadingSequence.headingLoaded
@@ -721,7 +769,7 @@ const Home = () => {
             transition={{ duration: 0.5 }}
           >
             <motion.h1
-              className="text-3xl md:text-4xl font-bold mb-3 text-white"
+              className="text-3xl md:text-4xl font-bold mb-3 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/50 inline-block px-4 py-2 rounded-lg border border-white/20 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -729,7 +777,7 @@ const Home = () => {
               Connect with Developers
             </motion.h1>
             <motion.p
-              className="text-lg opacity-80 text-white"
+              className="text-lg text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/50 inline-block px-4 py-2 rounded-lg border border-white/20 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
@@ -831,7 +879,7 @@ const Home = () => {
 
           {/* Stats cards */}
           <motion.div
-            className="stats-container"
+            className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={
               loadingSequence.statsLoaded
@@ -841,7 +889,7 @@ const Home = () => {
             transition={{ duration: 0.5 }}
           >
             <motion.div
-              className="stats-card"
+              className="stats-card bg-black/40 shadow-lg"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
@@ -877,7 +925,7 @@ const Home = () => {
             </motion.div>
 
             <motion.div
-              className="stats-card"
+              className="stats-card bg-black/40 shadow-lg"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
@@ -912,7 +960,7 @@ const Home = () => {
             </motion.div>
 
             <motion.div
-              className="stats-card"
+              className="stats-card bg-black/40 shadow-lg"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
