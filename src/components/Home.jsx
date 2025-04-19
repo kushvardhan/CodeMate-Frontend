@@ -360,67 +360,87 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
-  // Programming languages with their brand colors
+  // Programming language icons with their brand colors
   const programmingLanguages = [
-    { name: "JavaScript", color: "#F7DF1E" },
-    { name: "Python", color: "#3776AB" },
-    { name: "Java", color: "#007396" },
-    { name: "C++", color: "#00599C" },
-    { name: "TypeScript", color: "#3178C6" },
-    { name: "PHP", color: "#777BB4" },
-    { name: "Dart", color: "#0175C2" },
-    { name: "Swift", color: "#FA7343" },
-    { name: "Kotlin", color: "#7F52FF" },
-    { name: "Ruby", color: "#CC342D" },
-    { name: "C#", color: "#239120" },
-    { name: "HTML", color: "#E34F26" },
-    { name: "CSS", color: "#1572B6" },
+    { name: "⚛️", color: "#61DAFB" }, // React/Atom
+    { name: "🐍", color: "#3776AB" }, // Python
+    { name: "☕", color: "#007396" }, // Java
+    { name: "🔷", color: "#00599C" }, // C++
+    { name: "🟨", color: "#F7DF1E" }, // JavaScript
+    { name: "🔵", color: "#3178C6" }, // TypeScript
+    { name: "🐹", color: "#00ADD8" }, // Go
+    { name: "💎", color: "#CC342D" }, // Ruby
+    { name: "🦊", color: "#FF2D20" }, // Firefox/Laravel
+    { name: "🦄", color: "#7F52FF" }, // Kotlin/Fantasy
+    { name: "🦀", color: "#DEA584" }, // Rust
+    { name: "📱", color: "#FA7343" }, // Swift/Mobile
+    { name: "🎯", color: "#0175C2" }, // Dart
+    { name: "🟩", color: "#239120" }, // C#
+    { name: "🌐", color: "#E34F26" }, // HTML/Web
+    { name: "🎨", color: "#1572B6" }, // CSS/Design
   ];
 
-  // Frameworks with their brand colors
+  // Framework icons with their brand colors
   const frameworks = [
-    { name: "React", color: "#61DAFB" },
-    { name: "Angular", color: "#DD0031" },
-    { name: "Vue", color: "#4FC08D" },
-    { name: "Next.js", color: "#000000" },
-    { name: "Express", color: "#000000" },
-    { name: "Flask", color: "#000000" },
-    { name: "Svelte", color: "#FF3E00" },
-    { name: "Gatsby", color: "#663399" },
-    { name: "NestJS", color: "#E0234E" },
-    { name: "ASP.NET", color: "#512BD4" },
-    { name: "Rails", color: "#CC0000" },
+    { name: "🌊", color: "#4FC08D" }, // Vue/Wave
+    { name: "🅰️", color: "#DD0031" }, // Angular
+    { name: "🎯", color: "#092E20" }, // Django/Target
+    { name: "🌱", color: "#6DB33F" }, // Spring
+    { name: "🚂", color: "#CC0000" }, // Ruby on Rails
+    { name: "🔌", color: "#000000" }, // Express/Plugin
+    { name: "🧪", color: "#000000" }, // Flask/Test
+    { name: "🔥", color: "#FF3E00" }, // Svelte/Fire
+    { name: "🌌", color: "#663399" }, // Gatsby/Space
+    { name: "🐦", color: "#E0234E" }, // NestJS/Bird
+    { name: "🔷", color: "#512BD4" }, // ASP.NET
   ];
 
-  // Tools and libraries with their brand colors
+  // Tool and library icons with their brand colors
   const tools = [
-    { name: "Git", color: "#F05032" },
-    { name: "Docker", color: "#2496ED" },
-    { name: "Redux", color: "#764ABC" },
-    { name: "MongoDB", color: "#47A248" },
-    { name: "AWS", color: "#FF9900" },
-    { name: "Tailwind", color: "#06B6D4" },
-    { name: "Kubernetes", color: "#326CE5" },
+    { name: "📦", color: "#339933" }, // Node.js/Package
+    { name: "🐳", color: "#2496ED" }, // Docker
+    { name: "⚓", color: "#326CE5" }, // Kubernetes/Helm
+    { name: "🔄", color: "#F05032" }, // Git/Branch
+    { name: "🔁", color: "#764ABC" }, // Redux/Cycle
+    { name: "📊", color: "#E10098" }, // GraphQL/Chart
+    { name: "🍃", color: "#47A248" }, // MongoDB/Leaf
+    { name: "🐘", color: "#336791" }, // PostgreSQL
+    { name: "🐬", color: "#4479A1" }, // MySQL
+    { name: "🔥", color: "#FFCA28" }, // Firebase
+    { name: "☁️", color: "#FF9900" }, // AWS/Cloud
+    { name: "🧠", color: "#FF6F00" }, // TensorFlow/Brain
+    { name: "💨", color: "#06B6D4" }, // Tailwind
   ];
 
   // Code symbols with random vibrant colors
   const codeSymbols = [
     "{",
     "}",
-    "=>",
-    "!==",
-    "===",
-    "//",
-    "!!",
-    "??",
-    "++",
-    "@",
-    "~",
-    "^",
+    "[",
+    "]",
+    "(",
+    ")",
+    "<",
+    ">",
+    ";",
+    ":",
+    "=",
+    "+",
+    "-",
+    "*",
+    "/",
+    "%",
     "&",
-    "...",
-    "<<=",
-    "<>",
+    "|",
+    "^",
+    "~",
+    "!",
+    "?",
+    ".",
+    ",",
+    "#",
+    "$",
+    "@",
   ];
 
   // Vibrant colors for code symbols
@@ -441,10 +461,6 @@ const Home = () => {
     "#FFD740",
     "#FFAB40",
     "#FF6E40",
-    "#FF5252",
-    "#FF4081",
-    "#E040FB",
-    "#7C4DFF",
   ];
 
   // Create a distribution system that ensures elements are well-spaced and reach the bottom of the page
@@ -718,7 +734,7 @@ const Home = () => {
             key={`symbol-${symbol.instanceId}-${i}`}
             style={{
               ...symbol.position,
-              fontSize: `${Math.random() * 14 + 16}px`, // Slightly larger
+              fontSize: `${Math.random() * 6 + 14}px`, // Smaller for code symbols
               color: symbol.color,
               filter: `drop-shadow(0 0 18px ${symbol.color})`, // Stronger glow
               textShadow: `0 0 25px ${symbol.color}`, // Stronger glow
