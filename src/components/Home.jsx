@@ -708,7 +708,7 @@ const Home = () => {
 
           {/* Stats cards */}
           <motion.div
-            className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
+            className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl border-opacity-20"
             initial={{ opacity: 0, y: 20 }}
             animate={
               loadingSequence.statsLoaded
