@@ -504,8 +504,8 @@ const Home = () => {
               ...lang.position,
               fontSize: "16px",
               color: lang.color,
-              filter: `drop-shadow(0 0 10px ${lang.color})`,
-              textShadow: `0 0 15px ${lang.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${lang.color})`, // Added blur effect
+              textShadow: `0 0 12px ${lang.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -522,8 +522,8 @@ const Home = () => {
               ...framework.position,
               fontSize: "16px",
               color: framework.color,
-              filter: `drop-shadow(0 0 10px ${framework.color})`,
-              textShadow: `0 0 15px ${framework.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${framework.color})`, // Added blur effect
+              textShadow: `0 0 12px ${framework.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -540,8 +540,8 @@ const Home = () => {
               ...tool.position,
               fontSize: "16px",
               color: tool.color,
-              filter: `drop-shadow(0 0 10px ${tool.color})`,
-              textShadow: `0 0 15px ${tool.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${tool.color})`, // Added blur effect
+              textShadow: `0 0 12px ${tool.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -556,10 +556,10 @@ const Home = () => {
             key={`symbol-${i}`}
             style={{
               ...symbol.position,
-              fontSize: "20px", // Increased size for better visibility
+              fontSize: "20px", // Slightly larger size
               color: symbol.color,
-              filter: `drop-shadow(0 0 10px ${symbol.color})`,
-              textShadow: `0 0 15px ${symbol.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${symbol.color})`, // Added blur effect
+              textShadow: `0 0 12px ${symbol.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
