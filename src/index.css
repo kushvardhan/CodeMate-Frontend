@@ -3209,12 +3209,6 @@ pre,
   box-shadow: 0 0 4px rgba(129, 140, 248, 0.3);
 }
 
-/* Improve visibility of background elements in light theme */
-:root:not(.dark) .font-mono {
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 1) !important;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8)) !important;
-}
-
 .stats-icon {
   width: 40px;
   height: 40px;
