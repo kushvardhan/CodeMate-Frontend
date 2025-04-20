@@ -362,26 +362,26 @@ const Home = () => {
 
   // Programming language icons with coding-related symbols
   const programmingLanguages = [
-    { name: "JavaScript", color: "#F7DF1E", symbol: "JS" },
-    { name: "Python", color: "#3776AB", symbol: "Py" },
-    { name: "Java", color: "#007396", symbol: "☕" },
-    { name: "C++", color: "#00599C", symbol: "C++" },
+    { name: "JavaScript", color: "#F7DF1E", symbol: "ʤ" },
+    { name: "Python", color: "#3776AB", symbol: "∰" },
+    { name: "Java", color: "#007396", symbol: "ↂ" },
+    { name: "C++", color: "#00599C", symbol: "∅" },
     // ...add more programming languages...
   ];
 
   // Framework icons with coding-related symbols
   const frameworks = [
     { name: "React", color: "#61DAFB", symbol: "⚛" },
-    { name: "Angular", color: "#DD0031", symbol: "NG" },
-    { name: "Vue", color: "#4FC08D", symbol: "Vue" },
+    { name: "Angular", color: "#DD0031", symbol: "ɮ" },
+    { name: "Vue", color: "#4FC08D", symbol: "₳" },
     // ...add more frameworks...
   ];
 
   // Tool and library icons with coding-related symbols
   const tools = [
-    { name: "Git", color: "#F05032", symbol: "Git" },
-    { name: "Docker", color: "#2496ED", symbol: "🐳" },
-    { name: "Kubernetes", color: "#326CE5", symbol: "K8s" },
+    { name: "Git", color: "#F05032", symbol: "ʩ" },
+    { name: "Docker", color: "#2496ED", symbol: "૱" },
+    { name: "Kubernetes", color: "#326CE5", symbol: "₰" },
     // ...add more tools...
   ];
 
@@ -822,11 +822,11 @@ const Home = () => {
           <motion.div
             className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
             initial={{ opacity: 0, y: 20 }}
-            animate(
+            animate={
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            )
+            }
             transition={{ duration: 0.5 }}
           >
             <motion.div
