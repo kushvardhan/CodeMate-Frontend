@@ -436,162 +436,59 @@ const Home = () => {
     "#FF6E40",
   ];
 
-  // Create a distribution system that ensures elements are well-spaced and reach the bottom of the page
-  const generateWellSpacedPositions = (count, excludeTopPercentage = 15) => {
-    // Create a grid with more cells than elements to ensure spacing
-    const gridSize = Math.ceil(Math.sqrt(count * 3)); // 3x more cells than elements for spacing
+  // Function to generate well-distributed positions for elements
+  const generateDistributedPositions = (count, excludeTopPercentage = 15) => {
+    const gridSize = Math.ceil(Math.sqrt(count * 2)); // 2x more cells than elements for better spacing
     const cellWidth = 100 / gridSize;
-    const cellHeight = (100 - excludeTopPercentage) / gridSize; // Adjust height to exclude navbar area
+    const cellHeight = (100 - excludeTopPercentage) / gridSize;
 
-    // Create a shuffled array of all possible grid positions
-    const allPositions = [];
-
-    // Ensure we have positions at the bottom of the page
-    // by creating a more uniform distribution from top to bottom
+    const positions = [];
     for (let row = 0; row < gridSize; row++) {
       for (let col = 0; col < gridSize; col++) {
-        // Calculate position with some randomness within the cell
-        // Add excludeTopPercentage to ensure we start below the navbar
         const top =
           excludeTopPercentage +
           row * cellHeight +
-          (Math.random() * 0.6 + 0.2) * cellHeight;
-        const left = col * cellWidth + (Math.random() * 0.6 + 0.2) * cellWidth;
-
-        // Add position to our array
-        allPositions.push({ top: `${top}%`, left: `${left}%` });
+          Math.random() * (cellHeight * 0.5); // Add randomness within the cell
+        const left = col * cellWidth + Math.random() * (cellWidth * 0.5);
+        positions.push({ top: `${top}%`, left: `${left}%` });
       }
     }
 
-    // Add some extra positions specifically at the bottom of the page
-    for (let i = 0; i < Math.ceil(count * 0.2); i++) {
-      // Add 20% more positions at the bottom
-      const top = 85 + Math.random() * 10; // Between 85% and 95% of page height
-      const left = Math.random() * 100; // Anywhere horizontally
-      allPositions.push({ top: `${top}%`, left: `${left}%` });
-    }
-
-    // Add positions specifically around the stats div (which is at the bottom of the content)
-    for (let i = 0; i < Math.ceil(count * 0.3); i++) {
-      // Add 30% more positions around stats
-      const top = 75 + Math.random() * 15; // Between 75% and 90% of page height (stats area)
-      const left = 20 + Math.random() * 60; // More centered horizontally (20%-80%)
-      allPositions.push({ top: `${top}%`, left: `${left}%` });
-    }
-
-    // Shuffle the positions array to randomize distribution
-    const shuffled = [...allPositions].sort(() => Math.random() - 0.5);
-
-    // Take only the number of positions we need
-    return shuffled.slice(0, count);
-  };
-
-  // Distribute elements with their colors
-  const distributeElements = (elements, positions) => {
-    return elements.map((element, index) => ({
-      ...element,
-      position: positions[index % positions.length],
-    }));
+    return positions.sort(() => Math.random() - 0.5).slice(0, count); // Shuffle and limit to count
   };
 
   // Generate positions for all elements
-  // Calculate total number of elements with fewer instances to reduce clutter
-  // while still ensuring good coverage across the entire page
   const totalElements =
-    programmingLanguages.length * 1.5 + // 1.5x the programming languages
-    frameworks.length * 1.5 + // 1.5x the frameworks
-    tools.length * 1.5 + // 1.5x the tools
-    codeSymbols.length; // Keep original number of symbols
+    programmingLanguages.length +
+    frameworks.length +
+    tools.length +
+    codeSymbols.length;
 
-  // Generate positions for all elements, excluding top 15% (navbar area)
-  // and concentrating more elements in the 20-90% range (where header, cards and stats are)
-  const allPositions = generateWellSpacedPositions(totalElements, 15);
+  const allPositions = generateDistributedPositions(totalElements, 15);
 
-  // Shuffle and split positions for different element types
+  // Assign positions to each category
   let positionIndex = 0;
 
-  // Create multiple instances of each element type but with reduced numbers to avoid clutter
-  const createMultipleInstances = (elements, count) => {
-    // If count is not a whole number, randomly select elements to duplicate
-    if (count % 1 !== 0) {
-      const wholeCount = Math.floor(count);
-      const fraction = count - wholeCount;
-      const extraCount = Math.round(elements.length * fraction);
+  const distributedProgrammingLanguages = programmingLanguages.map((lang) => ({
+    ...lang,
+    position: allPositions[positionIndex++],
+  }));
 
-      let result = [];
-      // Add whole count instances of all elements
-      for (let i = 0; i < wholeCount; i++) {
-        result = [
-          ...result,
-          ...elements.map((el) => ({ ...el, instanceId: i })),
-        ];
-      }
+  const distributedFrameworks = frameworks.map((framework) => ({
+    ...framework,
+    position: allPositions[positionIndex++],
+  }));
 
-      // Add fraction of elements as an extra instance
-      const shuffled = [...elements].sort(() => Math.random() - 0.5);
-      const extraElements = shuffled.slice(0, extraCount);
-      result = [
-        ...result,
-        ...extraElements.map((el) => ({ ...el, instanceId: wholeCount })),
-      ];
+  const distributedTools = tools.map((tool) => ({
+    ...tool,
+    position: allPositions[positionIndex++],
+  }));
 
-      return result;
-    } else {
-      // For whole numbers, just create that many instances
-      let result = [];
-      for (let i = 0; i < count; i++) {
-        result = [
-          ...result,
-          ...elements.map((el) => ({ ...el, instanceId: i })),
-        ];
-      }
-      return result;
-    }
-  };
-
-  // Distribute programming languages (1.5 instances of each - less cluttered)
-  const langPositions = allPositions.slice(
-    positionIndex,
-    positionIndex + Math.ceil(programmingLanguages.length * 1.5)
-  );
-  positionIndex += Math.ceil(programmingLanguages.length * 1.5);
-  const distributedProgrammingLanguages = distributeElements(
-    createMultipleInstances(programmingLanguages, 1.5),
-    langPositions
-  );
-
-  // Distribute frameworks (1.5 instances of each - less cluttered)
-  const frameworkPositions = allPositions.slice(
-    positionIndex,
-    positionIndex + Math.ceil(frameworks.length * 1.5)
-  );
-  positionIndex += Math.ceil(frameworks.length * 1.5);
-  const distributedFrameworks = distributeElements(
-    createMultipleInstances(frameworks, 1.5),
-    frameworkPositions
-  );
-
-  // Distribute tools (1.5 instances of each - less cluttered)
-  const toolPositions = allPositions.slice(
-    positionIndex,
-    positionIndex + Math.ceil(tools.length * 1.5)
-  );
-  positionIndex += Math.ceil(tools.length * 1.5);
-  const distributedTools = distributeElements(
-    createMultipleInstances(tools, 1.5),
-    toolPositions
-  );
-
-  // Distribute symbols (1 instance of each - less cluttered)
-  const symbolPositions = allPositions.slice(positionIndex);
-  const distributedSymbols = distributeElements(
-    codeSymbols.map((symbol, i) => ({
-      name: symbol,
-      color: symbolColors[i % symbolColors.length],
-      instanceId: 0,
-    })),
-    symbolPositions
-  );
+  const distributedSymbols = codeSymbols.map((symbol, i) => ({
+    name: symbol,
+    color: symbolColors[i % symbolColors.length],
+    position: allPositions[positionIndex++],
+  }));
 
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
@@ -605,7 +502,7 @@ const Home = () => {
             key={`lang-${i}`}
             style={{
               ...lang.position,
-              fontSize: `${Math.random() * 12 + 14}px`,
+              fontSize: "16px",
               color: lang.color,
               filter: `drop-shadow(0 0 10px ${lang.color})`,
               textShadow: `0 0 15px ${lang.color}`,
@@ -623,7 +520,7 @@ const Home = () => {
             key={`framework-${i}`}
             style={{
               ...framework.position,
-              fontSize: `${Math.random() * 12 + 14}px`,
+              fontSize: "16px",
               color: framework.color,
               filter: `drop-shadow(0 0 10px ${framework.color})`,
               textShadow: `0 0 15px ${framework.color}`,
@@ -641,7 +538,7 @@ const Home = () => {
             key={`tool-${i}`}
             style={{
               ...tool.position,
-              fontSize: `${Math.random() * 12 + 14}px`,
+              fontSize: "16px",
               color: tool.color,
               filter: `drop-shadow(0 0 10px ${tool.color})`,
               textShadow: `0 0 15px ${tool.color}`,
@@ -656,33 +553,16 @@ const Home = () => {
         {/* Code symbols */}
         {distributedSymbols.map((symbol, i) => (
           <motion.div
-            key={`symbol-${symbol.instanceId}-${i}`}
+            key={`symbol-${i}`}
             style={{
               ...symbol.position,
-              fontSize: `${Math.random() * 6 + 14}px`,
+              fontSize: "20px", // Increased size for better visibility
               color: symbol.color,
-              filter: `drop-shadow(0 0 18px ${symbol.color})`,
-              textShadow: `0 0 25px ${symbol.color}`,
+              filter: `drop-shadow(0 0 10px ${symbol.color})`,
+              textShadow: `0 0 15px ${symbol.color}`,
               position: "absolute",
             }}
             className="font-mono font-bold"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0.5, 0.9, 0.5],
-              scale: [0.95, 1.15, 0.95],
-              rotate: [0, Math.random() * 20 - 10, 0],
-              filter: [
-                `drop-shadow(0 0 10px ${symbol.color})`,
-                `drop-shadow(0 0 25px ${symbol.color})`,
-                `drop-shadow(0 0 10px ${symbol.color})`,
-              ],
-            }}
-            transition={{
-              duration: Math.random() * 25 + 20,
-              repeat: Infinity,
-              delay: Math.random() * 15,
-              ease: "easeInOut",
-            }}
           >
             {symbol.name}
           </motion.div>
@@ -822,11 +702,11 @@ const Home = () => {
           <motion.div
             className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
             initial={{ opacity: 0, y: 20 }}
-            animate={
+            animate(
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            }
+            )
             transition={{ duration: 0.5 }}
           >
             <motion.div
