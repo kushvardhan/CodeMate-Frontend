@@ -508,9 +508,9 @@ const Home = () => {
               ...lang.position,
               fontSize: "18px",
               color: lang.color,
-              filter: `blur(1px) drop-shadow(0 0 3px ${lang.color})`,
-              textShadow: `0 0 5px ${lang.color}`,
-              opacity: 0.6,
+              filter: `blur(0.5px) drop-shadow(0 0 4px ${lang.color})`,
+              textShadow: `0 0 6px ${lang.color}`,
+              opacity: 0.75,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -527,9 +527,9 @@ const Home = () => {
               ...framework.position,
               fontSize: "18px",
               color: framework.color,
-              filter: `blur(1px) drop-shadow(0 0 3px ${framework.color})`,
-              textShadow: `0 0 5px ${framework.color}`,
-              opacity: 0.6,
+              filter: `blur(0.5px) drop-shadow(0 0 4px ${framework.color})`,
+              textShadow: `0 0 6px ${framework.color}`,
+              opacity: 0.75,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -546,9 +546,9 @@ const Home = () => {
               ...tool.position,
               fontSize: "18px",
               color: tool.color,
-              filter: `blur(1px) drop-shadow(0 0 3px ${tool.color})`,
-              textShadow: `0 0 5px ${tool.color}`,
-              opacity: 0.6,
+              filter: `blur(0.5px) drop-shadow(0 0 4px ${tool.color})`,
+              textShadow: `0 0 6px ${tool.color}`,
+              opacity: 0.75,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -565,9 +565,9 @@ const Home = () => {
               ...symbol.position,
               fontSize: "22px", // Slightly larger size
               color: symbol.color,
-              filter: `blur(1px) drop-shadow(0 0 3px ${symbol.color})`,
-              textShadow: `0 0 5px ${symbol.color}`,
-              opacity: 0.6,
+              filter: `blur(0.5px) drop-shadow(0 0 4px ${symbol.color})`,
+              textShadow: `0 0 6px ${symbol.color}`,
+              opacity: 0.75,
               position: "absolute",
             }}
             className="font-mono font-bold"
