@@ -1,13 +1,9 @@
 import { motion } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import React, { useEffect, useState } from "react";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
 const Home = () => {
-  // Get current theme
-  const { darkMode } = useContext(ThemeContext);
-
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousCards, setPreviousCards] = useState([]); // Store swiped cards for rewind function
@@ -415,6 +411,14 @@ const Home = () => {
     "#",
     "$",
     "@",
+    // Additional code snippets
+    "func()",
+    "return;",
+    "for(i=0;",
+    "catch{",
+    "class ",
+    "const ",
+    "let x=",
   ];
 
   // Vibrant colors for code symbols
@@ -439,23 +443,37 @@ const Home = () => {
 
   // Function to generate well-distributed positions for elements
   const generateDistributedPositions = (count, excludeTopPercentage = 15) => {
-    const gridSize = Math.ceil(Math.sqrt(count * 2)); // 2x more cells than elements for better spacing
+    const positions = [];
+
+    // Create a more structured grid with better spacing
+    const gridSize = Math.ceil(Math.sqrt(count * 1.5)); // 1.5x more cells for better spacing
     const cellWidth = 100 / gridSize;
     const cellHeight = (100 - excludeTopPercentage) / gridSize;
 
-    const positions = [];
+    // Create positions with better distribution
     for (let row = 0; row < gridSize; row++) {
       for (let col = 0; col < gridSize; col++) {
+        // Add more randomness to avoid grid-like appearance
         const top =
           excludeTopPercentage +
           row * cellHeight +
-          Math.random() * (cellHeight * 0.5); // Add randomness within the cell
-        const left = col * cellWidth + Math.random() * (cellWidth * 0.5);
+          (Math.random() * 0.7 + 0.15) * cellHeight;
+        const left = col * cellWidth + (Math.random() * 0.7 + 0.15) * cellWidth;
+
+        // Ensure we don't place elements too close to each other
         positions.push({ top: `${top}%`, left: `${left}%` });
       }
     }
 
-    return positions.sort(() => Math.random() - 0.5).slice(0, count); // Shuffle and limit to count
+    // Add some elements specifically at the bottom of the page
+    for (let i = 0; i < Math.ceil(count * 0.2); i++) {
+      const top = 80 + Math.random() * 15; // Between 80% and 95% of page height
+      const left = Math.random() * 100; // Anywhere horizontally
+      positions.push({ top: `${top}%`, left: `${left}%` });
+    }
+
+    // Shuffle and limit to count
+    return positions.sort(() => Math.random() - 0.5).slice(0, count);
   };
 
   // Generate positions for all elements
@@ -491,9 +509,6 @@ const Home = () => {
     position: allPositions[positionIndex++],
   }));
 
-  // Get current theme
-  const isDarkTheme = darkMode;
-
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
       {/* Background with coding icons */}
@@ -502,7 +517,7 @@ const Home = () => {
 
         {/* Programming languages */}
         {distributedProgrammingLanguages.map((lang, i) => (
-          <motion.div
+          <div
             key={`lang-${i}`}
             style={{
               ...lang.position,
@@ -516,12 +531,12 @@ const Home = () => {
             className="font-mono font-bold"
           >
             {lang.symbol}
-          </motion.div>
+          </div>
         ))}
 
         {/* Frameworks */}
         {distributedFrameworks.map((framework, i) => (
-          <motion.div
+          <div
             key={`framework-${i}`}
             style={{
               ...framework.position,
@@ -535,12 +550,12 @@ const Home = () => {
             className="font-mono font-bold"
           >
             {framework.symbol}
-          </motion.div>
+          </div>
         ))}
 
         {/* Tools */}
         {distributedTools.map((tool, i) => (
-          <motion.div
+          <div
             key={`tool-${i}`}
             style={{
               ...tool.position,
@@ -554,12 +569,12 @@ const Home = () => {
             className="font-mono font-bold"
           >
             {tool.symbol}
-          </motion.div>
+          </div>
         ))}
 
         {/* Code symbols */}
         {distributedSymbols.map((symbol, i) => (
-          <motion.div
+          <div
             key={`symbol-${i}`}
             style={{
               ...symbol.position,
@@ -573,7 +588,7 @@ const Home = () => {
             className="font-mono font-bold"
           >
             {symbol.name}
-          </motion.div>
+          </div>
         ))}
       </div>
 
