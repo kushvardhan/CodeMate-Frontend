@@ -3145,7 +3145,7 @@ pre,
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 /* Responsive stats container */
@@ -3182,6 +3182,30 @@ pre,
 
 .dark .stats-card:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Simple elegant borders between stats cards */
+.animated-border {
+  position: relative;
+  width: 1px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.animated-border-line {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+/* Ensure borders are visible in both themes */
+.dark .animated-border-line {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
 .stats-icon {
@@ -3942,7 +3966,7 @@ pre,
   margin-bottom: 2vw;
 }
 
-.stats-card{
+.stats-card {
   margin-top: 2vw;
 }
 

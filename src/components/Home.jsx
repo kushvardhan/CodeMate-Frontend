@@ -504,8 +504,8 @@ const Home = () => {
               ...lang.position,
               fontSize: "16px",
               color: lang.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${lang.color})`, // Added blur effect
-              textShadow: `0 0 12px ${lang.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${lang.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
+              textShadow: `0 0 12px ${lang.color}, 0 0 5px rgba(0,0,0,0.9)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -522,8 +522,8 @@ const Home = () => {
               ...framework.position,
               fontSize: "16px",
               color: framework.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${framework.color})`, // Added blur effect
-              textShadow: `0 0 12px ${framework.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${framework.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
+              textShadow: `0 0 12px ${framework.color}, 0 0 5px rgba(0,0,0,0.9)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -540,8 +540,8 @@ const Home = () => {
               ...tool.position,
               fontSize: "16px",
               color: tool.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${tool.color})`, // Added blur effect
-              textShadow: `0 0 12px ${tool.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${tool.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
+              textShadow: `0 0 12px ${tool.color}, 0 0 5px rgba(0,0,0,0.9)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -558,8 +558,8 @@ const Home = () => {
               ...symbol.position,
               fontSize: "20px", // Slightly larger size
               color: symbol.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${symbol.color})`, // Added blur effect
-              textShadow: `0 0 12px ${symbol.color}`,
+              filter: `blur(1px) drop-shadow(0 0 8px ${symbol.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
+              textShadow: `0 0 12px ${symbol.color}, 0 0 5px rgba(0,0,0,0.9)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -706,11 +706,11 @@ const Home = () => {
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            } // Corrected syntax: replaced parentheses with curly braces
+            }
             transition={{ duration: 0.5 }}
           >
             <motion.div
-              className="stats-card bg-black/40 shadow-lg"
+              className="stats-card bg-black/40 shadow-lg relative"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
@@ -745,8 +745,13 @@ const Home = () => {
               </motion.p>
             </motion.div>
 
+            {/* Animated border between cards */}
+            <div className="animated-border">
+              <div className="animated-border-line"></div>
+            </div>
+
             <motion.div
-              className="stats-card bg-black/40 shadow-lg"
+              className="stats-card bg-black/40 shadow-lg relative"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
@@ -780,8 +785,13 @@ const Home = () => {
               </motion.p>
             </motion.div>
 
+            {/* Animated border between cards */}
+            <div className="animated-border">
+              <div className="animated-border-line"></div>
+            </div>
+
             <motion.div
-              className="stats-card bg-black/40 shadow-lg"
+              className="stats-card bg-black/40 shadow-lg relative"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
