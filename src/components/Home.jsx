@@ -502,10 +502,10 @@ const Home = () => {
             key={`lang-${i}`}
             style={{
               ...lang.position,
-              fontSize: "16px",
+              fontSize: "18px",
               color: lang.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${lang.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
-              textShadow: `0 0 12px ${lang.color}, 0 0 5px rgba(0,0,0,0.9)`,
+              filter: `drop-shadow(0 0 5px ${lang.color})`,
+              textShadow: `0 0 8px ${lang.color}, 0 1px 2px rgba(0,0,0,0.8)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -520,10 +520,10 @@ const Home = () => {
             key={`framework-${i}`}
             style={{
               ...framework.position,
-              fontSize: "16px",
+              fontSize: "18px",
               color: framework.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${framework.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
-              textShadow: `0 0 12px ${framework.color}, 0 0 5px rgba(0,0,0,0.9)`,
+              filter: `drop-shadow(0 0 5px ${framework.color})`,
+              textShadow: `0 0 8px ${framework.color}, 0 1px 2px rgba(0,0,0,0.8)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -538,10 +538,10 @@ const Home = () => {
             key={`tool-${i}`}
             style={{
               ...tool.position,
-              fontSize: "16px",
+              fontSize: "18px",
               color: tool.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${tool.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
-              textShadow: `0 0 12px ${tool.color}, 0 0 5px rgba(0,0,0,0.9)`,
+              filter: `drop-shadow(0 0 5px ${tool.color})`,
+              textShadow: `0 0 8px ${tool.color}, 0 1px 2px rgba(0,0,0,0.8)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -556,10 +556,10 @@ const Home = () => {
             key={`symbol-${i}`}
             style={{
               ...symbol.position,
-              fontSize: "20px", // Slightly larger size
+              fontSize: "22px", // Slightly larger size
               color: symbol.color,
-              filter: `blur(1px) drop-shadow(0 0 8px ${symbol.color}) drop-shadow(0 0 4px rgba(0,0,0,0.8))`, // Added blur effect and dark shadow for visibility
-              textShadow: `0 0 12px ${symbol.color}, 0 0 5px rgba(0,0,0,0.9)`,
+              filter: `drop-shadow(0 0 5px ${symbol.color})`,
+              textShadow: `0 0 8px ${symbol.color}, 0 1px 2px rgba(0,0,0,0.8)`,
               position: "absolute",
             }}
             className="font-mono font-bold"
