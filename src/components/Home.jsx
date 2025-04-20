@@ -702,11 +702,11 @@ const Home = () => {
           <motion.div
             className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl"
             initial={{ opacity: 0, y: 20 }}
-            animate(
+            animate={
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            )
+            } // Corrected syntax: replaced parentheses with curly braces
             transition={{ duration: 0.5 }}
           >
             <motion.div
