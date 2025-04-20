@@ -5,8 +5,9 @@ import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
 const Home = () => {
-  // eslint-disable-next-line no-unused-vars
-  const { darkMode } = useContext(ThemeContext); // Used for theme-specific colors in background elements
+  // Get current theme
+  const { darkMode } = useContext(ThemeContext);
+
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousCards, setPreviousCards] = useState([]); // Store swiped cards for rewind function
@@ -490,11 +491,14 @@ const Home = () => {
     position: allPositions[positionIndex++],
   }));
 
+  // Get current theme
+  const isDarkTheme = darkMode;
+
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
       {/* Background with coding icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#0A0F18]"></div>
+        <div className="absolute inset-0 bg-[#0A0F18] dark:bg-[#0A0F18] light:bg-[#f8fafc]"></div>
 
         {/* Programming languages */}
         {distributedProgrammingLanguages.map((lang, i) => (
@@ -504,8 +508,9 @@ const Home = () => {
               ...lang.position,
               fontSize: "18px",
               color: lang.color,
-              filter: `drop-shadow(0 0 5px ${lang.color})`,
-              textShadow: `0 0 8px ${lang.color}, 0 1px 2px rgba(0,0,0,0.8)`,
+              filter: `drop-shadow(0 0 4px ${lang.color})`,
+              textShadow: `0 0 6px ${lang.color}, 0 1px 3px rgba(0,0,0,1)`,
+              opacity: 0.9,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -522,8 +527,9 @@ const Home = () => {
               ...framework.position,
               fontSize: "18px",
               color: framework.color,
-              filter: `drop-shadow(0 0 5px ${framework.color})`,
-              textShadow: `0 0 8px ${framework.color}, 0 1px 2px rgba(0,0,0,0.8)`,
+              filter: `drop-shadow(0 0 4px ${framework.color})`,
+              textShadow: `0 0 6px ${framework.color}, 0 1px 3px rgba(0,0,0,1)`,
+              opacity: 0.9,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -540,8 +546,9 @@ const Home = () => {
               ...tool.position,
               fontSize: "18px",
               color: tool.color,
-              filter: `drop-shadow(0 0 5px ${tool.color})`,
-              textShadow: `0 0 8px ${tool.color}, 0 1px 2px rgba(0,0,0,0.8)`,
+              filter: `drop-shadow(0 0 4px ${tool.color})`,
+              textShadow: `0 0 6px ${tool.color}, 0 1px 3px rgba(0,0,0,1)`,
+              opacity: 0.9,
               position: "absolute",
             }}
             className="font-mono font-bold"
@@ -558,8 +565,9 @@ const Home = () => {
               ...symbol.position,
               fontSize: "22px", // Slightly larger size
               color: symbol.color,
-              filter: `drop-shadow(0 0 5px ${symbol.color})`,
-              textShadow: `0 0 8px ${symbol.color}, 0 1px 2px rgba(0,0,0,0.8)`,
+              filter: `drop-shadow(0 0 4px ${symbol.color})`,
+              textShadow: `0 0 6px ${symbol.color}, 0 1px 3px rgba(0,0,0,1)`,
+              opacity: 0.9,
               position: "absolute",
             }}
             className="font-mono font-bold"

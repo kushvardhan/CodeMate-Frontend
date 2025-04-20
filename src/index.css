@@ -3198,14 +3198,20 @@ pre,
   position: absolute;
   width: 1px;
   height: 100%;
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Ensure borders are visible in both themes */
+/* Ensure borders are visible in both themes with a subtle glow */
 .dark .animated-border-line {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 8px rgba(129, 140, 248, 0.5);
+}
+
+/* Improve visibility of background elements in light theme */
+:root:not(.dark) .font-mono {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 1) !important;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8)) !important;
 }
 
 .stats-icon {
