@@ -753,11 +753,6 @@ const Home = () => {
               </motion.p>
             </motion.div>
 
-            {/* Animated border between cards */}
-            <div className="animated-border">
-              <div className="animated-border-line"></div>
-            </div>
-
             <motion.div
               className="stats-card bg-black/40 shadow-lg relative"
               initial={{ scale: 0.9, opacity: 0 }}
@@ -792,11 +787,6 @@ const Home = () => {
                 12
               </motion.p>
             </motion.div>
-
-            {/* Animated border between cards */}
-            <div className="animated-border">
-              <div className="animated-border-line"></div>
-            </div>
 
             <motion.div
               className="stats-card bg-black/40 shadow-lg relative"
