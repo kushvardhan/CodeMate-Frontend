@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
+import Footer from "./ui/Footer";
 
 const Home = () => {
   const [users, setUsers] = useState([]);
@@ -929,6 +930,7 @@ const Home = () => {
             </motion.div>
           </motion.div>
         </div>
+        <Footer></Footer>
       </div>
     </div>
   );
