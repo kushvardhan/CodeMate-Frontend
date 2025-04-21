@@ -1,96 +1,100 @@
-import { BsFacebook, BsInstagram, BsTwitter, BsGithub, BsDribbble } from "react-icons/bs";
+import React, { useContext } from "react";
+import { BsEnvelope, BsLinkedin } from "react-icons/bs";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const Footer = () => {
+  const { darkMode } = useContext(ThemeContext);
+
   return (
-    <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
-      <div className="w-full p-4">
-        <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-          <div className="mb-4 sm:mb-0">
-            <a href="https://flowbite.com" className="flex items-center">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="h-8 mr-3"
-                alt="Flowbite Logo"
-              />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
+    <footer
+      className={`${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"
+      }
+      transition-colors duration-300 rounded-lg shadow-lg backdrop-blur-sm
+      border ${darkMode ? "border-gray-700" : "border-gray-200"} m-4 mt-auto`}
+    >
+      <div className="w-full p-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="mb-4 md:mb-0 flex items-center">
+            <a href="/" className="flex items-center group">
+              <div
+                className={`relative overflow-hidden rounded-lg ${
+                  darkMode ? "dark-theme" : "light-theme"
+                }`}
+              >
+                <img
+                  src="/codemate-logo.svg"
+                  className={`h-10 mr-3 transition-transform duration-300 group-hover:scale-110
+                    ${darkMode ? "filter-none" : "filter-none"}`}
+                  alt="CodeMate Logo"
+                />
+              </div>
+              <span
+                className={`self-center text-2xl font-bold whitespace-nowrap
+                ${darkMode ? "text-white" : "text-gray-800"}
+                transition-colors duration-300 group-hover:text-indigo-500`}
+              >
+                CodeMate
               </span>
             </a>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                About
-              </h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Flowbite
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Tailwind CSS
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Follow us
-              </h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Github
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Discord
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Legal
-              </h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Terms &amp; Conditions
-                  </a>
-                </li>
-              </ul>
+
+          <div className="flex flex-wrap justify-center gap-6">
+            <div className="text-center md:text-left">
+              <p
+                className={`text-sm ${
+                  darkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                Connect with developers and collaborate on exciting projects.
+              </p>
             </div>
           </div>
         </div>
-        <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <div className="w-full sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            © 2022 <a href="#" className="hover:underline">Flowbite™</a>. All Rights Reserved.
+
+        <hr
+          className={`my-6 border-t ${
+            darkMode ? "border-gray-700" : "border-gray-200"
+          } sm:mx-auto`}
+        />
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <span
+            className={`text-sm ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            } text-center md:text-left`}
+          >
+            © {new Date().getFullYear()}{" "}
+            <a href="#" className="font-medium hover:underline">
+              Kush Vardhan
+            </a>
+            . All Rights Reserved.
           </span>
-          <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center text-gray-500 dark:text-gray-400">
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white">
-              <BsFacebook />
+
+          <div className="flex space-x-6 justify-center">
+            <a
+              href="https://www.linkedin.com/in/kush-vardhan-48996a251/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${
+                darkMode
+                  ? "text-gray-400 hover:text-white"
+                  : "text-gray-500 hover:text-gray-900"
+              }
+                transition-colors duration-300 hover:scale-110 transform`}
+            >
+              <BsLinkedin className="w-5 h-5" />
             </a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white">
-              <BsInstagram />
-            </a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white">
-              <BsTwitter />
-            </a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white">
-              <BsGithub />
-            </a>
-            <a href="#" className="hover:text-gray-900 dark:hover:text-white">
-              <BsDribbble />
+            <a
+              href="mailto:kushvardhan39797@gmail.com"
+              className={`${
+                darkMode
+                  ? "text-gray-400 hover:text-white"
+                  : "text-gray-500 hover:text-gray-900"
+              }
+                transition-colors duration-300 hover:scale-110 transform`}
+            >
+              <BsEnvelope className="w-5 h-5" />
             </a>
           </div>
         </div>
