@@ -357,32 +357,16 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
-  // Programming language icons with SVG symbols
+  // Programming language icons with coding-related symbols
   const programmingLanguages = [
-    {
-      name: "JavaScript",
-      color: "#F7DF1E",
-      symbol:
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path fill='currentColor' d='M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-6.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z'/></svg>",
-    },
-    {
-      name: "React",
-      color: "#61DAFB",
-      symbol:
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path fill='currentColor' d='M12 9.861a2.139 2.139 0 100 4.278 2.139 2.139 0 100-4.278zm-5.992 6.394l-.472-.12C2.018 15.246 0 13.737 0 11.996s2.018-3.25 5.536-4.139l.472-.119.133.468a23.53 23.53 0 001.363 3.578l.101.213-.101.213a23.307 23.307 0 00-1.363 3.578l-.133.467zM5.317 8.95c-2.674.751-4.315 1.9-4.315 3.046 0 1.145 1.641 2.294 4.315 3.046a24.95 24.95 0 011.182-3.046A24.752 24.752 0 015.317 8.95zm12.675 7.305l-.133-.469a23.357 23.357 0 00-1.364-3.577l-.101-.213.101-.213a23.42 23.42 0 001.364-3.578l.133-.468.473.119c3.517.889 5.535 2.398 5.535 4.14s-2.018 3.25-5.535 4.139l-.473.12zm-.491-4.259c.48 1.039.877 2.06 1.182 3.046 2.675-.752 4.315-1.901 4.315-3.046 0-1.146-1.641-2.294-4.315-3.046a24.788 24.788 0 01-1.182 3.046zM5.31 8.945l-.133-.467C4.188 4.992 4.488 2.494 6 1.622c1.483-.856 3.864.155 6.359 2.716l.34.349-.34.349a23.552 23.552 0 00-2.422 2.967l-.135.193-.235.02a23.657 23.657 0 00-3.785.61l-.472.119zm1.896-6.63c-.268 0-.505.058-.705.173-.994.573-1.17 2.565-.485 5.253a25.122 25.122 0 013.233-.501 24.847 24.847 0 012.052-2.544c-1.56-1.519-3.037-2.381-4.095-2.381zm9.589 20.362c-.001 0-.001 0 0 0-1.425 0-3.255-1.073-5.154-3.023l-.34-.349.34-.349a23.53 23.53 0 002.421-2.968l.135-.193.234-.02a23.63 23.63 0 003.787-.609l.472-.119.134.468c.987 3.484.688 5.983-.824 6.854a2.38 2.38 0 01-1.205.308zm-4.096-3.381c1.56 1.519 3.037 2.381 4.095 2.381h.001c.267 0 .505-.058.704-.173.994-.573 1.171-2.566.485-5.254a25.02 25.02 0 01-3.234.501 24.674 24.674 0 01-2.051 2.545zM18.69 8.945l-.472-.119a23.479 23.479 0 00-3.787-.61l-.234-.02-.135-.193a23.414 23.414 0 00-2.421-2.967l-.34-.349.34-.349C14.135 1.778 16.515.767 18 1.622c1.512.872 1.812 3.37.824 6.855l-.134.468zM14.75 7.24c1.142.104 2.227.273 3.234.501.686-2.688.509-4.68-.485-5.253-.988-.571-2.845.304-4.8 2.208A24.849 24.849 0 0114.75 7.24zM7.206 22.677A2.38 2.38 0 016 22.369c-1.512-.871-1.812-3.369-.823-6.854l.132-.468.472.119c1.155.291 2.429.496 3.785.609l.235.02.134.193a23.596 23.596 0 002.422 2.968l.34.349-.34.349c-1.898 1.95-3.728 3.023-5.151 3.023zm-1.19-6.427c-.686 2.688-.509 4.681.485 5.254.987.563 2.843-.305 4.8-2.208a24.998 24.998 0 01-2.052-2.545 24.976 24.976 0 01-3.233-.501zm5.984.628c-.823 0-1.669-.036-2.516-.106l-.235-.02-.135-.193a30.388 30.388 0 01-1.35-2.122 30.354 30.354 0 01-1.166-2.228l-.1-.213.1-.213a30.3 30.3 0 011.166-2.228c.414-.716.869-1.43 1.35-2.122l.135-.193.235-.02a29.785 29.785 0 015.033 0l.234.02.134.193a30.006 30.006 0 012.517 4.35l.101.213-.101.213a29.6 29.6 0 01-2.517 4.35l-.134.193-.234.02c-.847.07-1.694.106-2.517.106zm-2.197-1.084c1.48.111 2.914.111 4.395 0a29.006 29.006 0 002.196-3.798 28.585 28.585 0 00-2.197-3.798 29.031 29.031 0 00-4.394 0 28.477 28.477 0 00-2.197 3.798 29.114 29.114 0 002.197 3.798z'/></svg>",
-    },
-    {
-      name: "Node.js",
-      color: "#339933",
-      symbol:
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path fill='currentColor' d='M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z'/></svg>",
-    },
-    {
-      name: "Python",
-      color: "#3776AB",
-      symbol:
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path fill='currentColor' d='M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z'/></svg>",
-    },
+    { name: "JavaScript", color: "#F7DF1E", symbol: "JS" },
+    { name: "React", color: "#61DAFB", symbol: "⚛" },
+    { name: "Node.js", color: "#339933", symbol: "ⓝ" },
+    { name: "Python", color: "#3776AB", symbol: "🐍" },
+    { name: "Java", color: "#007396", symbol: "☕" },
+    { name: "C++", color: "#00599C", symbol: "C++" },
+    { name: "TypeScript", color: "#3178C6", symbol: "TS" },
+    { name: "PHP", color: "#777BB4", symbol: "PHP" },
   ];
 
   // Framework icons with SVG symbols
@@ -480,89 +464,154 @@ const Home = () => {
     "#FF6E40",
   ];
 
-  // Use a memoized function to generate positions only once
-  const generateFixedPositions = (() => {
-    // This closure ensures the positions are calculated only once
-    const memoizedPositions = {};
+  // Function to generate fixed positions based on the reference image layout
+  const generateFixedPositions = () => {
+    // Create predefined positions that match the reference image layout
+    const positions = [
+      // Top left area
+      { top: "18%", left: "5%" },
+      { top: "25%", left: "12%" },
+      { top: "15%", left: "22%" },
+      { top: "30%", left: "28%" },
 
-    return (count, excludeTopPercentage = 15) => {
-      // Return cached positions if already calculated
-      const cacheKey = `${count}-${excludeTopPercentage}`;
-      if (memoizedPositions[cacheKey]) {
-        return memoizedPositions[cacheKey];
-      }
+      // Top right area
+      { top: "20%", left: "75%" },
+      { top: "15%", left: "85%" },
+      { top: "28%", left: "92%" },
+      { top: "35%", left: "80%" },
 
-      const positions = [];
+      // Middle left area
+      { top: "45%", left: "8%" },
+      { top: "55%", left: "15%" },
+      { top: "65%", left: "5%" },
+      { top: "50%", left: "25%" },
 
-      // Create a more structured grid with better spacing
-      const gridSize = Math.ceil(Math.sqrt(count * 1.5)); // 1.5x more cells for better spacing
-      const cellWidth = 100 / gridSize;
-      const cellHeight = (100 - excludeTopPercentage) / gridSize;
+      // Middle right area
+      { top: "45%", left: "75%" },
+      { top: "55%", left: "88%" },
+      { top: "65%", left: "82%" },
+      { top: "50%", left: "95%" },
 
-      // Create positions with better distribution
-      for (let row = 0; row < gridSize; row++) {
-        for (let col = 0; col < gridSize; col++) {
-          // Add more randomness to avoid grid-like appearance
-          const top =
-            excludeTopPercentage +
-            row * cellHeight +
-            (Math.random() * 0.7 + 0.15) * cellHeight;
-          const left =
-            col * cellWidth + (Math.random() * 0.7 + 0.15) * cellWidth;
+      // Bottom area
+      { top: "80%", left: "15%" },
+      { top: "85%", left: "30%" },
+      { top: "82%", left: "50%" },
+      { top: "88%", left: "65%" },
+      { top: "85%", left: "80%" },
 
-          // Ensure we don't place elements too close to each other
-          positions.push({ top: `${top}%`, left: `${left}%` });
-        }
-      }
+      // Additional positions throughout the page
+      { top: "40%", left: "40%" },
+      { top: "60%", left: "60%" },
+      { top: "75%", left: "40%" },
+      { top: "35%", left: "55%" },
+      { top: "70%", left: "25%" },
+      { top: "25%", left: "45%" },
+      { top: "60%", left: "35%" },
+      { top: "40%", left: "70%" },
 
-      // Add some elements specifically at the bottom of the page
-      for (let i = 0; i < Math.ceil(count * 0.2); i++) {
-        const top = 80 + Math.random() * 15; // Between 80% and 95% of page height
-        const left = Math.random() * 100; // Anywhere horizontally
-        positions.push({ top: `${top}%`, left: `${left}%` });
-      }
+      // More positions to ensure we have enough
+      { top: "75%", left: "75%" },
+      { top: "20%", left: "60%" },
+      { top: "30%", left: "70%" },
+      { top: "50%", left: "50%" },
+      { top: "65%", left: "65%" },
+      { top: "35%", left: "35%" },
+      { top: "90%", left: "40%" },
+      { top: "15%", left: "40%" },
+      { top: "40%", left: "15%" },
+      { top: "60%", left: "80%" },
+      { top: "70%", left: "45%" },
+    ];
 
-      // Shuffle and limit to count
-      const result = positions.sort(() => Math.random() - 0.5).slice(0, count);
+    return positions;
+  };
 
-      // Cache the result
-      memoizedPositions[cacheKey] = result;
+  // Get all fixed positions
+  const allPositions = generateFixedPositions();
 
-      return result;
-    };
-  })();
-
-  // Generate positions for all elements
+  // Ensure we have enough positions
   const totalElements =
     programmingLanguages.length +
     frameworks.length +
     tools.length +
     codeSymbols.length;
+  if (allPositions.length < totalElements) {
+    console.warn(
+      `Not enough predefined positions (${allPositions.length}) for all elements (${totalElements})`
+    );
+  }
 
-  const allPositions = generateFixedPositions(totalElements, 15);
+  // Assign positions to each category in a way that distributes them evenly across the screen
+  // This ensures a balanced layout matching the reference image
 
-  // Assign positions to each category
-  let positionIndex = 0;
+  // Distribute programming languages in the top-left and middle-right areas
+  const programmingPositions = [
+    allPositions[0],
+    allPositions[1],
+    allPositions[2],
+    allPositions[3],
+    allPositions[12],
+    allPositions[13],
+    allPositions[14],
+    allPositions[15],
+  ];
 
-  const distributedProgrammingLanguages = programmingLanguages.map((lang) => ({
-    ...lang,
-    position: allPositions[positionIndex++],
-  }));
+  // Distribute frameworks in the top-right and middle-left areas
+  const frameworkPositions = [
+    allPositions[4],
+    allPositions[5],
+    allPositions[6],
+    allPositions[7],
+    allPositions[8],
+    allPositions[9],
+    allPositions[10],
+    allPositions[11],
+  ];
 
-  const distributedFrameworks = frameworks.map((framework) => ({
+  // Distribute tools in the bottom area
+  const toolPositions = [
+    allPositions[16],
+    allPositions[17],
+    allPositions[18],
+    allPositions[19],
+    allPositions[20],
+    allPositions[22],
+    allPositions[26],
+    allPositions[34],
+  ];
+
+  // Distribute code symbols throughout the remaining positions
+  const symbolPositions = allPositions.filter(
+    (_, index) =>
+      ![
+        ...programmingPositions,
+        ...frameworkPositions,
+        ...toolPositions,
+      ].includes(allPositions[index])
+  );
+
+  // Create distributed elements with fixed positions
+  const distributedProgrammingLanguages = programmingLanguages.map(
+    (lang, i) => ({
+      ...lang,
+      position: programmingPositions[i % programmingPositions.length],
+    })
+  );
+
+  const distributedFrameworks = frameworks.map((framework, i) => ({
     ...framework,
-    position: allPositions[positionIndex++],
+    position: frameworkPositions[i % frameworkPositions.length],
   }));
 
-  const distributedTools = tools.map((tool) => ({
+  const distributedTools = tools.map((tool, i) => ({
     ...tool,
-    position: allPositions[positionIndex++],
+    position: toolPositions[i % toolPositions.length],
   }));
 
   const distributedSymbols = codeSymbols.map((symbol, i) => ({
     name: symbol,
     color: symbolColors[i % symbolColors.length],
-    position: allPositions[positionIndex++],
+    position: symbolPositions[i % symbolPositions.length],
   }));
 
   return (
@@ -577,12 +626,13 @@ const Home = () => {
             key={`lang-${i}`}
             style={{
               ...lang.position,
-              fontSize: "18px",
+              fontSize: "22px",
               color: lang.color,
-              filter: `blur(1px) drop-shadow(0 0 4px ${lang.color})`,
-              textShadow: `0 0 6px ${lang.color}`,
-              opacity: 0.75,
+              filter: `blur(0.5px) drop-shadow(0 0 5px ${lang.color})`,
+              textShadow: `0 0 8px ${lang.color}`,
+              opacity: 0.85,
               position: "absolute",
+              zIndex: 1,
             }}
             className="font-mono font-bold"
           >
@@ -596,12 +646,13 @@ const Home = () => {
             key={`framework-${i}`}
             style={{
               ...framework.position,
-              fontSize: "18px",
+              fontSize: "20px",
               color: framework.color,
-              filter: `blur(1px) drop-shadow(0 0 4px ${framework.color})`,
-              textShadow: `0 0 6px ${framework.color}`,
-              opacity: 0.75,
+              filter: `blur(0.5px) drop-shadow(0 0 5px ${framework.color})`,
+              textShadow: `0 0 8px ${framework.color}`,
+              opacity: 0.85,
               position: "absolute",
+              zIndex: 1,
             }}
             className="font-mono font-bold"
           >
@@ -615,12 +666,13 @@ const Home = () => {
             key={`tool-${i}`}
             style={{
               ...tool.position,
-              fontSize: "18px",
+              fontSize: "20px",
               color: tool.color,
-              filter: `blur(1px) drop-shadow(0 0 4px ${tool.color})`,
-              textShadow: `0 0 6px ${tool.color}`,
-              opacity: 0.75,
+              filter: `blur(0.5px) drop-shadow(0 0 5px ${tool.color})`,
+              textShadow: `0 0 8px ${tool.color}`,
+              opacity: 0.85,
               position: "absolute",
+              zIndex: 1,
             }}
             className="font-mono font-bold"
           >
@@ -634,12 +686,13 @@ const Home = () => {
             key={`symbol-${i}`}
             style={{
               ...symbol.position,
-              fontSize: "22px", // Slightly larger size
+              fontSize: "18px",
               color: symbol.color,
-              filter: `blur(1px) drop-shadow(0 0 4px ${symbol.color})`,
-              textShadow: `0 0 6px ${symbol.color}`,
-              opacity: 0.75,
+              filter: `blur(0.5px) drop-shadow(0 0 5px ${symbol.color})`,
+              textShadow: `0 0 8px ${symbol.color}`,
+              opacity: 0.85,
               position: "absolute",
+              zIndex: 1,
             }}
             className="font-mono font-bold"
           >
