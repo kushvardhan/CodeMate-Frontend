@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import { updateUser } from "../slice/UserSlice";
+import { setUser, updateUser } from "../slice/UserSlice";
 import Card from "./ui/Card";
 import SuccessPopup from "./ui/SuccessPopup";
 
@@ -17,6 +17,24 @@ const ProfilePage = () => {
   const [errors, setErrors] = useState({});
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/profile/", {
+          withCredentials: true,
+        });
+        console.log(res.data.data);
+        dispatch(setUser(res.data.data));
+      } catch (err) {
+        if(err.response.status === 401){
+          navigate("/login");
+        }
+        console.error("ching chong: "+err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   // Form data state
   const [formData, setFormData] = useState({
