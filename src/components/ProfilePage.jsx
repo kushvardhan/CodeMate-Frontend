@@ -1,6 +1,7 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import {useRef} from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
@@ -27,10 +28,10 @@ const ProfilePage = () => {
         console.log(res.data.data);
         dispatch(setUser(res.data.data));
       } catch (err) {
-        if(err.response.status === 401){
+        if (err.response.status === 401) {
           navigate("/login");
         }
-        console.error("ching chong: "+err);
+        console.error("ching chong: " + err);
       }
     };
     fetchProfile();
@@ -312,6 +313,26 @@ const ProfilePage = () => {
   const handleClosePopup = () => {
     setShowSuccessPopup(false);
   };
+
+  const [feedData, setFeedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeedData = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/user/feed", {
+          withCredentials: true,
+        });
+        setFeedData(response.data.data); // Set the feed data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching feed data:", error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchFeedData();
+  }, []);
 
   return (
     <div
@@ -668,6 +689,28 @@ const ProfilePage = () => {
                 </motion.button>
               </form>
             </motion.div>
+          </div>
+
+          <div className="feed-container">
+            {loading ? (
+              <p>Loading feed...</p>
+            ) : feedData.length > 0 ? (
+              feedData.map((user) => (
+                <div key={user._id} className="feed-card">
+                  <img
+                    src={user.photoUrl}
+                    alt={`${user.firstName} ${user.lastName}`}
+                  />
+                  <h3>{`${user.firstName} ${user.lastName}`}</h3>
+                  <p>{user.about}</p>
+                  <p>Skills: {user.skills.join(", ")}</p>
+                  <p>Age: {user.age}</p>
+                  <p>Gender: {user.gender}</p>
+                </div>
+              ))
+            ) : (
+              <p>No feed data available.</p>
+            )}
           </div>
         </motion.div>
       </div>
