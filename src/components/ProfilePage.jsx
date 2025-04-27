@@ -1,9 +1,8 @@
-import axios from "axios";
 import { motion } from "framer-motion";
-import {useRef} from "react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { setUser, updateUser } from "../slice/UserSlice";
 import Card from "./ui/Card";
@@ -22,16 +21,16 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/profile/", {
+        const res = await axios.get("/profile/", {
           withCredentials: true,
         });
         console.log(res.data.data);
         dispatch(setUser(res.data.data));
       } catch (err) {
-        if (err.response.status === 401) {
+        if (err.response?.status === 401) {
           navigate("/login");
         }
-        console.error("ching chong: " + err);
+        console.error("Error fetching profile: " + err);
       }
     };
     fetchProfile();
@@ -231,17 +230,22 @@ const ProfilePage = () => {
         return;
       }
 
+      // Create a new object with only the allowed fields for profile update
+      const allowedFields = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        gender: formData.gender,
+        age: formData.age,
+        about: formData.about,
+        skills: formData.skills,
+        photoUrl: formData.photoUrl,
+        location: formData.location,
+      };
+
       // Make API call to update profile
-      const token = localStorage.getItem("token");
-      const response = await axios.patch(
-        "http://localhost:4000/api/profile/edit",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch("/profile/edit", allowedFields, {
+        withCredentials: true,
+      });
 
       // Update user in Redux store
       dispatch(updateUser(response.data.data));
@@ -320,7 +324,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/user/feed", {
+        const response = await axios.get("/user/feed", {
           withCredentials: true,
         });
         setFeedData(response.data.data); // Set the feed data
