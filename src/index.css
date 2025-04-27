@@ -1423,6 +1423,18 @@ pre,
   }
 }
 
+.next-card {
+  position: absolute;
+  transform: translateX(0) translateY(-20px) scale(1); /* Center above all cards */
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 20; /* Ensure it appears above all other cards */
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
 .next-card,
 .preview-stack-card {
   position: absolute;
@@ -1588,7 +1600,6 @@ pre,
 .rewind-button {
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .dark .rewind-button {
@@ -2278,7 +2289,8 @@ pre,
   transition: all 0.2s ease;
   letter-spacing: 0px; /* Remove letter spacing */
   position: relative;
-  overflow: hidden;
+  overflow```css
+  : hidden;
   margin-right: 0.3rem; /* Less space between tags */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -3841,3 +3853,4 @@ pre,
   padding-bottom: 3rem; /* Add spacing at the bottom */
   background-color: transparent; /* Transparent background */
 }
+```

@@ -244,17 +244,19 @@ const Card = ({
           void cardElement.offsetWidth;
         }
 
-        // Reset all next cards to ensure they appear in the correct position
+        // Reset all next cards to ensure they appear in the center above all cards
         const nextCards = document.querySelectorAll(".next-card");
         nextCards.forEach((card) => {
           card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
-          card.style.transform = "scale(0.95) translateY(10px)";
+          card.style.transform = "translateX(0) translateY(-20px) scale(1)";
+          card.style.opacity = "1";
           card.style.left = "0";
           card.style.right = "0";
           card.style.top = "0";
           card.style.bottom = "0";
           card.style.margin = "auto";
           card.style.position = "absolute";
+          card.style.zIndex = "20"; // Ensure it appears above all other cards
           void card.offsetWidth;
         });
       }, 50);
