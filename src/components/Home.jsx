@@ -240,6 +240,25 @@ const Home = () => {
       { card: currentCard, direction: "left" },
     ]);
 
+    // Ensure the next card is properly positioned in the center
+    const nextCards = document.querySelectorAll(
+      ".preview-stack-card, .deep-stack-card"
+    );
+    nextCards.forEach((card) => {
+      card.style.cssText = `
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        transform-origin: center center !important;
+        will-change: transform, opacity !important;
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        transform-style: preserve-3d !important;
+      `;
+    });
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -255,6 +274,25 @@ const Home = () => {
       setTimeout(() => {
         setIsCardSwiping(false);
         setSwipeDirection(null);
+
+        // Ensure the next card is properly positioned in the center
+        const nextCards = document.querySelectorAll(
+          ".preview-stack-card, .deep-stack-card"
+        );
+        nextCards.forEach((card) => {
+          card.style.cssText = `
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin: auto !important;
+            transform-origin: center center !important;
+            will-change: transform, opacity !important;
+            transition: transform 0.3s ease, opacity 0.3s ease !important;
+            transform-style: preserve-3d !important;
+          `;
+        });
       }, 500); // Longer delay for smoother transition
     }, 600); // Wait for exit animation to complete
   };
@@ -276,6 +314,25 @@ const Home = () => {
       { card: currentCard, direction: "right" },
     ]);
 
+    // Ensure the next card is properly positioned in the center
+    const nextCards = document.querySelectorAll(
+      ".preview-stack-card, .deep-stack-card"
+    );
+    nextCards.forEach((card) => {
+      card.style.cssText = `
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        transform-origin: center center !important;
+        will-change: transform, opacity !important;
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        transform-style: preserve-3d !important;
+      `;
+    });
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -291,6 +348,25 @@ const Home = () => {
       setTimeout(() => {
         setIsCardSwiping(false);
         setSwipeDirection(null);
+
+        // Ensure the next card is properly positioned in the center
+        const nextCards = document.querySelectorAll(
+          ".preview-stack-card, .deep-stack-card"
+        );
+        nextCards.forEach((card) => {
+          card.style.cssText = `
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin: auto !important;
+            transform-origin: center center !important;
+            will-change: transform, opacity !important;
+            transition: transform 0.3s ease, opacity 0.3s ease !important;
+            transform-style: preserve-3d !important;
+          `;
+        });
       }, 500); // Longer delay for smoother transition
     }, 600); // Wait for exit animation to complete
   };
@@ -322,6 +398,25 @@ const Home = () => {
     setIsCardSwiping(true);
     setSwipeDirection("rewind");
 
+    // Ensure the next card is properly positioned in the center
+    const nextCards = document.querySelectorAll(
+      ".preview-stack-card, .deep-stack-card"
+    );
+    nextCards.forEach((card) => {
+      card.style.cssText = `
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        transform-origin: center center !important;
+        will-change: transform, opacity !important;
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        transform-style: preserve-3d !important;
+      `;
+    });
+
     // Decrement the index to show the previous card
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
 
@@ -329,6 +424,25 @@ const Home = () => {
     setTimeout(() => {
       setIsCardSwiping(false);
       setSwipeDirection(null);
+
+      // Ensure the next card is properly positioned in the center
+      const nextCards = document.querySelectorAll(
+        ".preview-stack-card, .deep-stack-card"
+      );
+      nextCards.forEach((card) => {
+        card.style.cssText = `
+          position: absolute !important;
+          left: 0 !important;
+          right: 0 !important;
+          top: 0 !important;
+          bottom: 0 !important;
+          margin: auto !important;
+          transform-origin: center center !important;
+          will-change: transform, opacity !important;
+          transition: transform 0.3s ease, opacity 0.3s ease !important;
+          transform-style: preserve-3d !important;
+        `;
+      });
     }, 600); // Match the longer timeout for consistency
   };
 
@@ -778,9 +892,37 @@ const Home = () => {
                         transform: "translateX(0) translateY(10px) scale(0.95)",
                         zIndex: "5",
                         opacity: "0.85",
+                        transformStyle: "preserve-3d",
+                        transformOrigin: "center center",
+                        willChange: "transform, opacity",
+                        transition: "transform 0.3s ease, opacity 0.3s ease",
                       }}
                     >
                       <Card user={users[currentIndex + 1]} isNextCard={true} />
+                    </div>
+                  )}
+
+                  {/* Add a third card for deeper stack effect (Tinder-like) */}
+                  {currentIndex + 2 < users.length && (
+                    <div
+                      className="static-card-position deep-stack-card"
+                      style={{
+                        position: "absolute",
+                        left: "0",
+                        right: "0",
+                        top: "0",
+                        bottom: "0",
+                        margin: "auto",
+                        transform: "translateX(0) translateY(20px) scale(0.9)",
+                        zIndex: "4",
+                        opacity: "0.7",
+                        transformStyle: "preserve-3d",
+                        transformOrigin: "center center",
+                        willChange: "transform, opacity",
+                        transition: "transform 0.3s ease, opacity 0.3s ease",
+                      }}
+                    >
+                      <Card user={users[currentIndex + 2]} isNextCard={true} />
                     </div>
                   )}
                 </div>
@@ -799,6 +941,10 @@ const Home = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     zIndex: "10",
+                    transformStyle: "preserve-3d",
+                    transformOrigin: "center center",
+                    willChange: "transform",
+                    transform: "translateX(0) translateY(0) translateZ(0)",
                   }}
                 >
                   <Card
