@@ -259,6 +259,27 @@ const Home = () => {
       `;
     });
 
+    // Reset the tinder-card-stack container to ensure proper positioning
+    const cardStack = document.querySelector(".tinder-card-stack");
+    if (cardStack) {
+      cardStack.style.cssText = `
+        position: relative !important;
+        width: 100% !important;
+        max-width: 340px !important;
+        height: 550px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        perspective: 1000px !important;
+        transform-style: preserve-3d !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateX(0) !important;
+        inset: 0 !important;
+      `;
+    }
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -293,6 +314,27 @@ const Home = () => {
             transform-style: preserve-3d !important;
           `;
         });
+
+        // Reset the tinder-card-stack container again to ensure proper positioning
+        const cardStack = document.querySelector(".tinder-card-stack");
+        if (cardStack) {
+          cardStack.style.cssText = `
+            position: relative !important;
+            width: 100% !important;
+            max-width: 340px !important;
+            height: 550px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            perspective: 1000px !important;
+            transform-style: preserve-3d !important;
+            margin: 0 auto !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateX(0) !important;
+            inset: 0 !important;
+          `;
+        }
       }, 500); // Longer delay for smoother transition
     }, 600); // Wait for exit animation to complete
   };
@@ -333,6 +375,27 @@ const Home = () => {
       `;
     });
 
+    // Reset the tinder-card-stack container to ensure proper positioning
+    const cardStack = document.querySelector(".tinder-card-stack");
+    if (cardStack) {
+      cardStack.style.cssText = `
+        position: relative !important;
+        width: 100% !important;
+        max-width: 340px !important;
+        height: 550px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        perspective: 1000px !important;
+        transform-style: preserve-3d !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateX(0) !important;
+        inset: 0 !important;
+      `;
+    }
+
     // Use a longer timeout to ensure the exit animation completes before changing cards
     // This prevents the glitching/shifting effect
     setTimeout(() => {
@@ -367,6 +430,27 @@ const Home = () => {
             transform-style: preserve-3d !important;
           `;
         });
+
+        // Reset the tinder-card-stack container again to ensure proper positioning
+        const cardStack = document.querySelector(".tinder-card-stack");
+        if (cardStack) {
+          cardStack.style.cssText = `
+            position: relative !important;
+            width: 100% !important;
+            max-width: 340px !important;
+            height: 550px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            perspective: 1000px !important;
+            transform-style: preserve-3d !important;
+            margin: 0 auto !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateX(0) !important;
+            inset: 0 !important;
+          `;
+        }
       }, 500); // Longer delay for smoother transition
     }, 600); // Wait for exit animation to complete
   };
@@ -417,6 +501,27 @@ const Home = () => {
       `;
     });
 
+    // Reset the tinder-card-stack container to ensure proper positioning
+    const cardStack = document.querySelector(".tinder-card-stack");
+    if (cardStack) {
+      cardStack.style.cssText = `
+        position: relative !important;
+        width: 100% !important;
+        max-width: 340px !important;
+        height: 550px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        perspective: 1000px !important;
+        transform-style: preserve-3d !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateX(0) !important;
+        inset: 0 !important;
+      `;
+    }
+
     // Decrement the index to show the previous card
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
 
@@ -443,6 +548,27 @@ const Home = () => {
           transform-style: preserve-3d !important;
         `;
       });
+
+      // Reset the tinder-card-stack container again to ensure proper positioning
+      const cardStack = document.querySelector(".tinder-card-stack");
+      if (cardStack) {
+        cardStack.style.cssText = `
+          position: relative !important;
+          width: 100% !important;
+          max-width: 340px !important;
+          height: 550px !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          perspective: 1000px !important;
+          transform-style: preserve-3d !important;
+          margin: 0 auto !important;
+          left: 0 !important;
+          right: 0 !important;
+          transform: translateX(0) !important;
+          inset: 0 !important;
+        `;
+      }
     }, 600); // Match the longer timeout for consistency
   };
 

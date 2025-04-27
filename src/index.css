@@ -1366,6 +1366,8 @@ pre,
   will-change: transform !important;
   /* Ensure all cards are positioned relative to this container */
   overflow: visible !important;
+  /* Ensure all cards are perfectly centered */
+  position: relative !important;
 }
 
 /* Ensure centering on all screen sizes */
@@ -1476,6 +1478,13 @@ pre,
   inset: 0 !important;
   /* Ensure proper stacking context */
   transform-style: preserve-3d !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
+}
+
+/* Only the actual card inside should receive pointer events */
+.tinder-current-card .dev-card {
+  pointer-events: auto !important;
 }
 
 /* Next card in stack (behind current card) */

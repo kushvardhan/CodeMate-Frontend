@@ -280,18 +280,21 @@ const Card = ({
           ".dev-card:not(.next-card):not(.preview-card)"
         );
         if (cardElement) {
-          cardElement.style.transition = "none";
-          cardElement.style.transform = "translateX(0) rotate(0) scale(1)";
-          cardElement.style.opacity = "1";
-          cardElement.style.boxShadow = "";
-          cardElement.style.border = "none";
+          cardElement.style.cssText = `
+            transition: none !important;
+            transform: translateX(0) rotate(0) scale(1) !important;
+            opacity: 1 !important;
+            box-shadow: none !important;
+            border: none !important;
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin: auto !important;
+            z-index: 10 !important;
+          `;
           cardElement.setAttribute("data-drag", "none");
-          cardElement.style.left = "0";
-          cardElement.style.right = "0";
-          cardElement.style.top = "0";
-          cardElement.style.bottom = "0";
-          cardElement.style.margin = "auto";
-          cardElement.style.position = "relative";
 
           // Force a reflow to apply the changes immediately
           void cardElement.offsetWidth;
@@ -713,19 +716,21 @@ const Card = ({
 
                       // Reset the transform to ensure the next card appears in the center
                       if (element && element.isConnected) {
-                        element.style.transition = "none";
-                        element.style.transform =
-                          "translateX(0) rotate(0) scale(1)";
-                        element.style.opacity = "1";
-                        element.style.boxShadow = "";
-                        element.style.border = "none";
+                        element.style.cssText = `
+                          transition: none !important;
+                          transform: translateX(0) rotate(0) scale(1) !important;
+                          opacity: 1 !important;
+                          box-shadow: none !important;
+                          border: none !important;
+                          position: absolute !important;
+                          left: 0 !important;
+                          right: 0 !important;
+                          top: 0 !important;
+                          bottom: 0 !important;
+                          margin: auto !important;
+                          z-index: 10 !important;
+                        `;
                         element.setAttribute("data-drag", "none");
-                        element.style.left = "0";
-                        element.style.right = "0";
-                        element.style.top = "0";
-                        element.style.bottom = "0";
-                        element.style.margin = "auto";
-                        element.style.position = "relative";
 
                         // Force a reflow to ensure the transition is removed
                         void element.offsetWidth;
@@ -809,19 +814,21 @@ const Card = ({
 
                       // Reset the transform to ensure the next card appears in the center
                       if (element && element.isConnected) {
-                        element.style.transition = "none";
-                        element.style.transform =
-                          "translateX(0) rotate(0) scale(1)";
-                        element.style.opacity = "1";
-                        element.style.boxShadow = "";
-                        element.style.border = "none";
+                        element.style.cssText = `
+                          transition: none !important;
+                          transform: translateX(0) rotate(0) scale(1) !important;
+                          opacity: 1 !important;
+                          box-shadow: none !important;
+                          border: none !important;
+                          position: absolute !important;
+                          left: 0 !important;
+                          right: 0 !important;
+                          top: 0 !important;
+                          bottom: 0 !important;
+                          margin: auto !important;
+                          z-index: 10 !important;
+                        `;
                         element.setAttribute("data-drag", "none");
-                        element.style.left = "0";
-                        element.style.right = "0";
-                        element.style.top = "0";
-                        element.style.bottom = "0";
-                        element.style.margin = "auto";
-                        element.style.position = "relative";
 
                         // Force a reflow to ensure the transition is removed
                         void element.offsetWidth;
