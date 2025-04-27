@@ -242,31 +242,21 @@ const Card = ({
 
           // Force a reflow to apply the changes immediately
           void cardElement.offsetWidth;
-
-          // Then add back the transition for smooth animations
-          setTimeout(() => {
-            if (cardElement) {
-              cardElement.style.transition =
-                "transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease, border 0.3s ease";
-            }
-          }, 50);
-
-          // Also reset all next cards to ensure they appear in the center
-          const nextCards = document.querySelectorAll(
-            ".next-card, .preview-stack-card"
-          );
-          nextCards.forEach((card) => {
-            card.style.transition = "none";
-            card.style.transform = "scale(0.98) translateY(10px)";
-            card.style.left = "0";
-            card.style.right = "0";
-            card.style.top = "0";
-            card.style.bottom = "0";
-            card.style.margin = "auto";
-            card.style.position = "absolute";
-            void card.offsetWidth;
-          });
         }
+
+        // Reset all next cards to ensure they appear in the correct position
+        const nextCards = document.querySelectorAll(".next-card");
+        nextCards.forEach((card) => {
+          card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+          card.style.transform = "scale(0.95) translateY(10px)";
+          card.style.left = "0";
+          card.style.right = "0";
+          card.style.top = "0";
+          card.style.bottom = "0";
+          card.style.margin = "auto";
+          card.style.position = "absolute";
+          void card.offsetWidth;
+        });
       }, 50);
     }
   }, [isNextCard, isPreview]);

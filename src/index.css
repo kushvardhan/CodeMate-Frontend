@@ -1423,101 +1423,16 @@ pre,
   }
 }
 
-/* Extra small screens */
-@media (max-width: 360px) {
-  .tinder-card-stack {
-    max-width: 280px; /* Slightly larger for very small screens */
-    transform: translateX(0) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    inset: 0 !important;
-  }
-
-  .dev-card {
-    width: 100% !important;
-    min-height: 500px; /* Taller for better text visibility */
-    margin: 0 auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    transform: translateX(0) !important; /* Force center alignment */
-  }
-
-  /* Ensure card container is centered */
-  .tinder-current-card {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 auto !important;
-    transform: translateX(0) !important; /* Force center alignment */
-  }
-
-  /* Ensure next card is also centered */
-  .tinder-next-card {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 auto !important;
-    transform: translateX(0) !important; /* Force center alignment */
-  }
-}
-
-/* Larger screens - bigger card */
-@media (min-width: 1024px) {
-  .dev-card {
-    width: 130% !important; /* Bigger on large screens */
-    min-height: 580px !important; /* Taller on large screens */
-  }
-
-  .tinder-card-stack {
-    max-width: 400px; /* Larger container for bigger card */
-  }
-}
-
-/* Very large screens - even bigger card */
-@media (min-width: 1440px) {
-  .dev-card {
-    width: 150% !important; /* Even bigger on very large screens */
-    min-height: 620px !important; /* Even taller on very large screens */
-  }
-
-  .tinder-card-stack {
-    max-width: 450px; /* Even larger container for bigger card */
-  }
-}
-
-/* Next card in stack (behind current card) */
-.tinder-next-card {
+.next-card,
+.preview-stack-card {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  pointer-events: none;
-  /* Prevent shifting during animations */
-  transform-origin: center center !important;
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
-  will-change: transform !important;
-  transform: translateZ(0) scale(0.95) translateY(10px) !important;
-  opacity: 0.8 !important;
-  /* Ensure the next card is always centered */
-  left: 0 !important;
-  right: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  margin: auto !important;
-  /* Force center positioning */
-  inset: 0 !important;
+  transform: scale(0.95) translateY(10px);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Current card (top of stack) */
@@ -1545,15 +1460,31 @@ pre,
   inset: 0 !important;
 }
 
-/* Next card styling */
-.next-card {
+/* Next card in stack (behind current card) */
+.tinder-next-card {
   position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
   pointer-events: none;
-  user-select: none;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
-  transform: scale(0.98) translateY(10px) !important; /* Increased scale for larger background card */
-  opacity: 0.85 !important; /* Increased opacity for better visibility */
-  filter: blur(0.5px) !important; /* Reduced blur for better visibility */
+  /* Prevent shifting during animations */
+  transform-origin: center center !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  transform: translateZ(0) scale(0.95) translateY(10px) !important;
+  opacity: 0.8 !important;
+  /* Ensure the next card is always centered */
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  /* Force center positioning */
+  inset: 0 !important;
 }
 
 /* Static card stack - these cards don't move */
@@ -2358,7 +2289,7 @@ pre,
   position: absolute;
   top: 0;
   left: -100%;
-  width: 100%;
+  width: 100px;
   height: 100%;
   background: linear-gradient(
     90deg,
@@ -3127,12 +3058,12 @@ pre,
 
 .dark-mode .swipe-left {
   background-color: var(--color-dark-card);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  color: var(--color-error);
 }
 
 .dark-mode .swipe-right {
   background-color: var(--color-dark-card);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  color: var(--color-success);
 }
 
 /* Stats container */
@@ -3228,13 +3159,13 @@ pre,
 }
 
 .stats-icon svg {
-  filter: drop-shadow(0 0 3px rgba(var(--color-primary-rgb), 0.3));
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
   transition: all 0.3s ease;
 }
 
 .stats-card:hover .stats-icon svg {
   transform: scale(1.1);
-  filter: drop-shadow(0 0 5px rgba(var(--color-primary-rgb), 0.4));
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.4));
 }
 
 .stats-title {
@@ -3396,7 +3327,7 @@ pre,
 
 /* Background pattern */
 .bg-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Code background pattern - WhatsApp style */
@@ -3528,83 +3459,6 @@ pre,
   }
 }
 
-/* WhatsApp-style background with glowy animated icons */
-.whatsapp-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.whatsapp-bg-icon {
-  position: absolute;
-  opacity: 0.65; /* Significantly increased for light theme */
-  transform-origin: center;
-  animation: pulse-glow 4s infinite ease-in-out;
-}
-
-.dark .whatsapp-bg-icon {
-  opacity: 0.55; /* Slightly increased for dark theme */
-}
-
-.whatsapp-bg-icon.code {
-  color: #4f46e5;
-  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.4));
-}
-
-.whatsapp-bg-icon.people {
-  color: #ec4899;
-  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.4));
-}
-
-.whatsapp-bg-icon.connection {
-  color: #10b981;
-  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
-}
-
-.dark .whatsapp-bg-icon.code {
-  color: #818cf8;
-  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.5));
-}
-
-.dark .whatsapp-bg-icon.people {
-  color: #f472b6;
-  filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.5));
-}
-
-.dark .whatsapp-bg-icon.connection {
-  color: #34d399;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.5));
-}
-
-@keyframes float-slow {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-}
-
-@keyframes pulse-glow {
-  0% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.3;
-  }
-  50% {
-    filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.5));
-    opacity: 0.5;
-  }
-  100% {
-    filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
-    opacity: 0.3;
-  }
-}
-
 /* Infinity symbol styles */
 .infinity-symbol {
   filter: drop-shadow(0 0 15px rgba(79, 70, 229, 0.3));
@@ -3657,7 +3511,7 @@ pre,
   }
 }
 
-/* Home Page Styles */
+/* Home Page Specific Styles */
 .home-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -3891,6 +3745,10 @@ pre,
   color: inherit;
   text-decoration: none;
   transition: all 0.3s ease;
+}
+
+.footer-container {
+  position: relative;
 }
 
 .footer-wave-container {
