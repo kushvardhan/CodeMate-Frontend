@@ -2289,8 +2289,7 @@ pre,
   transition: all 0.2s ease;
   letter-spacing: 0px; /* Remove letter spacing */
   position: relative;
-  overflow```css
-  : hidden;
+  overflow: hidden;
   margin-right: 0.3rem; /* Less space between tags */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -3853,4 +3852,3 @@ pre,
   padding-bottom: 3rem; /* Add spacing at the bottom */
   background-color: transparent; /* Transparent background */
 }
-```
