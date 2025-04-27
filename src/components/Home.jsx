@@ -362,8 +362,6 @@ const Home = () => {
     { name: "JavaScript", color: "#F7DF1E", symbol: "JS" },
     { name: "React", color: "#61DAFB", symbol: "⚛" },
     { name: "Node.js", color: "#339933", symbol: "ⓝ" },
-    { name: "Python", color: "#3776AB", symbol: "🐍" },
-    { name: "Java", color: "#007396", symbol: "☕" },
     { name: "C++", color: "#00599C", symbol: "C++" },
     { name: "TypeScript", color: "#3178C6", symbol: "TS" },
     { name: "PHP", color: "#777BB4", symbol: "PHP" },
@@ -378,7 +376,6 @@ const Home = () => {
     { name: "Django", color: "#092E20", symbol: "DJ" },
     { name: "Laravel", color: "#FF2D20", symbol: "LV" },
     { name: "Express", color: "#000000", symbol: "EX" },
-    { name: "Spring", color: "#6DB33F", symbol: "❦" },
   ];
 
   // Tool and library icons with coding-related symbols
@@ -769,14 +766,41 @@ const Home = () => {
                 <div className="static-card-stack">
                   {/* Next card (visible behind current card) - always centered */}
                   {currentIndex + 1 < users.length && (
-                    <div className="static-card-position preview-stack-card">
+                    <div
+                      className="static-card-position preview-stack-card"
+                      style={{
+                        position: "absolute",
+                        left: "0",
+                        right: "0",
+                        top: "0",
+                        bottom: "0",
+                        margin: "auto",
+                        transform: "translateX(0) translateY(10px) scale(0.95)",
+                        zIndex: "5",
+                        opacity: "0.85",
+                      }}
+                    >
                       <Card user={users[currentIndex + 1]} isNextCard={true} />
                     </div>
                   )}
                 </div>
 
                 {/* Current card */}
-                <div className="tinder-current-card">
+                <div
+                  className="tinder-current-card"
+                  style={{
+                    position: "absolute",
+                    left: "0",
+                    right: "0",
+                    top: "0",
+                    bottom: "0",
+                    margin: "auto",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: "10",
+                  }}
+                >
                   <Card
                     user={users[currentIndex]}
                     onSwipeLeft={handleSwipeLeft}

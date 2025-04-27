@@ -65,11 +65,18 @@ const Card = ({
     // Tinder-like next card (exactly like Tinder)
     nextCard: {
       opacity: 0.85 /* Slightly less visible behind current card */,
-      scale: 0.98 /* Slightly smaller than current card but larger than before */,
+      scale: 0.95 /* Slightly smaller than current card */,
       y: 10 /* Slightly lower than current card */,
       x: 0 /* Centered horizontally */,
       rotateZ: 0 /* No rotation */,
       filter: "blur(0.5px)" /* Very slight blur for better visibility */,
+      zIndex: 5 /* Lower z-index to appear behind the current card */,
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      margin: "auto",
       transition: {
         type: "spring",
         stiffness: 300,
@@ -188,15 +195,61 @@ const Card = ({
               ".next-card, .preview-stack-card"
             );
             nextCards.forEach((card) => {
-              card.style.transition = "none";
-              card.style.transform = "scale(0.98) translateY(10px)";
-              card.style.left = "0";
-              card.style.right = "0";
-              card.style.top = "0";
-              card.style.bottom = "0";
-              card.style.margin = "auto";
-              card.style.position = "absolute";
+              // Force the card to be centered with !important styles
+              card.style.cssText = `
+                transition: transform 0.3s ease, opacity 0.3s ease !important;
+                transform: translateX(0) translateY(10px) scale(0.95) !important;
+                opacity: 0.85 !important;
+                position: absolute !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                margin: auto !important;
+                z-index: 5 !important;
+              `;
+
+              // Force a reflow to apply the changes immediately
               void card.offsetWidth;
+
+              // Reset any parent containers as well
+              const parentContainer = card.closest(
+                ".static-card-position, .static-card-stack"
+              );
+              if (parentContainer) {
+                parentContainer.style.cssText = `
+                  position: absolute !important;
+                  left: 0 !important;
+                  right: 0 !important;
+                  top: 0 !important;
+                  bottom: 0 !important;
+                  margin: auto !important;
+                  display: flex !important;
+                  justify-content: center !important;
+                  align-items: center !important;
+                `;
+              }
+
+              // Also reset the tinder-card-stack container
+              const cardStack = document.querySelector(".tinder-card-stack");
+              if (cardStack) {
+                cardStack.style.cssText = `
+                  position: relative !important;
+                  width: 100% !important;
+                  max-width: 340px !important;
+                  height: 550px !important;
+                  display: flex !important;
+                  justify-content: center !important;
+                  align-items: center !important;
+                  perspective: 1000px !important;
+                  transform-style: preserve-3d !important;
+                  margin: 0 auto !important;
+                  left: 0 !important;
+                  right: 0 !important;
+                  transform: translateX(0) !important;
+                  inset: 0 !important;
+                `;
+              }
             });
           }
         }, 600); // Match timeout to the animation duration
@@ -244,20 +297,66 @@ const Card = ({
           void cardElement.offsetWidth;
         }
 
-        // Reset all next cards to ensure they appear in the center above all cards
-        const nextCards = document.querySelectorAll(".next-card");
+        // Reset all next cards to ensure they appear in the center
+        const nextCards = document.querySelectorAll(
+          ".next-card, .preview-stack-card"
+        );
         nextCards.forEach((card) => {
-          card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
-          card.style.transform = "translateX(0) translateY(-20px) scale(1)";
-          card.style.opacity = "1";
-          card.style.left = "0";
-          card.style.right = "0";
-          card.style.top = "0";
-          card.style.bottom = "0";
-          card.style.margin = "auto";
-          card.style.position = "absolute";
-          card.style.zIndex = "20"; // Ensure it appears above all other cards
+          // Force the card to be centered with !important styles
+          card.style.cssText = `
+            transition: transform 0.3s ease, opacity 0.3s ease !important;
+            transform: translateX(0) translateY(10px) scale(0.95) !important;
+            opacity: 0.85 !important;
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin: auto !important;
+            z-index: 5 !important;
+          `;
+
+          // Force a reflow to apply the changes immediately
           void card.offsetWidth;
+
+          // Reset any parent containers as well
+          const parentContainer = card.closest(
+            ".static-card-position, .static-card-stack"
+          );
+          if (parentContainer) {
+            parentContainer.style.cssText = `
+              position: absolute !important;
+              left: 0 !important;
+              right: 0 !important;
+              top: 0 !important;
+              bottom: 0 !important;
+              margin: auto !important;
+              display: flex !important;
+              justify-content: center !important;
+              align-items: center !important;
+            `;
+          }
+
+          // Also reset the tinder-card-stack container
+          const cardStack = document.querySelector(".tinder-card-stack");
+          if (cardStack) {
+            cardStack.style.cssText = `
+              position: relative !important;
+              width: 100% !important;
+              max-width: 340px !important;
+              height: 550px !important;
+              display: flex !important;
+              justify-content: center !important;
+              align-items: center !important;
+              perspective: 1000px !important;
+              transform-style: preserve-3d !important;
+              margin: 0 auto !important;
+              left: 0 !important;
+              right: 0 !important;
+              transform: translateX(0) !important;
+              inset: 0 !important;
+            `;
+          }
         });
       }, 50);
     }
@@ -636,15 +735,40 @@ const Card = ({
                           ".next-card, .preview-stack-card"
                         );
                         nextCards.forEach((card) => {
-                          card.style.transition = "none";
-                          card.style.transform = "scale(0.98) translateY(10px)";
-                          card.style.left = "0";
-                          card.style.right = "0";
-                          card.style.top = "0";
-                          card.style.bottom = "0";
-                          card.style.margin = "auto";
-                          card.style.position = "absolute";
+                          // Force the card to be centered with !important styles
+                          card.style.cssText = `
+                            transition: transform 0.3s ease, opacity 0.3s ease !important;
+                            transform: translateX(0) translateY(10px) scale(0.95) !important;
+                            opacity: 0.85 !important;
+                            position: absolute !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            top: 0 !important;
+                            bottom: 0 !important;
+                            margin: auto !important;
+                            z-index: 5 !important;
+                          `;
+
+                          // Force a reflow to apply the changes immediately
                           void card.offsetWidth;
+
+                          // Reset any parent containers as well
+                          const parentContainer = card.closest(
+                            ".static-card-position, .static-card-stack"
+                          );
+                          if (parentContainer) {
+                            parentContainer.style.cssText = `
+                              position: absolute !important;
+                              left: 0 !important;
+                              right: 0 !important;
+                              top: 0 !important;
+                              bottom: 0 !important;
+                              margin: auto !important;
+                              display: flex !important;
+                              justify-content: center !important;
+                              align-items: center !important;
+                            `;
+                          }
                         });
                       }
                     }, 200);
@@ -707,15 +831,40 @@ const Card = ({
                           ".next-card, .preview-stack-card"
                         );
                         nextCards.forEach((card) => {
-                          card.style.transition = "none";
-                          card.style.transform = "scale(0.98) translateY(10px)";
-                          card.style.left = "0";
-                          card.style.right = "0";
-                          card.style.top = "0";
-                          card.style.bottom = "0";
-                          card.style.margin = "auto";
-                          card.style.position = "absolute";
+                          // Force the card to be centered with !important styles
+                          card.style.cssText = `
+                            transition: transform 0.3s ease, opacity 0.3s ease !important;
+                            transform: translateX(0) translateY(10px) scale(0.95) !important;
+                            opacity: 0.85 !important;
+                            position: absolute !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            top: 0 !important;
+                            bottom: 0 !important;
+                            margin: auto !important;
+                            z-index: 5 !important;
+                          `;
+
+                          // Force a reflow to apply the changes immediately
                           void card.offsetWidth;
+
+                          // Reset any parent containers as well
+                          const parentContainer = card.closest(
+                            ".static-card-position, .static-card-stack"
+                          );
+                          if (parentContainer) {
+                            parentContainer.style.cssText = `
+                              position: absolute !important;
+                              left: 0 !important;
+                              right: 0 !important;
+                              top: 0 !important;
+                              bottom: 0 !important;
+                              margin: auto !important;
+                              display: flex !important;
+                              justify-content: center !important;
+                              align-items: center !important;
+                            `;
+                          }
                         });
                       }
                     }, 200);

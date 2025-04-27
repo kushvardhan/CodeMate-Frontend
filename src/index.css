@@ -1425,25 +1425,27 @@ pre,
 
 .next-card {
   position: absolute;
-  transform: translateX(0) translateY(-20px) scale(1); /* Center above all cards */
+  transform: translateX(0) translateY(10px) scale(0.95); /* Center behind current card (Tinder-like) */
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
-  z-index: 20; /* Ensure it appears above all other cards */
+  z-index: 5; /* Lower z-index to appear behind the current card */
+  opacity: 0.85; /* Slightly less visible behind current card */
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.next-card,
 .preview-stack-card {
   position: absolute;
-  transform: scale(0.95) translateY(10px);
+  transform: translateX(0) translateY(10px) scale(0.95); /* Center behind current card (Tinder-like) */
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
+  z-index: 5; /* Lower z-index to appear behind the current card */
+  opacity: 0.85; /* Slightly less visible behind current card */
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -1554,6 +1556,7 @@ pre,
   bottom: 0;
   margin: auto;
   inset: 0;
+  z-index: 5; /* Lower z-index to appear behind the current card */
 }
 
 /* Deep stack card (third card) */
@@ -1564,8 +1567,15 @@ pre,
 
 /* Preview stack card (second card) */
 .preview-stack-card {
-  opacity: 0.85; /* Increased opacity for better visibility */
-  transform: scale(0.98) translateY(10px); /* Increased scale for larger background card */
+  opacity: 0.85; /* Slightly less visible behind current card */
+  transform: translateX(0) translateY(10px) scale(0.95); /* Center behind current card (Tinder-like) */
+  z-index: 5; /* Lower z-index to appear behind the current card */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 /* Static card images */
