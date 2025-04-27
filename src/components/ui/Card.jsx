@@ -381,6 +381,14 @@ const Card = ({
     // This avoids querySelector which can cause performance issues
     const element = event.currentTarget;
     if (element) {
+      // Make sure the card is absolutely positioned in the center
+      element.style.position = "absolute";
+      element.style.left = "0";
+      element.style.right = "0";
+      element.style.top = "0";
+      element.style.bottom = "0";
+      element.style.margin = "auto";
+
       // Apply rotation and horizontal movement with slight vertical lift (Tinder-like)
       // Use transform for better performance
       element.style.transform = `translateX(${info.offset.x}px) translateY(${
@@ -650,7 +658,9 @@ const Card = ({
         dragConstraints={{
           left: -1000,
           right: 1000,
-        }} /* Allow more movement for Tinder-like feel */
+          top: 0,
+          bottom: 0,
+        }} /* Allow horizontal movement for Tinder-like feel but constrain vertical */
         dragElastic={1} /* Full elasticity for Tinder-like feel */
         dragMomentum={true} /* Enable momentum for natural feel */
         dragTransition={{
@@ -880,11 +890,18 @@ const Card = ({
                   // Spring back to center if not swiped far enough (Tinder-like)
                   if (element) {
                     // Tinder uses a spring animation for the return
-                    element.style.transition =
-                      "transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000)";
-                    element.style.transform =
-                      "translateX(0) translateY(0) rotate(0deg)";
-                    element.style.boxShadow = "";
+                    element.style.cssText = `
+                      position: absolute !important;
+                      left: 0 !important;
+                      right: 0 !important;
+                      top: 0 !important;
+                      bottom: 0 !important;
+                      margin: auto !important;
+                      transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000) !important;
+                      transform: translateX(0) translateY(0) rotate(0deg) !important;
+                      box-shadow: none !important;
+                      z-index: 10 !important;
+                    `;
 
                     // Reset progress
                     setSwipeProgress(0);

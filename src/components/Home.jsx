@@ -597,6 +597,73 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
+  // Effect to ensure the next card is properly positioned when the component mounts
+  useEffect(() => {
+    // Reset the card stack position
+    const cardStack = document.querySelector(".tinder-card-stack");
+    if (cardStack) {
+      cardStack.style.cssText = `
+        position: relative !important;
+        width: 100% !important;
+        max-width: 340px !important;
+        height: 550px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        perspective: 1000px !important;
+        transform-style: preserve-3d !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateX(0) !important;
+        inset: 0 !important;
+      `;
+    }
+
+    // Reset all next cards to ensure they appear in the center
+    const nextCards = document.querySelectorAll(
+      ".preview-stack-card, .deep-stack-card"
+    );
+    nextCards.forEach((card) => {
+      card.style.cssText = `
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        transform-origin: center center !important;
+        will-change: transform, opacity !important;
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        transform-style: preserve-3d !important;
+        z-index: 5 !important;
+        opacity: 0.85 !important;
+        transform: translateX(0) translateY(10px) scale(0.95) !important;
+      `;
+    });
+
+    // Reset the current card to ensure it appears in the center
+    const currentCard = document.querySelector(".tinder-current-card");
+    if (currentCard) {
+      currentCard.style.cssText = `
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        z-index: 10 !important;
+        transform-style: preserve-3d !important;
+        transform-origin: center center !important;
+        will-change: transform !important;
+        transform: translateX(0) translateY(0) translateZ(0) !important;
+      `;
+    }
+  }, []);
+
   // Programming language icons with coding-related symbols
   const programmingLanguages = [
     { name: "JavaScript", color: "#F7DF1E", symbol: "JS" },
@@ -974,7 +1041,10 @@ const Home = () => {
             {users.length > 0 &&
             currentIndex < users.length &&
             !allCardsFinished ? (
-              <div className="tinder-card-stack relative w-full max-w-[340px] mx-auto">
+              <div
+                className="tinder-card-stack relative w-full max-w-[340px] mx-auto"
+                style={{ position: "relative", margin: "0 auto" }}
+              >
                 {/* Rewind button */}
                 {previousCards.length > 0 && (
                   <motion.button

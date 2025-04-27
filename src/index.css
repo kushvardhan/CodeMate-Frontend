@@ -1579,6 +1579,8 @@ pre,
   transform-style: preserve-3d !important;
   /* Ensure the card is always centered */
   transform: translateX(0) !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
 }
 
 /* Deep stack card (third card) */
@@ -1605,6 +1607,8 @@ pre,
   /* Ensure the card is always centered */
   transform-origin: center center !important;
   will-change: transform, opacity !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
 }
 
 /* Static card images */
