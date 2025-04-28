@@ -10,6 +10,7 @@ import {
 import "./App.css";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
+import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
 
@@ -17,7 +18,6 @@ import SignupPage from "./components/SignupPage";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const location = useLocation();
-
   if (!isAuthenticated) {
     // Redirect to login if not authenticated, but save the location they were trying to access
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -38,16 +38,17 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
-// Auth Redirect component - redirects based on authentication status
-const AuthRedirect = () => {
+// NotFound Route component - shows NotFoundPage for invalid routes
+const NotFoundRoute = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
 
-  // If authenticated, redirect to profile; otherwise redirect to login
-  return isAuthenticated ? (
-    <Navigate to="/profile" replace />
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  // If not authenticated, redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If authenticated, show the NotFoundPage
+  return <NotFoundPage />;
 };
 
 const AppRoutes = () => {
@@ -56,6 +57,14 @@ const AppRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Navigate to="/" replace />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/"
           element={
@@ -88,8 +97,24 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        {/* Catch-all route - redirect based on authentication status */}
-        <Route path="*" element={<AuthRedirect />} />
+        <Route
+          path="/connections"
+          element={
+            <ProtectedRoute>
+              <NotFoundPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/requests"
+          element={
+            <ProtectedRoute>
+              <NotFoundPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Not Found Page - shown for invalid routes */}
+        <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </AnimatePresence>
   );

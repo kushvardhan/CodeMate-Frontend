@@ -695,27 +695,6 @@ const ProfilePage = () => {
             </motion.div>
           </div>
 
-          <div className="feed-container">
-            {loading ? (
-              <p>Loading feed...</p>
-            ) : feedData.length > 0 ? (
-              feedData.map((user) => (
-                <div key={user._id} className="feed-card">
-                  <img
-                    src={user.photoUrl}
-                    alt={`${user.firstName} ${user.lastName}`}
-                  />
-                  <h3>{`${user.firstName} ${user.lastName}`}</h3>
-                  <p>{user.about}</p>
-                  <p>Skills: {user.skills.join(", ")}</p>
-                  <p>Age: {user.age}</p>
-                  <p>Gender: {user.gender}</p>
-                </div>
-              ))
-            ) : (
-              <p>No feed data available.</p>
-            )}
-          </div>
         </motion.div>
       </div>
     </div>
