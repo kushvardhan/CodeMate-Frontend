@@ -355,7 +355,7 @@ const ProfilePage = () => {
       {/* Top navigation bar with back button and theme toggle */}
       <div className="profile-top-nav">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="back-button"
           aria-label="Go back"
         >
@@ -372,7 +372,7 @@ const ProfilePage = () => {
           >
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          <span>Back</span>
+          <span>Home</span>
         </button>
 
         <button

@@ -1,19 +1,14 @@
-import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login"); // Redirect to login if no token is found
-    }
-  }, [navigate]);
+  // Authentication is now handled by the ProtectedRoute component in App.jsx
 
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,7 +26,7 @@ const Home = () => {
         setError(null);
 
         // Make API call to fetch feed data
-        const response = await axios.get("http://localhost:4000/user/feed", {
+        const response = await axios.get("/user/feed", {
           withCredentials: true,
         });
 

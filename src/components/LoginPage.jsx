@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { setUser } from "../slice/UserSlice";
@@ -9,11 +9,10 @@ import { setUser } from "../slice/UserSlice";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { darkMode, toggleDarkMode } = useTheme();
 
-  // Get the previous location the user was trying to access
-  const from = location.state?.from?.pathname || "/";
+  // Always redirect to profile page after login
+  const from = "/profile";
 
   const [formData, setFormData] = useState({
     email: "",

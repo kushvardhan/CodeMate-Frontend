@@ -13,7 +13,7 @@ import LoginPage from "./components/LoginPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
 
-// Protected Route component
+// Protected Route component - redirects to login if not authenticated
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const location = useLocation();
@@ -24,6 +24,30 @@ const ProtectedRoute = ({ children }) => {
   }
 
   return children;
+};
+
+// Public Route component - redirects to profile if already authenticated
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  if (isAuthenticated) {
+    // Redirect to profile if already authenticated
+    return <Navigate to="/profile" replace />;
+  }
+
+  return children;
+};
+
+// Auth Redirect component - redirects based on authentication status
+const AuthRedirect = () => {
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  // If authenticated, redirect to profile; otherwise redirect to login
+  return isAuthenticated ? (
+    <Navigate to="/profile" replace />
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 const AppRoutes = () => {
@@ -40,8 +64,22 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignupPage />
+            </PublicRoute>
+          }
+        />
         <Route
           path="/profile"
           element={
@@ -50,8 +88,8 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        {/* Redirect any unknown routes to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Catch-all route - redirect based on authentication status */}
+        <Route path="*" element={<AuthRedirect />} />
       </Routes>
     </AnimatePresence>
   );
