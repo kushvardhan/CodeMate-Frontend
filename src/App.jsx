@@ -26,13 +26,13 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// Public Route component - redirects to profile if already authenticated
+// Public Route component - redirects to home if already authenticated
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.user);
 
   if (isAuthenticated) {
-    // Redirect to profile if already authenticated
-    return <Navigate to="/profile" replace />;
+    // Redirect to home if already authenticated
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -105,7 +105,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-      
+
         {/* Not Found Page - shown for invalid routes */}
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
@@ -116,9 +116,49 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <PersistAuth>
+        <AppRoutes />
+      </PersistAuth>
     </BrowserRouter>
   );
+};
+
+// PersistAuth component - checks for token and sets user state on page load/refresh
+const PersistAuth = ({ children }) => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    // Only try to restore auth if not already authenticated
+    if (!isAuthenticated) {
+      const checkAuth = async () => {
+        const token = localStorage.getItem("token");
+
+        // If token exists, try to validate it and get user data
+        if (token) {
+          try {
+            // Call the API to get current user data
+            const response = await axios.get("/user/me", {
+              withCredentials: true,
+            });
+
+            // If successful, set the user in Redux state
+            if (response.data && response.data.user) {
+              dispatch(setUser(response.data.user));
+            }
+          } catch (error) {
+            console.error("Error restoring auth:", error);
+            // If token is invalid, clear it
+            localStorage.removeItem("token");
+          }
+        }
+      };
+
+      checkAuth();
+    }
+  }, [dispatch, isAuthenticated]);
+
+  return children;
 };
 
 export default App;

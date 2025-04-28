@@ -392,7 +392,7 @@ const Nav = () => {
 
                 {/* CodeMate in center */}
                 <div className="navbar-center-mobile">
-                  <Link to="/home" className="logo-link">
+                  <Link to="/" className="logo-link">
                     <svg
                       width="32"
                       height="32"
@@ -470,7 +470,7 @@ const Nav = () => {
               <>
                 {/* CodeMate in center */}
                 <div className="navbar-center-mobile">
-                  <Link to="/home" className="logo-link">
+                  <Link to="/" className="logo-link">
                     <svg
                       width="32"
                       height="32"
