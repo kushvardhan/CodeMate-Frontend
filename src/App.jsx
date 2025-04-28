@@ -1,5 +1,6 @@
 import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter,
   Navigate,
@@ -8,11 +9,13 @@ import {
   useLocation,
 } from "react-router-dom";
 import "./App.css";
+import axios from "./api/axios";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
 import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
+import { setUser } from "./slice/UserSlice";
 
 // Protected Route component - redirects to login if not authenticated
 const ProtectedRoute = ({ children }) => {
