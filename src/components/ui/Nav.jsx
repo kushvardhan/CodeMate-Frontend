@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../../api/axios";
 import { useTheme } from "../../context/ThemeContext";
+import { logoutUser } from "../../slice/UserSlice";
 
 const Nav = () => {
   const { user } = useSelector((state) => state.user);
   const { darkMode, toggleDarkMode } = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -287,7 +290,34 @@ const Nav = () => {
                       }}
                     >
                       <a
-                        onClick={() => navigate("/login")}
+                        onClick={async () => {
+                          try {
+                            // Call the backend logout endpoint to clear cookies
+                            await axios.post(
+                              "/logout",
+                              {},
+                              { withCredentials: true }
+                            );
+                          } catch (error) {
+                            console.error("Error during logout:", error);
+                          } finally {
+                            // Dispatch logout action to clear Redux state
+                            dispatch(logoutUser());
+                            // Clear any stored tokens
+                            localStorage.removeItem("token");
+                            // Clear all cookies by setting them to expire
+                            document.cookie.split(";").forEach((cookie) => {
+                              document.cookie = cookie
+                                .replace(/^ +/, "")
+                                .replace(
+                                  /=.*/,
+                                  `=;expires=${new Date().toUTCString()};path=/`
+                                );
+                            });
+                            // Navigate to login page
+                            navigate("/login");
+                          }
+                        }}
                         className="logout-link"
                       >
                         <svg
@@ -658,7 +688,31 @@ const Nav = () => {
                     delay: 0.4,
                   }}
                 >
-                  <a onClick={() => navigate("/login")} className="logout-link">
+                  <a
+                    onClick={async () => {
+                      try {
+                        // Call the backend logout endpoint to clear cookies
+                        await axios.post(
+                          "/logout",
+                          {},
+                          { withCredentials: true }
+                        );
+                        // Dispatch logout action to clear Redux state
+                        dispatch(logoutUser());
+                        // Clear any stored tokens
+                        localStorage.removeItem("token");
+                        // Navigate to login page
+                        navigate("/login");
+                      } catch (error) {
+                        console.error("Error during logout:", error);
+                        // Even if the API call fails, still clear local state and redirect
+                        dispatch(logoutUser());
+                        localStorage.removeItem("token");
+                        navigate("/login");
+                      }
+                    }}
+                    className="logout-link"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
