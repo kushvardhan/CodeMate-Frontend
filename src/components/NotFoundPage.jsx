@@ -69,7 +69,7 @@ const NotFoundPage = () => {
           </div>
 
           <motion.div className="button-wrapper" variants={itemVariants}>
-            <Link to="/home" className="home-button">
+            <Link to="/" className="home-button">
               <i className="ri-arrow-left-s-line" />
               Back to Home
             </Link>
