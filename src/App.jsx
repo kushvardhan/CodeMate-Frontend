@@ -1,10 +1,11 @@
 import { AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
-  createBrowserRouter,
-  RouterProvider,
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
   useLocation,
-  useNavigate,
 } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
@@ -12,43 +13,55 @@ import LoginPage from "./components/LoginPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
 
-// Create router configuration
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/signup",
-    element: <SignupPage />,
-  },
-  {
-    path: "/profile",
-    element: <ProfilePage />,
-  },
-]);
-
-const App = () => {
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.user);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const publicRoutes = ["/login", "/signup"];
+  if (!isAuthenticated) {
+    // Redirect to login if not authenticated, but save the location they were trying to access
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-    if (!token && !publicRoutes.includes(location.pathname)) {
-      navigate("/login"); // Redirect to login if not logged in and accessing a restricted page
-    }
-  }, [location, navigate]);
+  return children;
+};
+
+const AppRoutes = () => {
+  const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
-      <RouterProvider router={router} />
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Redirect any unknown routes to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </AnimatePresence>
+  );
+};
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 };
 

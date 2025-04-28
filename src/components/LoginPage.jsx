@@ -1,17 +1,19 @@
-import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { setUser } from "../slice/UserSlice";
-
-axios.defaults.baseURL = "http://localhost:4000";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { darkMode, toggleDarkMode } = useTheme();
+
+  // Get the previous location the user was trying to access
+  const from = location.state?.from?.pathname || "/";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -76,7 +78,8 @@ const LoginPage = () => {
         password: "",
       });
 
-      navigate("/");
+      // Navigate to the page the user was trying to access before being redirected to login
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err.response?.data?.message || err.message);
       setIsSubmitting(false);

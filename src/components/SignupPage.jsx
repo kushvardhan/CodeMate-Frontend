@@ -1,12 +1,9 @@
-import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { setUser } from "../slice/UserSlice";
-
-axios.defaults.baseURL = "http://localhost:4000";
 
 const SignupPage = () => {
   const dispatch = useDispatch();
@@ -89,10 +86,7 @@ const SignupPage = () => {
       });
       console.log(res.data.user);
 
-      // Store user data in Redux
-      dispatch(setUser(res.data.user));
-      setIsSubmitting(false);
-
+      // Clear form data
       setFormData({
         firstName: "",
         lastName: "",
@@ -101,8 +95,17 @@ const SignupPage = () => {
         confirmPassword: "",
       });
 
-      // Navigate to home page instead of login since user is already logged in
-      navigate("/");
+      setIsSubmitting(false);
+
+      // Show success message
+      setErrors({
+        success: "Account created successfully! Please log in.",
+      });
+
+      // Navigate to login page after successful signup
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       console.log(err.response?.data?.message || err.message);
       setIsSubmitting(false);
@@ -407,6 +410,11 @@ const SignupPage = () => {
             {errors.general && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
                 <p className="font-medium">{errors.general}</p>
+              </div>
+            )}
+            {errors.success && (
+              <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded shadow-sm animate-fadeIn">
+                <p className="font-medium">{errors.success}</p>
               </div>
             )}
             <div className="flex gap-4 mb-4">
