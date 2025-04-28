@@ -61,14 +61,6 @@ const AppRoutes = () => {
           path="/"
           element={
             <ProtectedRoute>
-              <Navigate to="/" replace />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }
@@ -113,6 +105,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+      
         {/* Not Found Page - shown for invalid routes */}
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>

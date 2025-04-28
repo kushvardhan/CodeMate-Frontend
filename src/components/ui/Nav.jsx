@@ -77,7 +77,7 @@ const Nav = () => {
           <>
             {/* CodeMate logo on left */}
             <div className="navbar-left">
-              <Link to="/home" className="logo-link">
+              <Link to="/" className="logo-link">
                 <svg
                   width="32"
                   height="32"
