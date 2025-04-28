@@ -1,5 +1,11 @@
 import { AnimatePresence } from "framer-motion";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
@@ -26,12 +32,24 @@ const router = createBrowserRouter([
   },
 ]);
 
-function App() {
+const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const publicRoutes = ["/login", "/signup"];
+
+    if (!token && !publicRoutes.includes(location.pathname)) {
+      navigate("/login"); // Redirect to login if not logged in and accessing a restricted page
+    }
+  }, [location, navigate]);
+
   return (
     <AnimatePresence mode="wait">
       <RouterProvider router={router} />
     </AnimatePresence>
   );
-}
+};
 
 export default App;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 
 const HomePage = () => {
@@ -39,7 +39,9 @@ const HomePage = () => {
               />
               <h3 className="feed-card-name">{`${user.firstName} ${user.lastName}`}</h3>
               <p className="feed-card-about">{user.about}</p>
-              <p className="feed-card-skills">Skills: {user.skills.join(", ")}</p>
+              <p className="feed-card-skills">
+                Skills: {user.skills.join(", ")}
+              </p>
               <p className="feed-card-age">Age: {user.age}</p>
               <p className="feed-card-gender">Gender: {user.gender}</p>
             </div>

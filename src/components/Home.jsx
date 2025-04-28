@@ -1,10 +1,20 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login"); // Redirect to login if no token is found
+    }
+  }, [navigate]);
+
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousCards, setPreviousCards] = useState([]); // Store swiped cards for rewind function
