@@ -543,7 +543,19 @@ const Card = ({
       onDrag={!isPreview ? handleDrag : undefined}
       onDragEnd={!isPreview ? handleDragEnd : undefined}
     >
-      <div className="dev-card-content">
+      <div
+        className="dev-card-content"
+        style={{
+          backgroundColor: darkMode
+            ? "rgba(255, 255, 255, 0.05)"
+            : "transparent",
+          boxShadow: darkMode
+            ? "0 4px 15px rgba(0, 0, 0, 0.5)"
+            : "0 4px 10px rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
+      >
         <motion.img
           src={userData.image}
           alt={userData.name}

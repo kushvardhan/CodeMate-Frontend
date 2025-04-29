@@ -12,6 +12,7 @@ import "./App.css";
 import axios from "./api/axios";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
+import Connection from "./components/Connection";
 import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
@@ -96,7 +97,7 @@ const AppRoutes = () => {
           path="/connections"
           element={
             <ProtectedRoute>
-              <NotFoundPage />
+              <Connection />
             </ProtectedRoute>
           }
         />
