@@ -41,30 +41,37 @@ const SignupPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate first name
     if (!formData.firstName.trim()) {
-      newErrors.firstName = "First name is required";
+      newErrors.firstName = "First name is required.";
+    } else if (
+      formData.firstName.length < 3 ||
+      formData.firstName.length > 20
+    ) {
+      newErrors.firstName = "First name must be between 3 and 20 characters.";
     }
 
-    // Validate email
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required.";
+    } else if (formData.lastName.length < 3 || formData.lastName.length > 20) {
+      newErrors.lastName = "Last name must be between 3 and 20 characters.";
+    }
+
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email is required.";
     } else if (
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
     ) {
-      newErrors.email = "Invalid email address";
+      newErrors.email = "Invalid email address.";
     }
 
-    // Validate password
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = "Password is required.";
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = "Password must be at least 8 characters.";
     }
 
-    // Validate confirm password
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = "Passwords do not match.";
     }
 
     return newErrors;
@@ -447,6 +454,9 @@ const SignupPage = () => {
                   onChange={handleChange}
                   placeholder="Enter last name"
                 />
+                {errors.lastName && (
+                  <p className="error-message">{errors.lastName}</p>
+                )}
               </div>
             </div>
 

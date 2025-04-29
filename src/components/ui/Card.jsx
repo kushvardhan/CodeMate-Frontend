@@ -1,3 +1,4 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
@@ -9,7 +10,7 @@ const Card = ({
   isNextCard = false,
   isCardSwiping = false,
   swipeDirection = null,
-  isPreview = false, // Added for profile preview
+  isPreview = false,
 }) => {
   const { darkMode } = useTheme();
 
@@ -49,12 +50,11 @@ const Card = ({
 
   // Card animation variants
   const cardVariants = {
-    initial: { opacity: 0, y: 30, scale: 0.95 },
+    initial: { opacity: 1, y: 0, scale: 1 },
     animate: {
-      opacity: 1,
+      opacity: 1, // Ensure full visibility for all cards
       y: 0,
       scale: 1,
-      filter: "none" /* Ensure no filter is applied */,
       transition: {
         type: "spring",
         stiffness: 100,
@@ -62,15 +62,13 @@ const Card = ({
         duration: 0.5,
       },
     },
-    // Tinder-like next card (exactly like Tinder)
     nextCard: {
-      opacity: 0.85 /* Slightly less visible behind current card */,
-      scale: 0.95 /* Slightly smaller than current card */,
-      y: 10 /* Slightly lower than current card */,
-      x: 0 /* Centered horizontally */,
-      rotateZ: 0 /* No rotation */,
-      filter: "blur(0.5px)" /* Very slight blur for better visibility */,
-      zIndex: 5 /* Lower z-index to appear behind the current card */,
+      opacity: 1, // Fully visible
+      scale: 1, // Same size as the top card
+      y: 0, // Centered vertically
+      x: 0, // Centered horizontally
+      rotateZ: 0, // No rotation
+      zIndex: 5, // Lower z-index to appear behind the current card
       position: "absolute",
       left: 0,
       right: 0,
@@ -85,13 +83,10 @@ const Card = ({
       },
     },
     hover: {
-      y: -2, // Minimal lift effect
-      scale: 1.005, // Very minimal scale effect
-      boxShadow: darkMode
-        ? "0 8px 20px -5px rgba(66, 153, 225, 0.2), 0 5px 8px -5px rgba(66, 153, 225, 0.15)"
-        : "0 8px 20px -5px rgba(0, 0, 0, 0.1), 0 5px 8px -5px rgba(0, 0, 0, 0.05)",
+      y: -2,
+      scale: 1.005,
       transition: {
-        type: "tween", // Smooth tween effect
+        type: "tween",
         ease: "easeOut",
         duration: 0.2,
       },
@@ -99,21 +94,21 @@ const Card = ({
     swipeLeft: {
       x: -1000,
       opacity: 0,
-      rotate: -10, // Less rotation for more natural feel
+      rotate: -10,
       transition: {
-        duration: 0.2, // Faster transition for instant feel
+        duration: 0.2,
         ease: [0.23, 1, 0.32, 1],
-        type: "tween", // Explicit tween for smoother animation
+        type: "tween",
       },
     },
     swipeRight: {
       x: 1000,
       opacity: 0,
-      rotate: 10, // Less rotation for more natural feel
+      rotate: 10,
       transition: {
-        duration: 0.2, // Faster transition for instant feel
+        duration: 0.2,
         ease: [0.23, 1, 0.32, 1],
-        type: "tween", // Explicit tween for smoother animation
+        type: "tween",
       },
     },
   };
@@ -458,499 +453,157 @@ const Card = ({
     }
   };
 
+  const handleSwipe = async (direction) => {
+    try {
+      const status = direction === "right" ? "interested" : "ignored";
+      console.log(`${status} with the ID: ${user.id}`);
+
+      await axios.post(
+        `http://localhost:4000/request/send/${status}/${user.id}`,
+        {},
+        { withCredentials: true }
+      );
+    } catch (error) {
+      console.error(`Error sending ${direction} swipe request:`, error.message);
+    }
+  };
+
+  const handleDragEnd = (event, { offset, velocity }) => {
+    // Don't process drag end if we're already showing the next card
+    if (showingNextCard) return;
+
+    const swipe = offset.x;
+    const swipeVelocity = Math.abs(velocity.x);
+    const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
+
+    // Get the card element directly from the event for better performance
+    const element = event.currentTarget;
+
+    // Consider both distance and velocity for a more natural feel (Tinder-like)
+    // Tinder allows quick flicks with less distance
+    const isSwipeLeft = swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
+    const isSwipeRight = swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
+
+    if (isSwipeLeft) {
+      handleSwipe("left");
+      if (onSwipeLeft) onSwipeLeft();
+    } else if (isSwipeRight) {
+      handleSwipe("right");
+      if (onSwipeRight) onSwipeRight();
+    } else {
+      // Spring back to center if not swiped far enough (Tinder-like)
+      if (element) {
+        // Tinder uses a spring animation for the return
+        element.style.cssText = `
+          position: absolute !important;
+          left: 0 !important;
+          right: 0 !important;
+          top: 0 !important;
+          bottom: 0 !important;
+          margin: auto !important;
+          transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000) !important;
+          transform: translateX(0) translateY(0) rotate(0deg) !important;
+          box-shadow: none !important;
+          z-index: 10 !important;
+        `;
+
+        // Reset progress
+        setSwipeProgress(0);
+      }
+    }
+  };
+
   return (
-    <div className="card-container">
-      {/* Swipe indicators */}
-      <div className="swipe-indicators tinder-style">
-        <div
-          className="swipe-left-indicator tinder-indicator"
+    <motion.div
+      className={`dev-card ${isNextCard ? "next-card" : ""} ${
+        isPreview ? "preview-card" : ""
+      }`}
+      variants={cardVariants}
+      initial="initial"
+      animate={isNextCard ? "nextCard" : "animate"}
+      whileHover={
+        showingNextCard || isNextCard || isPreview ? undefined : "hover"
+      }
+      drag={
+        showingNextCard || isNextCard || isPreview ? false : "x"
+      }
+      dragConstraints={{
+        left: -1000,
+        right: 1000,
+        top: 0,
+        bottom: 0,
+      }}
+      dragElastic={1}
+      dragMomentum={true}
+      dragTransition={{
+        power: 0.2,
+        timeConstant: 400,
+        restDelta: 0.5,
+      }}
+      onDrag={!isPreview ? handleDrag : undefined}
+      onDragEnd={!isPreview ? handleDragEnd : undefined}
+    >
+      <div className="dev-card-content">
+        <motion.img
+          src={userData.image}
+          alt={userData.name}
+          className="dev-card-image"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.05 }} /* Even faster transition */
+          loading="eager" /* Force eager loading */
+          decoding="sync" /* Decode image synchronously */
+          fetchPriority="high" /* High priority fetch */
+          draggable="false" /* Prevent image dragging for better performance */
           style={{
-            opacity: dragDirection === "left" ? swipeProgress / 100 : 0,
+            willChange:
+              "transform, opacity" /* Hint browser for optimization */,
+            backfaceVisibility: "hidden" /* Prevent flickering */,
+            WebkitBackfaceVisibility: "hidden",
+            transform: "translateZ(0)" /* Force GPU acceleration */,
+            WebkitTransform: "translateZ(0)",
+            objectFit: "cover" /* Ensure image covers the entire card */,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
           }}
-        >
-          <div className="indicator-icon ignore-icon tinder-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </div>
-          <span className="indicator-text tinder-text">NOPE</span>
-        </div>
-
-        <div
-          className="swipe-right-indicator tinder-indicator"
-          style={{
-            opacity: dragDirection === "right" ? swipeProgress / 100 : 0,
+          onLoad={(e) => {
+            // Force browser to render the image at full quality immediately
+            e.target.style.opacity = "1";
+            e.target.style.filter = "none";
+            // Add a class to indicate the image is loaded
+            e.target.classList.add("loaded");
           }}
-        >
-          <div className="indicator-icon match-icon tinder-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </div>
-          <span className="indicator-text tinder-text">LIKE</span>
-        </div>
-      </div>
+        />
+        <div className="dev-card-overlay">
+          <div className="dev-card-info">
+            <h2 className="dev-card-name">{userData.name}</h2>
+            {userData.location && (
+              <div className="dev-card-location">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>{userData.location}</span>
+              </div>
+            )}
 
-      {/* Only show floating icons when swiping right */}
-      {dragDirection === "right" && (
-        <div className="floating-icons right-icons">
-          {/* Code brackets */}
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={`code-${i}`}
-              className="floating-icon code-icon"
-              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-              animate={{
-                opacity: [0, 0.9, 0],
-                scale: [0, 1, 0.8],
-                x: [0, Math.random() * 300 + 100],
-                y: [0, Math.random() * 300 - 150],
-              }}
-              transition={{ duration: 1.2, delay: i * 0.1 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-            </motion.div>
-          ))}
-
-          {/* Function symbols */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={`function-${i}`}
-              className="floating-icon function-icon"
-              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-              animate={{
-                opacity: [0, 0.9, 0],
-                scale: [0, 1, 0.8],
-                x: [0, Math.random() * 300 + 100],
-                y: [0, Math.random() * 300 - 150],
-              }}
-              transition={{ duration: 1.2, delay: 0.15 + i * 0.1 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </motion.div>
-          ))}
-
-          {/* Heart icons */}
-          {[...Array(2)].map((_, i) => (
-            <motion.div
-              key={`heart-${i}`}
-              className="floating-icon heart-icon"
-              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-              animate={{
-                opacity: [0, 0.9, 0],
-                scale: [0, 1, 0.8],
-                x: [0, Math.random() * 300 + 100],
-                y: [0, Math.random() * 300 - 150],
-              }}
-              transition={{ duration: 1.2, delay: 0.3 + i * 0.1 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-            </motion.div>
-          ))}
-
-          {/* Code symbols */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={`terminal-${i}`}
-              className="floating-icon terminal-icon"
-              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-              animate={{
-                opacity: [0, 0.9, 0],
-                scale: [0, 1, 0.8],
-                x: [0, Math.random() * 300 + 100],
-                y: [0, Math.random() * 300 - 150],
-              }}
-              transition={{ duration: 1.2, delay: 0.2 + i * 0.1 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="4 17 10 11 4 5"></polyline>
-                <line x1="12" y1="19" x2="20" y2="19"></line>
-              </svg>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {/* Main card */}
-      <motion.div
-        className={`dev-card ${isNextCard ? "next-card" : ""} ${
-          isPreview ? "preview-card" : ""
-        }`}
-        variants={cardVariants}
-        initial="initial"
-        animate={isNextCard ? "nextCard" : "animate"}
-        whileHover={
-          showingNextCard || isNextCard || isPreview ? undefined : "hover"
-        } /* Disable hover animation during transitions, for next card, and for preview */
-        drag={
-          showingNextCard || isNextCard || isPreview ? false : "x"
-        } /* Disable dragging for next card and preview */
-        dragConstraints={{
-          left: -1000,
-          right: 1000,
-          top: 0,
-          bottom: 0,
-        }} /* Allow horizontal movement for Tinder-like feel but constrain vertical */
-        dragElastic={1} /* Full elasticity for Tinder-like feel */
-        dragMomentum={true} /* Enable momentum for natural feel */
-        dragTransition={{
-          power: 0.2 /* More natural power for Tinder-like feel */,
-          timeConstant: 400 /* Faster time constant for Tinder-like feel */,
-          restDelta: 0.5 /* Higher rest delta for Tinder-like feel */,
-        }}
-        onDrag={!isPreview ? handleDrag : undefined}
-        onDragEnd={
-          !isPreview
-            ? (event, { offset, velocity }) => {
-                // Don't process drag end if we're already showing the next card
-                if (showingNextCard) return;
-
-                const swipe = offset.x;
-                const swipeVelocity = Math.abs(velocity.x);
-                const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
-
-                // Get the card element directly from the event for better performance
-                const element = event.currentTarget;
-
-                // Consider both distance and velocity for a more natural feel (Tinder-like)
-                // Tinder allows quick flicks with less distance
-                const isSwipeLeft =
-                  swipe < -swipeThreshold ||
-                  (swipe < -40 && swipeVelocity > 0.8);
-                const isSwipeRight =
-                  swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
-
-                if (isSwipeLeft) {
-                  // Prevent multiple swipes
-                  if (showingNextCard) return;
-                  setShowingNextCard(true);
-
-                  // Tinder-like exit animation for left swipe with more pronounced red effect
-                  if (element) {
-                    // Use will-change to hint browser for optimization
-                    element.style.willChange =
-                      "transform, opacity, box-shadow, border";
-                    // Tinder uses a combination of rotation, translation and opacity
-                    element.style.transition =
-                      "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
-                    element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-                    element.style.opacity = "0";
-                    // More pronounced red shadow/glow effect
-                    element.style.boxShadow =
-                      "0 0 30px 10px rgba(255, 59, 48, 0.8)";
-                    element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
-                  }
-
-                  // Set the swipe direction for animation
-                  setDragDirection("left");
-
-                  // Preload next card image to prevent lag
-                  if (onSwipeLeft) {
-                    // Trigger the swipe action after a short delay
-                    // This is faster than Tinder but still allows for the animation
-                    setTimeout(() => {
-                      onSwipeLeft();
-                      // Reset progress after the card is gone
-                      setSwipeProgress(0);
-                      setShowingNextCard(false); // Reset for the next card
-
-                      // Reset the transform to ensure the next card appears in the center
-                      if (element && element.isConnected) {
-                        element.style.cssText = `
-                          transition: none !important;
-                          transform: translateX(0) rotate(0) scale(1) !important;
-                          opacity: 1 !important;
-                          box-shadow: none !important;
-                          border: none !important;
-                          position: absolute !important;
-                          left: 0 !important;
-                          right: 0 !important;
-                          top: 0 !important;
-                          bottom: 0 !important;
-                          margin: auto !important;
-                          z-index: 10 !important;
-                        `;
-                        element.setAttribute("data-drag", "none");
-
-                        // Force a reflow to ensure the transition is removed
-                        void element.offsetWidth;
-
-                        // Also reset all next cards to ensure they appear in the center
-                        const nextCards = document.querySelectorAll(
-                          ".next-card, .preview-stack-card"
-                        );
-                        nextCards.forEach((card) => {
-                          // Force the card to be centered with !important styles
-                          card.style.cssText = `
-                            transition: transform 0.3s ease, opacity 0.3s ease !important;
-                            transform: translateX(0) translateY(10px) scale(0.95) !important;
-                            opacity: 0.85 !important;
-                            position: absolute !important;
-                            left: 0 !important;
-                            right: 0 !important;
-                            top: 0 !important;
-                            bottom: 0 !important;
-                            margin: auto !important;
-                            z-index: 5 !important;
-                          `;
-
-                          // Force a reflow to apply the changes immediately
-                          void card.offsetWidth;
-
-                          // Reset any parent containers as well
-                          const parentContainer = card.closest(
-                            ".static-card-position, .static-card-stack"
-                          );
-                          if (parentContainer) {
-                            parentContainer.style.cssText = `
-                              position: absolute !important;
-                              left: 0 !important;
-                              right: 0 !important;
-                              top: 0 !important;
-                              bottom: 0 !important;
-                              margin: auto !important;
-                              display: flex !important;
-                              justify-content: center !important;
-                              align-items: center !important;
-                            `;
-                          }
-                        });
-                      }
-                    }, 200);
-                  }
-                } else if (isSwipeRight) {
-                  // Prevent multiple swipes
-                  if (showingNextCard) return;
-                  setShowingNextCard(true);
-
-                  // Tinder-like exit animation for right swipe with more pronounced green effect
-                  if (element) {
-                    // Use will-change to hint browser for optimization
-                    element.style.willChange =
-                      "transform, opacity, box-shadow, border";
-                    // Tinder uses a combination of rotation, translation and opacity
-                    element.style.transition =
-                      "transform 0.4s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease-out, border 0.3s ease-out";
-                    element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-                    element.style.opacity = "0";
-                    // More pronounced green shadow/glow effect
-                    element.style.boxShadow =
-                      "0 0 30px 10px rgba(52, 199, 89, 0.8)";
-                    element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
-                  }
-
-                  // Set the swipe direction for animation
-                  setDragDirection("right");
-
-                  // Preload next card image to prevent lag
-                  if (onSwipeRight) {
-                    // Trigger the swipe action after a short delay
-                    // This is faster than Tinder but still allows for the animation
-                    setTimeout(() => {
-                      onSwipeRight();
-                      // Reset progress after the card is gone
-                      setSwipeProgress(0);
-                      setShowingNextCard(false); // Reset for the next card
-
-                      // Reset the transform to ensure the next card appears in the center
-                      if (element && element.isConnected) {
-                        element.style.cssText = `
-                          transition: none !important;
-                          transform: translateX(0) rotate(0) scale(1) !important;
-                          opacity: 1 !important;
-                          box-shadow: none !important;
-                          border: none !important;
-                          position: absolute !important;
-                          left: 0 !important;
-                          right: 0 !important;
-                          top: 0 !important;
-                          bottom: 0 !important;
-                          margin: auto !important;
-                          z-index: 10 !important;
-                        `;
-                        element.setAttribute("data-drag", "none");
-
-                        // Force a reflow to ensure the transition is removed
-                        void element.offsetWidth;
-
-                        // Also reset all next cards to ensure they appear in the center
-                        const nextCards = document.querySelectorAll(
-                          ".next-card, .preview-stack-card"
-                        );
-                        nextCards.forEach((card) => {
-                          // Force the card to be centered with !important styles
-                          card.style.cssText = `
-                            transition: transform 0.3s ease, opacity 0.3s ease !important;
-                            transform: translateX(0) translateY(10px) scale(0.95) !important;
-                            opacity: 0.85 !important;
-                            position: absolute !important;
-                            left: 0 !important;
-                            right: 0 !important;
-                            top: 0 !important;
-                            bottom: 0 !important;
-                            margin: auto !important;
-                            z-index: 5 !important;
-                          `;
-
-                          // Force a reflow to apply the changes immediately
-                          void card.offsetWidth;
-
-                          // Reset any parent containers as well
-                          const parentContainer = card.closest(
-                            ".static-card-position, .static-card-stack"
-                          );
-                          if (parentContainer) {
-                            parentContainer.style.cssText = `
-                              position: absolute !important;
-                              left: 0 !important;
-                              right: 0 !important;
-                              top: 0 !important;
-                              bottom: 0 !important;
-                              margin: auto !important;
-                              display: flex !important;
-                              justify-content: center !important;
-                              align-items: center !important;
-                            `;
-                          }
-                        });
-                      }
-                    }, 200);
-                  }
-                } else {
-                  // Spring back to center if not swiped far enough (Tinder-like)
-                  if (element) {
-                    // Tinder uses a spring animation for the return
-                    element.style.cssText = `
-                      position: absolute !important;
-                      left: 0 !important;
-                      right: 0 !important;
-                      top: 0 !important;
-                      bottom: 0 !important;
-                      margin: auto !important;
-                      transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000) !important;
-                      transform: translateX(0) translateY(0) rotate(0deg) !important;
-                      box-shadow: none !important;
-                      z-index: 10 !important;
-                    `;
-
-                    // Reset progress
-                    setSwipeProgress(0);
-                  }
-                }
-              }
-            : undefined
-        }
-        data-drag={dragDirection}
-      >
-        <div className="dev-card-content">
-          <motion.img
-            src={userData.image}
-            alt={userData.name}
-            className="dev-card-image"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.05 }} /* Even faster transition */
-            loading="eager" /* Force eager loading */
-            decoding="sync" /* Decode image synchronously */
-            fetchPriority="high" /* High priority fetch */
-            draggable="false" /* Prevent image dragging for better performance */
-            style={{
-              willChange:
-                "transform, opacity" /* Hint browser for optimization */,
-              backfaceVisibility: "hidden" /* Prevent flickering */,
-              WebkitBackfaceVisibility: "hidden",
-              transform: "translateZ(0)" /* Force GPU acceleration */,
-              WebkitTransform: "translateZ(0)",
-              objectFit: "cover" /* Ensure image covers the entire card */,
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-            }}
-            onLoad={(e) => {
-              // Force browser to render the image at full quality immediately
-              e.target.style.opacity = "1";
-              e.target.style.filter = "none";
-              // Add a class to indicate the image is loaded
-              e.target.classList.add("loaded");
-            }}
-          />
-          <div className="dev-card-overlay">
-            <div className="dev-card-info">
-              <h2 className="dev-card-name">{userData.name}</h2>
-              {userData.location && (
-                <div className="dev-card-location">
+            {/* Age and Gender */}
+            {userData.age && userData.gender && (
+              <div className="dev-card-info-row">
+                <div className="dev-card-age-gender">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -962,76 +615,59 @@ const Card = ({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
+                    <circle cx="12" cy="8" r="5"></circle>
+                    <path d="M20 21v-2a8 8 0 0 0-16 
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="5"></circle>
+                    <path d="M20 21v-2a8 8 0 0 0-16 0v2"></path>
                   </svg>
-                  <span>{userData.location}</span>
+                  <span>
+                    {userData.age}, {userData.gender}
+                  </span>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Age and Gender */}
-              {userData.age && userData.gender && (
-                <div className="dev-card-info-row">
-                  <div className="dev-card-age-gender">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="8" r="5"></circle>
-                      <path d="M20 21v-2a8 8 0 0 0-16 0v2"></path>
-                    </svg>
-                    <span>
-                      {userData.age}, {userData.gender}
-                    </span>
-                  </div>
-                </div>
-              )}
+            {userData.bio && (
+              <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
+            )}
 
-              {userData.bio && (
-                <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
-              )}
-
-              {userData.skills && userData.skills.length > 0 && (
-                <div className="dev-card-skills">
-                  {getDisplaySkills(userData.skills).map((skill, index) => (
-                    <motion.span
-                      key={index}
-                      className="dev-skill-tag"
-                      variants={skillVariants}
-                      initial="initial"
-                      animate="animate"
-                      whileHover="hover"
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      {skill}
-                    </motion.span>
-                  ))}
-                  {getAdditionalSkillsCount(userData.skills) > 0 && (
-                    <motion.span
-                      className="dev-skill-more"
-                      variants={skillVariants}
-                      initial="initial"
-                      animate="animate"
-                      whileHover="hover"
-                      transition={{ delay: 0.1 }}
-                    >
-                      +{getAdditionalSkillsCount(userData.skills)}
-                    </motion.span>
-                  )}
-                </div>
-              )}
-            </div>
+            {userData.skills && userData.skills.length > 0 && (
+              <div className="dev-card-skills">
+                {getDisplaySkills(userData.skills).map((skill, index) => (
+                  <motion.span
+                    key={index}
+                    className="dev-skill-tag"
+                    variants={skillVariants}
+                    initial="initial"
+                    animate="animate"
+                    whileHover="hover"
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    {skill}
+                  </motion.span>
+                ))}
+                {getAdditionalSkillsCount(userData.skills) > 0 && (
+                  <motion.span
+                    className="dev-skill-more"
+                    variants={skillVariants}
+                    initial="initial"
+                    animate="animate"
+                    whileHover="hover"
+                    transition={{ delay: 0.1 }}
+                  >
+                    +{getAdditionalSkillsCount(userData.skills)}
+                  </motion.span>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

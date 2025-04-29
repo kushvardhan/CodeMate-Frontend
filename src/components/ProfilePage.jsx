@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { setUser, updateUser } from "../slice/UserSlice";
+import { setUser } from "../slice/UserSlice";
 import Card from "./ui/Card";
 import SuccessPopup from "./ui/SuccessPopup";
 
@@ -155,120 +155,40 @@ const ProfilePage = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setErrors({});
-    setShowSuccessPopup(false);
+
+    const validationErrors = {};
+
+    if (!formData.firstName.trim()) {
+      validationErrors.firstName = "First name is required.";
+    } else if (
+      formData.firstName.length < 3 ||
+      formData.firstName.length > 20
+    ) {
+      validationErrors.firstName =
+        "First name must be between 3 and 20 characters.";
+    }
+
+    if (formData.age && (isNaN(formData.age) || formData.age < 16)) {
+      validationErrors.age = "Age must be a number and at least 16.";
+    }
+
+    if (formData.photoUrl && !isValidUrl(formData.photoUrl)) {
+      validationErrors.photoUrl = "Invalid photo URL.";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
-      // Validate form data
-      const validationErrors = {};
-
-      // First name validation - required
-      if (!formData.firstName.trim()) {
-        validationErrors.firstName = "First name is required";
-      }
-
-      // Gender validation - required
-      if (!formData.gender) {
-        validationErrors.gender = "Gender selection is required";
-      }
-
-      // Age validation - optional but must be valid if provided
-      if (formData.age && (isNaN(formData.age) || formData.age < 16)) {
-        validationErrors.age = "Age must be a number and at least 16";
-      }
-
-      // Photo URL validation - optional but must be valid if provided
-      if (formData.photoUrl && !isValidUrl(formData.photoUrl)) {
-        validationErrors.photoUrl = "Please enter a valid URL";
-      }
-
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        setIsSubmitting(false);
-
-        // Scroll to the first field with an error
-        setTimeout(() => {
-          if (validationErrors.firstName && firstNameRef.current) {
-            firstNameRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.gender && genderRef.current) {
-            genderRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.age && ageRef.current) {
-            ageRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.location && locationRef.current) {
-            locationRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.photoUrl && photoUrlRef.current) {
-            photoUrlRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.about && aboutRef.current) {
-            aboutRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else if (validationErrors.skills && skillsRef.current) {
-            skillsRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }
-        }, 100); // Small delay to ensure the DOM is updated
-
-        return;
-      }
-
-      // Create a new object with only the allowed fields for profile update
-      const allowedFields = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender,
-        age: formData.age,
-        about: formData.about,
-        skills: formData.skills,
-        photoUrl: formData.photoUrl,
-        location: formData.location,
-      };
-
-      // Make API call to update profile
-      const response = await axios.patch("/profile/edit", allowedFields, {
+      setIsSubmitting(true);
+      const response = await axios.put("/profile", formData, {
         withCredentials: true,
       });
-
-      // Update user in Redux store
-      dispatch(updateUser(response.data.data));
-
-      // Show success popup
-      setPopupMessage(`${formData.firstName}, your profile is updated.`);
       setShowSuccessPopup(true);
-
-      // Reset form to initial values from user
-      if (user) {
-        setFormData({
-          firstName: user.firstName || "",
-          lastName: user.lastName || "",
-          gender: user.gender || "",
-          age: user.age || "",
-          location: user.location || "",
-          about: user.about || "",
-          skills: user.skills || [],
-          photoUrl: user.photoUrl || "",
-        });
-      }
+      setPopupMessage("Profile updated successfully!");
     } catch (error) {
-      console.error("Error updating profile:", error);
       setErrors({
         general:
           error.response?.data?.message ||
@@ -694,7 +614,6 @@ const ProfilePage = () => {
               </form>
             </motion.div>
           </div>
-
         </motion.div>
       </div>
     </div>
