@@ -661,6 +661,7 @@ pre,
     #38bdf8
   );
   background-size: 200% 200%;
+  background-clip: text;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
