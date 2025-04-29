@@ -63,7 +63,7 @@ const Card = ({
       },
     },
     nextCard: {
-      opacity: 1, // Fully visible
+      opacity: 1, // Ensure no transparency for back cards
       scale: 1, // Same size as the top card
       y: 0, // Centered vertically
       x: 0, // Centered horizontally
@@ -481,8 +481,10 @@ const Card = ({
 
     // Consider both distance and velocity for a more natural feel (Tinder-like)
     // Tinder allows quick flicks with less distance
-    const isSwipeLeft = swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
-    const isSwipeRight = swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
+    const isSwipeLeft =
+      swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
+    const isSwipeRight =
+      swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
 
     if (isSwipeLeft) {
       handleSwipe("left");
@@ -524,9 +526,7 @@ const Card = ({
       whileHover={
         showingNextCard || isNextCard || isPreview ? undefined : "hover"
       }
-      drag={
-        showingNextCard || isNextCard || isPreview ? false : "x"
-      }
+      drag={showingNextCard || isNextCard || isPreview ? false : "x"}
       dragConstraints={{
         left: -1000,
         right: 1000,
@@ -616,13 +616,12 @@ const Card = ({
                     strokeLinejoin="round"
                   >
                     <circle cx="12" cy="8" r="5"></circle>
-                    <path d="M20 21v-2a8 8 0 0 0-16 
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="8" r="5"></circle>
-                    <path d="M20 21v-2a8 8 0 0 0-16 0v2"></path>
+                    <path
+                      d="M20 21v-2a8 8 0 0 0-16 0v2"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                   <span>
                     {userData.age}, {userData.gender}
