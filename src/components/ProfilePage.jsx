@@ -21,7 +21,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("/profile/", {
+        const res = await axios.get("http://localhost:5173/profile/", {
           withCredentials: true,
         });
         console.log(res.data.data);
@@ -183,9 +183,10 @@ const ProfilePage = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.put("/profile", formData, {
+      const response = await axios.put("/profile/update-profile", formData, {
         withCredentials: true,
       });
+      
       setShowSuccessPopup(true);
       setPopupMessage("Profile updated successfully!");
     } catch (error) {
