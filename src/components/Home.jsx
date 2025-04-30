@@ -131,234 +131,100 @@ const Home = () => {
 
   const handleSwipeLeft = () => {
     console.log("Swiped left (pass)");
-    // Prevent multiple swipes
     if (isCardSwiping) return;
 
-    // Set swiping state and direction for animation
     setIsCardSwiping(true);
     setSwipeDirection("left");
     setPrevIndex(currentIndex);
 
-    // Store the current card for rewind function
     const currentCard = users[currentIndex];
     setPreviousCards((prev) => [
       ...prev,
       { card: currentCard, direction: "left" },
     ]);
 
-    // Ensure the next card is properly positioned in the center
-    const nextCards = document.querySelectorAll(
-      ".preview-stack-card, .deep-stack-card"
-    );
-    nextCards.forEach((card) => {
-      card.style.cssText = `
-        position: absolute !important;
-        left: 0 !important;
-        right: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        margin: auto !important;
-        transform-origin: center center !important;
-        will-change: transform, opacity !important;
-        transition: transform 0.3s ease, opacity 0.3s ease !important;
-        transform-style: preserve-3d !important;
-      `;
-    });
-
-    // Reset the tinder-card-stack container to ensure proper positioning
-    const cardStack = document.querySelector(".tinder-card-stack");
-    if (cardStack) {
-      cardStack.style.cssText = `
-        position: relative !important;
-        width: 100% !important;
-        max-width: 340px !important;
-        height: 550px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        perspective: 1000px !important;
-        transform-style: preserve-3d !important;
-        margin: 0 auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: translateX(0) !important;
-        inset: 0 !important;
-      `;
-    }
-
-    // Use a longer timeout to ensure the exit animation completes before changing cards
-    // This prevents the glitching/shifting effect
+    // Ensure the next card is properly positioned in the center above all cards
     setTimeout(() => {
       if (nextCardIndex !== null) {
-        // Move to the next card
         setCurrentIndex(nextCardIndex);
-      } else {
-        // No more cards left
-        setAllCardsFinished(true);
-      }
 
-      // Reset swiping state after a longer delay to ensure smooth transition
-      setTimeout(() => {
-        setIsCardSwiping(false);
-        setSwipeDirection(null);
-
-        // Ensure the next card is properly positioned in the center
-        const nextCards = document.querySelectorAll(
-          ".preview-stack-card, .deep-stack-card"
-        );
-        nextCards.forEach((card) => {
-          card.style.cssText = `
+        const nextCard = document.querySelector(".tinder-current-card");
+        if (nextCard) {
+          nextCard.style.cssText = `
             position: absolute !important;
             left: 0 !important;
             right: 0 !important;
             top: 0 !important;
             bottom: 0 !important;
             margin: auto !important;
-            transform-origin: center center !important;
-            will-change: transform, opacity !important;
-            transition: transform 0.3s ease, opacity 0.3s ease !important;
-            transform-style: preserve-3d !important;
-          `;
-        });
-
-        // Reset the tinder-card-stack container again to ensure proper positioning
-        const cardStack = document.querySelector(".tinder-card-stack");
-        if (cardStack) {
-          cardStack.style.cssText = `
-            position: relative !important;
-            width: 100% !important;
-            max-width: 340px !important;
-            height: 550px !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            perspective: 1000px !important;
+            z-index: 10 !important;
             transform-style: preserve-3d !important;
-            margin: 0 auto !important;
-            left: 0 !important;
-            right: 0 !important;
-            transform: translateX(0) !important;
-            inset: 0 !important;
+            transform-origin: center center !important;
+            will-change: transform !important;
+            transform: translateX(0) translateY(0) translateZ(0) !important;
           `;
         }
-      }, 500); // Longer delay for smoother transition
-    }, 600); // Wait for exit animation to complete
+      } else {
+        setAllCardsFinished(true);
+      }
+
+      setTimeout(() => {
+        setIsCardSwiping(false);
+        setSwipeDirection(null);
+      }, 500);
+    }, 300); // Reduced timeout for quicker positioning
   };
 
   const handleSwipeRight = () => {
     console.log("Swiped right (like)");
-    // Prevent multiple swipes
     if (isCardSwiping) return;
 
-    // Set swiping state and direction for animation
     setIsCardSwiping(true);
     setSwipeDirection("right");
     setPrevIndex(currentIndex);
 
-    // Store the current card for rewind function
     const currentCard = users[currentIndex];
     setPreviousCards((prev) => [
       ...prev,
       { card: currentCard, direction: "right" },
     ]);
 
-    // Ensure the next card is properly positioned in the center
-    const nextCards = document.querySelectorAll(
-      ".preview-stack-card, .deep-stack-card"
-    );
-    nextCards.forEach((card) => {
-      card.style.cssText = `
-        position: absolute !important;
-        left: 0 !important;
-        right: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        margin: auto !important;
-        transform-origin: center center !important;
-        will-change: transform, opacity !important;
-        transition: transform 0.3s ease, opacity 0.3s ease !important;
-        transform-style: preserve-3d !important;
-      `;
-    });
-
-    // Reset the tinder-card-stack container to ensure proper positioning
-    const cardStack = document.querySelector(".tinder-card-stack");
-    if (cardStack) {
-      cardStack.style.cssText = `
-        position: relative !important;
-        width: 100% !important;
-        max-width: 340px !important;
-        height: 550px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        perspective: 1000px !important;
-        transform-style: preserve-3d !important;
-        margin: 0 auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: translateX(0) !important;
-        inset: 0 !important;
-      `;
-    }
-
-    // Use a longer timeout to ensure the exit animation completes before changing cards
-    // This prevents the glitching/shifting effect
+    // Ensure the next card is properly positioned in the center above all cards
     setTimeout(() => {
       if (nextCardIndex !== null) {
-        // Move to the next card
         setCurrentIndex(nextCardIndex);
-      } else {
-        // No more cards left
-        setAllCardsFinished(true);
-      }
 
-      // Reset swiping state after a longer delay to ensure smooth transition
-      setTimeout(() => {
-        setIsCardSwiping(false);
-        setSwipeDirection(null);
-
-        // Ensure the next card is properly positioned in the center
-        const nextCards = document.querySelectorAll(
-          ".preview-stack-card, .deep-stack-card"
-        );
-        nextCards.forEach((card) => {
-          card.style.cssText = `
+        const nextCard = document.querySelector(".tinder-current-card");
+        if (nextCard) {
+          nextCard.style.cssText = `
             position: absolute !important;
             left: 0 !important;
             right: 0 !important;
             top: 0 !important;
             bottom: 0 !important;
             margin: auto !important;
-            transform-origin: center center !important;
-            will-change: transform, opacity !important;
-            transition: transform 0.3s ease, opacity 0.3s ease !important;
-            transform-style: preserve-3d !important;
-          `;
-        });
-
-        // Reset the tinder-card-stack container again to ensure proper positioning
-        const cardStack = document.querySelector(".tinder-card-stack");
-        if (cardStack) {
-          cardStack.style.cssText = `
-            position: relative !important;
-            width: 100% !important;
-            max-width: 340px !important;
-            height: 550px !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            perspective: 1000px !important;
+            z-index: 10 !important;
             transform-style: preserve-3d !important;
-            margin: 0 auto !important;
-            left: 0 !important;
-            right: 0 !important;
-            transform: translateX(0) !important;
-            inset: 0 !important;
+            transform-origin: center center !important;
+            will-change: transform !important;
+            transform: translateX(0) translateY(0) translateZ(0) !important;
           `;
         }
-      }, 500); // Longer delay for smoother transition
-    }, 600); // Wait for exit animation to complete
+      } else {
+        setAllCardsFinished(true);
+      }
+
+      setTimeout(() => {
+        setIsCardSwiping(false);
+        setSwipeDirection(null);
+      }, 500);
+    }, 300); // Reduced timeout for quicker positioning
   };
 
   // Rewind function to bring back the last card
