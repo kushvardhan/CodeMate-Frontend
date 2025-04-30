@@ -111,12 +111,12 @@ const ProfilePage = () => {
       [name]: value,
     });
 
-    // Clear error when user types
+    // Clear error for the specific field when the user types
     if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: "",
-      });
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "", // Clear the error for the specific field
+      }));
     }
   };
 
@@ -186,7 +186,7 @@ const ProfilePage = () => {
       const response = await axios.put("/profile/update-profile", formData, {
         withCredentials: true,
       });
-      
+
       setShowSuccessPopup(true);
       setPopupMessage("Profile updated successfully!");
     } catch (error) {
