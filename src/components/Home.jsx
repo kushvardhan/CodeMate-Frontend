@@ -688,19 +688,25 @@ const Home = () => {
                 )}
 
                 {/* Static background cards */}
-                <div className="static-card-stack">
+                <div
+                  className="static-card-stack"
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden", // Prevent cards from appearing outside the stack
+                  }}
+                >
                   {/* Next card */}
                   {currentIndex + 1 < users.length && (
                     <div
                       className="static-card-position preview-stack-card"
                       style={{
                         position: "absolute",
-                        left: "0",
-                        right: "0",
-                        top: "0",
-                        bottom: "0",
-                        margin: "auto",
-                        transform: "translateX(0) translateY(10px) scale(1)", // Ensure same size
+                        left: "50%", // Center horizontally
+                        top: "50%", // Center vertically
+                        transform:
+                          "translate(-50%, -50%) translateY(10px) scale(1)", // Center and adjust position
                         zIndex: "5",
                         opacity: "1", // Fully visible
                         transformStyle: "preserve-3d",
@@ -719,12 +725,10 @@ const Home = () => {
                       className="static-card-position deep-stack-card"
                       style={{
                         position: "absolute",
-                        left: "0",
-                        right: "0",
-                        top: "0",
-                        bottom: "0",
-                        margin: "auto",
-                        transform: "translateX(0) translateY(20px) scale(1)", // Ensure same size
+                        left: "50%", // Center horizontally
+                        top: "50%", // Center vertically
+                        transform:
+                          "translate(-50%, -50%) translateY(20px) scale(1)", // Center and adjust position
                         zIndex: "4",
                         opacity: "1", // Fully visible
                         transformStyle: "preserve-3d",
@@ -743,10 +747,9 @@ const Home = () => {
                   className="tinder-current-card"
                   style={{
                     position: "absolute",
-                    left: "0",
-                    right: "0",
-                    top: "0",
-                    bottom: "0",
+                    left: "50%", // Center horizontally
+                    top: "50%", // Center vertically
+                    transform: "translate(-50%, -50%) translateZ(0) scale(1.1)", // Center and slightly larger
                     margin: "auto",
                     display: "flex",
                     justifyContent: "center",
@@ -755,8 +758,6 @@ const Home = () => {
                     transformStyle: "preserve-3d",
                     transformOrigin: "center center",
                     willChange: "transform",
-                    transform:
-                      "translateX(0) translateY(0) translateZ(0) scale(1.1)", // Slightly larger size
                     transition: "transform 0.3s ease", // Smooth transition back to center
                   }}
                 >
@@ -781,7 +782,7 @@ const Home = () => {
                       if (currentCard) {
                         currentCard.style.transition = "transform 0.3s ease"; // Re-enable transition
                         currentCard.style.transform =
-                          "translateX(0) translateY(0) translateZ(0) scale(1.1)"; // Reset to center
+                          "translate(-50%, -50%) translateZ(0) scale(1.1)"; // Reset to center
                       }
                     }}
                     className="card-container"
@@ -839,7 +840,7 @@ const Home = () => {
               loadingSequence.statsLoaded
                 ? { opacity: 1, y: 0 }
                 : { opacity: 0, y: 20 }
-            }
+            } // Fixed syntax: replaced parentheses with curly braces
             transition={{ duration: 0.5 }}
           >
             <motion.div
