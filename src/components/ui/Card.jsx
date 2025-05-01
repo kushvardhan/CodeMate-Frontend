@@ -580,6 +580,8 @@ const Card = ({
             position: "absolute",
             top: 0,
             left: 0,
+            filter:
+              "brightness(1.05) contrast(1.05)" /* Slightly enhance brightness and contrast */,
           }}
           onLoad={(e) => {
             // Force browser to render the image at full quality immediately

@@ -661,14 +661,12 @@ const Home = () => {
                 }}
               >
                 {/* Rewind button */}
-                {previousCards.length > 0 && (
+                {previousCards.length > 0 && !isCardSwiping && (
                   <motion.button
-                    className="rewind-button absolute top-4 left-4 z-30 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+                    className="rewind-button absolute opacity-0 -left-[9999px] z-30 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
                     onClick={handleRewind}
                     initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    animate={{ opacity: 0, scale: 0.8 }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

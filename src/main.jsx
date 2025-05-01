@@ -13,18 +13,16 @@ const AppWithAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Try to get user profile to check if authenticated
-        const response = await axios.get("/profile", {
-          withCredentials: true,
+        const response = await axios.get("http://localhost:4000/profile", {
+          withCredentials: true, // Ensure cookies are sent
         });
 
         if (response.data && response.data.data) {
-          // If successful, set the user in Redux
           store.dispatch(setUser(response.data.data));
         }
       } catch (error) {
-        // If error, user is not authenticated (this is expected for logged out users)
         console.log("User not authenticated");
+        localStorage.removeItem("token"); // Clear any invalid tokens
       }
     };
 

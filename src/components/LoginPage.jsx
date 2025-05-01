@@ -65,10 +65,12 @@ const LoginPage = () => {
 
     try {
       setIsSubmitting(true);
-      const res = await axios.post("/login", formData, {
-        withCredentials: true,
-      });
-      console.log(res.data.user);
+      const res = await axios.post(
+        "http://localhost:4000/login",
+        formData,
+        { withCredentials: true } // Ensure cookies are sent
+      );
+
       dispatch(setUser(res.data.user));
       setIsSubmitting(false);
 
@@ -77,26 +79,14 @@ const LoginPage = () => {
         password: "",
       });
 
-      // Navigate to the page the user was trying to access before being redirected to login
       navigate(from, { replace: true });
     } catch (err) {
-      console.log(err.response?.data?.message || err.message);
+      console.error(err.response?.data?.message || err.message);
       setIsSubmitting(false);
 
-      // Handle different types of error responses
-      if (err.response?.data?.errors) {
-        // Handle field-specific errors
-        setErrors(err.response.data.errors);
-      } else if (err.response?.data?.message) {
-        // Handle general error message
-        setErrors({ general: err.response.data.message });
-      } else {
-        // Handle unexpected errors
-        setErrors({
-          general:
-            err.message || "An unexpected error occurred. Please try again.",
-        });
-      }
+      setErrors({
+        general: err.response?.data?.message || "An unexpected error occurred.",
+      });
     }
   };
 
