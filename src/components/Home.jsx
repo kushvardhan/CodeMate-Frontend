@@ -756,7 +756,8 @@ const Home = () => {
                     transformOrigin: "center center",
                     willChange: "transform",
                     transform:
-                      "translateX(0) translateY(0) translateZ(0) scale(1.05)", // Slightly larger size
+                      "translateX(0) translateY(0) translateZ(0) scale(1.1)", // Slightly larger size
+                    transition: "transform 0.3s ease", // Smooth transition back to center
                   }}
                 >
                   <motion.div
@@ -780,12 +781,12 @@ const Home = () => {
                       if (currentCard) {
                         currentCard.style.transition = "transform 0.3s ease"; // Re-enable transition
                         currentCard.style.transform =
-                          "translateX(0) translateY(0) translateZ(0) scale(1.05)"; // Reset to center
+                          "translateX(0) translateY(0) translateZ(0) scale(1.1)"; // Reset to center
                       }
                     }}
                     className="card-container"
                     style={{
-                      transform: "scale(1.05)", // Slightly larger size
+                      transform: "scale(1.1)", // Slightly larger size
                     }}
                   >
                     <Card
