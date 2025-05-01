@@ -815,12 +815,12 @@ const Home = () => {
                       <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">
+                  <h3 className="text-xl font-semibold mb-2 text-white">
                     {users.length === 0
                       ? "No Profiles Available"
                       : "No More Profiles"}
                   </h3>
-                  <p className="text-center opacity-80">
+                  <p className="text-center opacity-80 text-white">
                     {users.length === 0
                       ? "There are no profiles to show at the moment."
                       : "You've seen all available profiles."}
