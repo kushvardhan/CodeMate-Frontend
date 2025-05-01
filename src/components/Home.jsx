@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import Card from "./ui/Card";
@@ -536,24 +536,6 @@ const Home = () => {
     } else if (cardWidth > screenWidth / 2) {
       info.point.x = screenWidth / 2;
     }
-  };
-
-  const childRefs = useRef(
-    Array(users.length)
-      .fill(0)
-      .map(() => React.createRef())
-  );
-
-  const swiped = (direction, index) => {
-    console.log(`Swiped ${direction}`);
-    if (index >= 0) {
-      setCurrentIndex(index - 1); // Update the current index
-    }
-  };
-
-  const outOfFrame = (name, idx) => {
-    console.log(`${name} (${idx}) left the screen`);
-    // Reset position or perform cleanup if necessary
   };
 
   return (
