@@ -526,6 +526,18 @@ const Home = () => {
     position: allPositions[i % allPositions.length],
   }));
 
+  const handleDrag = (event, info) => {
+    const screenWidth = window.innerWidth;
+    const cardWidth = info.point.x;
+
+    // Restrict the card's movement to stay within the screen width
+    if (cardWidth < -screenWidth / 2) {
+      info.point.x = -screenWidth / 2;
+    } else if (cardWidth > screenWidth / 2) {
+      info.point.x = screenWidth / 2;
+    }
+  };
+
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
       {/* Background with coding icons */}
@@ -641,7 +653,12 @@ const Home = () => {
               !allCardsFinished ? (
               <div
                 className="tinder-card-stack relative w-full max-w-[340px] mx-auto"
-                style={{ position: "relative", margin: "0 auto" }}
+                style={{
+                  position: "relative",
+                  margin: "0 auto", // Center the card stack
+                  overflow: "hidden", // Prevent overflow
+                  maxWidth: "100%", // Ensure it doesn't exceed the screen width
+                }}
               >
                 {/* Rewind button */}
                 {previousCards.length > 0 && (
@@ -670,9 +687,9 @@ const Home = () => {
                   </motion.button>
                 )}
 
-                {/* Static background cards - always centered */}
+                {/* Static background cards */}
                 <div className="static-card-stack">
-                  {/* Next card (visible behind current card) - always centered */}
+                  {/* Next card */}
                   {currentIndex + 1 < users.length && (
                     <div
                       className="static-card-position preview-stack-card"
@@ -683,9 +700,9 @@ const Home = () => {
                         top: "0",
                         bottom: "0",
                         margin: "auto",
-                        transform: "translateX(0) translateY(10px) scale(0.95)",
+                        transform: "translateX(0) translateY(10px) scale(1)", // Ensure same size
                         zIndex: "5",
-                        opacity: "0.85",
+                        opacity: "1", // Fully visible
                         transformStyle: "preserve-3d",
                         transformOrigin: "center center",
                         willChange: "transform, opacity",
@@ -696,7 +713,7 @@ const Home = () => {
                     </div>
                   )}
 
-                  {/* Add a third card for deeper stack effect (Tinder-like) */}
+                  {/* Add a third card for deeper stack effect */}
                   {currentIndex + 2 < users.length && (
                     <div
                       className="static-card-position deep-stack-card"
@@ -707,9 +724,9 @@ const Home = () => {
                         top: "0",
                         bottom: "0",
                         margin: "auto",
-                        transform: "translateX(0) translateY(20px) scale(0.9)",
+                        transform: "translateX(0) translateY(20px) scale(1)", // Ensure same size
                         zIndex: "4",
-                        opacity: "0.7",
+                        opacity: "1", // Fully visible
                         transformStyle: "preserve-3d",
                         transformOrigin: "center center",
                         willChange: "transform, opacity",
@@ -738,16 +755,47 @@ const Home = () => {
                     transformStyle: "preserve-3d",
                     transformOrigin: "center center",
                     willChange: "transform",
-                    transform: "translateX(0) translateY(0) translateZ(0)",
+                    transform:
+                      "translateX(0) translateY(0) translateZ(0) scale(1.05)", // Slightly larger size
                   }}
                 >
-                  <Card
-                    user={users[currentIndex]}
-                    onSwipeLeft={handleSwipeLeft}
-                    onSwipeRight={handleSwipeRight}
-                    isCardSwiping={isCardSwiping}
-                    swipeDirection={swipeDirection}
-                  />
+                  <motion.div
+                    drag="x"
+                    dragConstraints={{
+                      left: -window.innerWidth / 2,
+                      right: window.innerWidth / 2,
+                    }}
+                    onDragStart={() => {
+                      const currentCard = document.querySelector(
+                        ".tinder-current-card"
+                      );
+                      if (currentCard) {
+                        currentCard.style.transition = "none"; // Disable transition during drag
+                      }
+                    }}
+                    onDragEnd={() => {
+                      const currentCard = document.querySelector(
+                        ".tinder-current-card"
+                      );
+                      if (currentCard) {
+                        currentCard.style.transition = "transform 0.3s ease"; // Re-enable transition
+                        currentCard.style.transform =
+                          "translateX(0) translateY(0) translateZ(0) scale(1.05)"; // Reset to center
+                      }
+                    }}
+                    className="card-container"
+                    style={{
+                      transform: "scale(1.05)", // Slightly larger size
+                    }}
+                  >
+                    <Card
+                      user={users[currentIndex]}
+                      onSwipeLeft={handleSwipeLeft}
+                      onSwipeRight={handleSwipeRight}
+                      isCardSwiping={isCardSwiping}
+                      swipeDirection={swipeDirection}
+                    />
+                  </motion.div>
                 </div>
               </div>
             ) : (
