@@ -1491,6 +1491,9 @@ pre,
 .tinder-current-card .dev-card {
   pointer-events: auto !important;
 }
+.error-login{
+  color:rgb(206, 61, 61);
+}
 
 /* Next card in stack (behind current card) */
 .tinder-next-card {

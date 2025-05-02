@@ -372,7 +372,7 @@ const LoginPage = () => {
           <motion.form onSubmit={handleSubmit} variants={itemVariants}>
             {errors.general && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
-                <p className="font-medium">{errors.general}</p>
+                <p className=" error-login  font-medium">{errors.general}</p>
               </div>
             )}
             <div className="form-group">

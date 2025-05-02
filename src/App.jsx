@@ -12,7 +12,7 @@ import "./App.css";
 import axios from "./api/axios";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
-import Connection from "./components/Connection";
+import Request from "./components/Request";
 import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import SignupPage from "./components/SignupPage";
@@ -93,19 +93,12 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/connections"
-          element={
-            <ProtectedRoute>
-              <Connection />
-            </ProtectedRoute>
-          }
-        />
+\
         <Route
           path="/requests"
           element={
             <ProtectedRoute>
-              <NotFoundPage />
+              <Request />
             </ProtectedRoute>
           }
         />
