@@ -1,8 +1,8 @@
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../../context/ThemeContext";
 
-const SuccessPopup = ({ isVisible, message, onClose }) => {
+const SuccessPopup = ({ isVisible, message, onClose, color }) => {
   const { darkMode } = useTheme();
 
   // Auto-close the popup after 5 seconds
@@ -27,6 +27,7 @@ const SuccessPopup = ({ isVisible, message, onClose }) => {
         >
           <motion.div
             className={`success-popup ${darkMode ? "dark" : "light"}`}
+            style={{ borderColor: color }}
             initial={{ scale: 0.8, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.8, y: 20, opacity: 0 }}
@@ -37,7 +38,7 @@ const SuccessPopup = ({ isVisible, message, onClose }) => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="success-popup-icon">
+            <div className="success-popup-icon" style={{ color }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="40"

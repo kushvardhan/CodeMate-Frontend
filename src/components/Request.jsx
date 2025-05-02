@@ -1,54 +1,61 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import { addRequest } from "../slice/RequestSlice";
+import { addConnection } from "../slice/ConnectionSlice";
+import { addRequest, removeRequest } from "../slice/RequestSlice";
+import SuccessPopup from "./ui/SuccessPopup";
 
 const Request = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { darkMode, toggleDarkMode } = useTheme();
-
   const requests = useSelector((state) => state.request);
+  const [popup, setPopup] = useState({
+    isVisible: false,
+    message: "",
+    color: "",
+  });
 
   const fetchRequest = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:4000/user/request/received",
-        {
-          withCredentials: true,
-        }
-      );
-      dispatch(addRequest(res.data.data));
+      const res = await axios.get("http://localhost:4000/user/request/received");
+      console.log(res.data.data);
     } catch (err) {
-      console.log(err);
+      console.error(
+        "Error fetching requests:",
+        err.response?.data || err.message
+      );
     }
   };
 
-  const handleAccept = async (id) => {
+  const handleRequestAction = async (status, request) => {
     try {
       await axios.post(
-        `http://localhost:4000/user/request/accept/${id}`,
+        `http://localhost:4000/request/review/${status}/${request._id}`, // Corrected endpoint
         {},
         { withCredentials: true }
       );
-      alert("Request accepted!");
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  const handleReject = async (id) => {
-    try {
-      await axios.post(
-        `http://localhost:4000/user/request/reject/${id}`,
-        {},
-        { withCredentials: true }
-      );
-      alert("Request rejected!");
+      if (status === "accepted") {
+        dispatch(addConnection(request.fromUserId));
+        setPopup({
+          isVisible: true,
+          message: `You accepted ${request.fromUserId.firstName}'s request.`,
+          color: "green",
+        });
+      } else if (status === "rejected") {
+        setPopup({
+          isVisible: true,
+          message: `You rejected ${request.fromUserId.firstName}'s request.`,
+          color: "red",
+        });
+      }
+
+      dispatch(removeRequest(request._id));
     } catch (err) {
-      console.error(err);
+      console.error("Error handling request action:", err);
     }
   };
 
@@ -62,16 +69,30 @@ const Request = () => {
     }
   };
 
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(" ");
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "...";
+    }
+    return text;
+  };
+
   useEffect(() => {
     fetchRequest();
   }, []);
 
-  if (!requests) return;
+  if (!requests) return null;
   if (requests.length === 0)
     return <h1 className="no-requests">No request found.</h1>;
 
   return (
     <div className="request-maindiv">
+      <SuccessPopup
+        isVisible={popup.isVisible}
+        message={popup.message}
+        onClose={() => setPopup({ isVisible: false, message: "", color: "" })}
+        color={popup.color}
+      />
       <div className="profile-top-nav">
         <button
           onClick={() => navigate("/")}
@@ -93,7 +114,6 @@ const Request = () => {
           </svg>
           <span>Home</span>
         </button>
-
         <button
           onClick={toggleDarkMode}
           className={`theme-toggle ${darkMode ? "dark" : "light"}`}
@@ -144,7 +164,9 @@ const Request = () => {
               />
               <div className="request-card-content">
                 <h2 className="request-card-name">{`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}</h2>
-                <p className="request-card-about">{req.fromUserId.about}</p>
+                <p className="request-card-about">
+                  {truncateText(req.fromUserId.about, 20)}
+                </p>
                 <div className="request-card-info">
                   <div className="request-card-age-gender">
                     <div className="info-item">
@@ -168,13 +190,13 @@ const Request = () => {
               <div className="request-card-actions">
                 <button
                   className="accept-button"
-                  onClick={() => handleAccept(req._id)}
+                  onClick={() => handleRequestAction("accepted", req)}
                 >
                   ✓
                 </button>
                 <button
                   className="reject-button"
-                  onClick={() => handleReject(req._id)}
+                  onClick={() => handleRequestAction("rejected", req)}
                 >
                   ✕
                 </button>
