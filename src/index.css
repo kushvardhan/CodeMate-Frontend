@@ -1491,8 +1491,8 @@ pre,
 .tinder-current-card .dev-card {
   pointer-events: auto !important;
 }
-.error-login{
-  color:rgb(206, 61, 61);
+.error-login {
+  color: rgb(206, 61, 61);
 }
 
 /* Next card in stack (behind current card) */
@@ -2572,11 +2572,11 @@ pre,
   }
 }
 
-.error-msg{
-  color:rgb(219, 53, 53);
+.error-msg {
+  color: rgb(219, 53, 53);
 }
-.success-msg{
-  color:rgb(36, 209, 36);
+.success-msg {
+  color: rgb(36, 209, 36);
 }
 
 /* Home Page Specific Styles */
@@ -4076,4 +4076,168 @@ pre,
 .home-button:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+/* Request Cards Styles */
+.request-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--color-background);
+  min-height: 100vh;
+}
+
+.request-title {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--color-foreground);
+}
+
+.no-requests {
+  font-size: var(--text-2xl);
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.request-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.request-card {
+  background-color: var(--color-input);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.request-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.request-card-content {
+  padding: 1rem;
+}
+
+.request-card-name {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-foreground);
+}
+
+.request-card-about {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.request-card-age-gender {
+  font-size: var(--text-sm);
+  color: var(--color-muted-light);
+  margin-bottom: 1rem;
+}
+
+.request-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.request-skill-tag {
+  background-color: var(--color-primary-light);
+  color: white;
+  font-size: var(--text-xs);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.request-cards-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.request-card-horizontal {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-input);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1rem;
+  width: 80%; /* Adjust width to occupy 75-80% of the screen */
+  max-width: 700px; /* Slightly reduce the maximum width */
+  margin: 0 auto; /* Center the card horizontally */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.request-card-horizontal:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.request-card-image {
+  width: 100px; /* Slightly increase the image width */
+  height: 100px; /* Slightly increase the image height */
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.request-card-content {
+  flex: 1;
+}
+
+.request-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.accept-button,
+.reject-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.accept-button {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.accept-button:hover {
+  background-color: #059669; /* Darker green */
+  transform: scale(1.1);
+}
+
+.reject-button {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.reject-button:hover {
+  background-color: #b91c1c; /* Darker red */
+  transform: scale(1.1);
 }
