@@ -27,6 +27,16 @@
   }
 }
 
+@keyframes togglePosition {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(5px, -5px); /* Slight toggle in position */
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

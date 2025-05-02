@@ -71,7 +71,7 @@ const ProfilePage = () => {
         lastName: user.lastName || "",
         gender: user.gender || "",
         age: user.age || "",
-        location: user.location || "", // Added location field
+        location: user.location || "", 
         about: user.about || "",
         skills: user.skills || [],
         photoUrl: user.photoUrl || "",
@@ -82,8 +82,8 @@ const ProfilePage = () => {
         name: `${user.firstName || ""} ${user.lastName || ""}`,
         bio: user.about || "Your bio will appear here",
         skills: user.skills || [],
-        image: user.photoUrl || "https://i.imgur.com/6YQ1Zzt.png", // Clean, geometric profile avatar without text
-        location: "Your location",
+        image: user.photoUrl || "https://static.vecteezy.com/system/resources/thumbnails/051/294/291/large/neon-frame-effect-teddy-bear-on-black-background-free-video.jpg", // Clean, geometric profile avatar without text
+        location: user.location || "", // Use actual location or fallback to an empty string
         age: user.age || 25,
         gender: user.gender || "other",
       });
@@ -96,8 +96,8 @@ const ProfilePage = () => {
       name: `${formData.firstName || ""} ${formData.lastName || ""}`,
       bio: formData.about || "Your bio will appear here",
       skills: formData.skills || [],
-      image: formData.photoUrl || "https://i.imgur.com/6YQ1Zzt.png", // Clean, geometric profile avatar without text
-      location: formData.location || "Your location",
+      image: formData.photoUrl || "https://static.vecteezy.com/system/resources/thumbnails/051/294/291/large/neon-frame-effect-teddy-bear-on-black-background-free-video.jpg", // Clean, geometric profile avatar without text
+      location: formData.location || "", // Use actual location or fallback to an empty string
       age: formData.age || 25,
       gender: formData.gender || "other",
     });

@@ -520,10 +520,13 @@ const Home = () => {
 
   const allPositions = generateFixedPositions();
 
+  // Generate random sizes and animation delays for code symbols
   const distributedSymbols = codeSymbols.map((symbol, i) => ({
     name: symbol,
     color: symbolColors[i % symbolColors.length],
     position: allPositions[i % allPositions.length],
+    size: `${Math.random() * 20 + 15}px`, // Random size between 15px and 35px
+    animationDelay: `${Math.random() * 2}s`, // Random delay between 0s and 2s
   }));
 
   const handleDrag = (event, info) => {
@@ -550,13 +553,14 @@ const Home = () => {
             key={`symbol-${i}`}
             style={{
               ...symbol.position,
-              fontSize: "22px", // Adjusted size for better visibility
+              fontSize: symbol.size, // Apply random size
               color: symbol.color,
               filter: `blur(0.3px) drop-shadow(0 0 5px ${symbol.color})`, // Subtle glow
               textShadow: `0 0 6px ${symbol.color}`, // Vibrant glow
               opacity: 0.8, // Slightly prominent
               position: "absolute",
               zIndex: 1,
+              animation: `togglePosition 3s ease-in-out ${symbol.animationDelay} infinite`, // Add animation
             }}
             className="font-mono font-bold"
           >
