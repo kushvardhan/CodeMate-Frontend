@@ -2564,6 +2564,13 @@ pre,
   }
 }
 
+.error-msg{
+  color:rgb(219, 53, 53);
+}
+.success-msg{
+  color:rgb(36, 209, 36);
+}
+
 /* Home Page Specific Styles */
 .nav-link {
   position: relative;

@@ -10,7 +10,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
-    lastName: "",
+    lastName: "" || "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -50,11 +50,6 @@ const SignupPage = () => {
       newErrors.firstName = "First name must be between 3 and 20 characters.";
     }
 
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required.";
-    } else if (formData.lastName.length < 3 || formData.lastName.length > 20) {
-      newErrors.lastName = "Last name must be between 3 and 20 characters.";
-    }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required.";
@@ -96,7 +91,7 @@ const SignupPage = () => {
       // Clear form data
       setFormData({
         firstName: "",
-        lastName: "",
+        lastName: "" || "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -415,12 +410,12 @@ const SignupPage = () => {
 
           <motion.form onSubmit={handleSubmit} variants={itemVariants}>
             {errors.general && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
-                <p className="font-medium">{errors.general}</p>
+              <div className="error-msg mb-4 p-3 bg-red-400 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
+                <p className="font-medium">*{errors.general}*</p>
               </div>
             )}
             {errors.success && (
-              <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded shadow-sm animate-fadeIn">
+              <div className="success-msg mb-4 p-3 bg-green-300 border border-green-400 text-green-700 rounded shadow-sm animate-fadeIn">
                 <p className="font-medium">{errors.success}</p>
               </div>
             )}
