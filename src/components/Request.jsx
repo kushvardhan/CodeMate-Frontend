@@ -52,58 +52,13 @@ const Request = () => {
     }
   };
 
-  const getGenderIcon = (gender) => {
+  const getGenderSymbol = (gender) => {
     if (gender.toLowerCase() === "male") {
-      return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="4" r="4"></circle>
-          <path d="M16 8v8h-8"></path>
-          <path d="M12 12l4 4"></path>
-        </svg>
-      );
+      return <span className="info-icon bold-light">♂</span>;
     } else if (gender.toLowerCase() === "female") {
-      return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="8" r="4"></circle>
-          <path d="M12 12v4"></path>
-          <path d="M10 16h4"></path>
-        </svg>
-      );
+      return <span className="info-icon bold-light">♀</span>;
     } else {
-      return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="8" r="4"></circle>
-          <path d="M8 12h8"></path>
-          <path d="M10 16h4"></path>
-        </svg>
-      );
+      return <span className="info-icon bold-light">⚧</span>; // Gender-neutral symbol
     }
   };
 
@@ -188,50 +143,25 @@ const Request = () => {
                 className="request-card-image"
               />
               <div className="request-card-content">
-                <h2 className="request-card-name">
-                  {req.fromUserId.firstName}{" "}
-                  {req.fromUserId.lastName ? req.fromUserId.lastName : ""}
-                </h2>
-                <p className="request-card-about">
-                  {req.fromUserId.about ? "About: " + req.fromUserId.about : ""}
-                </p>
+                <h2 className="request-card-name">{`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}</h2>
+                <p className="request-card-about">{req.fromUserId.about}</p>
                 <div className="request-card-info">
                   <div className="request-card-age-gender">
                     <div className="info-item">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="8" r="4"></circle>
-                        <path d="M12 12v6"></path>
-                        <path d="M9 18h6"></path>
-                      </svg>
-                      <span>
-                        {req.fromUserId.age ? "Age: " + req.fromUserId.age : ""}{" "}
-                        years
-                      </span>
+                      <span>Age:</span>
+                      <span>{req.fromUserId.age} years</span>
                     </div>
                     <div className="info-item">
-                      {getGenderIcon(req.fromUserId.gender)}
-                      <span>
-                        {req.fromUserId.gender ? req.fromUserId.gender : ""}
-                      </span>
+                      {getGenderSymbol(req.fromUserId.gender)}
+                      <span>{req.fromUserId.gender}</span>
                     </div>
                   </div>
                   <div className="request-card-skills">
-                    {req.fromUserId.skills.length > 0
-                      ? req.fromUserId.skills.map((skill, index) => (
-                          <span className="request-skill-tag" key={index}>
-                            {skill}
-                          </span>
-                        ))
-                      : ""}
+                    {req.fromUserId.skills.map((skill, index) => (
+                      <span className="request-skill-tag" key={index}>
+                        {skill}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>

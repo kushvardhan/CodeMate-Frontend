@@ -4080,7 +4080,7 @@ pre,
 
 /* Request Cards Styles */
 
-.request-maindiv{
+.request-maindiv {
   height: 100%;
   width: 100%;
 }
@@ -4091,8 +4091,8 @@ pre,
   align-items: center;
   justify-content: center;
   padding-top: 2rem;
-  width : 100%;
-  height : fit-content;
+  width: 100%;
+  height: fit-content;
   background-color: var(--color-background);
 }
 
@@ -4144,8 +4144,17 @@ pre,
 .request-card-name {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--color-primary);
+  color: var(
+    --color-primary-dark
+  ); /* Darker for better visibility in light theme */
   margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Add subtle shadow for better contrast */
+}
+
+.dark-mode .request-card-name {
+  color: var(
+    --color-primary-light
+  ); /* Lighter for better visibility in dark theme */
 }
 
 .request-card-about {
@@ -4173,12 +4182,21 @@ pre,
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  color: var(--color-secondary);
+  color: var(--color-muted-light); /* Neutral color for better visibility */
 }
 
-.info-item svg {
-  color: var(--color-primary);
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+.info-item .info-icon {
+  font-size: 1.5rem; /* Increase font size for better visibility */
+  font-weight: bold; /* Make the icons bold */
+  color: var(--color-secondary-dark); /* Adjusted for better visibility */
+}
+
+.dark-mode .info-item {
+  color: var(--color-muted); /* Slightly lighter for dark mode */
+}
+
+.dark-mode .info-item .info-icon {
+  color: var(--color-secondary-light); /* Lighter icon color for dark mode */
 }
 
 .request-card-skills {
@@ -4188,13 +4206,24 @@ pre,
   justify-content: center;
 }
 
+.request-card-skills::before {
+  content: "Skills:"; /* Add "Skills" label */
+  font-weight: bold;
+  margin-right: 0.5rem;
+  color: var(--color-foreground);
+}
+
 .request-skill-tag {
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-dark); /* Darker for light theme */
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.dark-mode .request-skill-tag {
+  background-color: var(--color-accent-light); /* Lighter for dark theme */
 }
 
 .request-cards-horizontal {
@@ -4272,4 +4301,14 @@ pre,
 .reject-button:hover {
   background-color: #b91c1c; /* Darker red */
   transform: scale(1.1);
+}
+
+.bold-light {
+  font-weight: bold; /* Make icons bold */
+  color: var(--color-secondary-dark); /* Ensure visibility in light theme */
+}
+
+.dark-mode .bold-light {
+  font-weight: normal; /* Keep normal weight in dark mode */
+  color: var(--color-secondary-light); /* Adjust for dark mode */
 }
