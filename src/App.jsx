@@ -12,16 +12,21 @@ import "./App.css";
 import axios from "./api/axios";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
-import Request from "./components/Request";
 import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
+import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
 import { setUser } from "./slice/UserSlice";
 
 // Protected Route component - redirects to login if not authenticated
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
   const location = useLocation();
+
+  if (isAuthLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (!isAuthenticated) {
     // Redirect to login if not authenticated, but save the location they were trying to access
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -93,7 +98,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-\
         <Route
           path="/requests"
           element={
@@ -102,7 +106,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
         {/* Not Found Page - shown for invalid routes */}
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
@@ -120,31 +123,32 @@ const App = () => {
   );
 };
 
+// PersistAuth component - checks for token and sets user state on page load/refresh
 const PersistAuth = ({ children }) => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      const checkAuth = async () => {
+    const checkAuth = async () => {
+      try {
         const token = localStorage.getItem("token");
 
         if (token) {
-          try {
-            const response = await axios.get("/user/me", {
-              withCredentials: true,
-            });
+          const response = await axios.get("/user/me", {
+            withCredentials: true,
+          });
 
-            if (response.data && response.data.user) {
-              dispatch(setUser(response.data.user));
-            }
-          } catch (error) {
-            console.error("Error restoring auth:", error);
-            localStorage.removeItem("token");
+          if (response.data && response.data.user) {
+            dispatch(setUser(response.data.user));
           }
         }
-      };
+      } catch (error) {
+        console.error("Error restoring auth:", error);
+        localStorage.removeItem("token");
+      }
+    };
 
+    if (!isAuthenticated) {
       checkAuth();
     }
   }, [dispatch, isAuthenticated]);

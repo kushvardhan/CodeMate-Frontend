@@ -18,26 +18,29 @@ const Request = () => {
     color: "",
   });
 
-  const fetchRequest = async () => {
-    try {
-      const res = await axios.get(
-        "http://localhost:4000/user/request/received"
-      );
-      console.log(res.data.data);
-      dispatch(addRequest(res.data.data));
-    } catch (err) {
-      if (err.response?.status === 401) {
-        console.error("Unauthorized: Redirecting to login...");
-        localStorage.removeItem("token");
-        window.location.href = "/login";
-      } else {
-        console.error(
-          "Error fetching requests:",
-          err.response?.data || err.message
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:4000/user/request/received"
         );
+        dispatch(addRequest(res.data.data));
+      } catch (err) {
+        if (err.response?.status === 401) {
+          console.error("Unauthorized: Redirecting to login...");
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          console.error(
+            "Error fetching requests:",
+            err.response?.data || err.message
+          );
+        }
       }
-    }
-  };
+    };
+
+    fetchRequest();
+  }, [dispatch, navigate]);
 
   const handleRequestAction = async (status, request) => {
     try {
@@ -86,11 +89,7 @@ const Request = () => {
     return text;
   };
 
-  useEffect(() => {
-    fetchRequest();
-  }, []);
-
-  if (!requests) return null;
+  if (!requests) return <div>Loading...</div>;
   if (requests.length === 0)
     return <h1 className="no-requests">No request found.</h1>;
 
