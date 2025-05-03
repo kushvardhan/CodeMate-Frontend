@@ -20,20 +20,29 @@ const Request = () => {
 
   const fetchRequest = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/user/request/received");
-      console.log(res.data.data);
-    } catch (err) {
-      console.error(
-        "Error fetching requests:",
-        err.response?.data || err.message
+      const res = await axios.get(
+        "http://localhost:4000/user/request/received"
       );
+      console.log(res.data.data);
+      dispatch(addRequest(res.data.data));
+    } catch (err) {
+      if (err.response?.status === 401) {
+        console.error("Unauthorized: Redirecting to login...");
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        console.error(
+          "Error fetching requests:",
+          err.response?.data || err.message
+        );
+      }
     }
   };
 
   const handleRequestAction = async (status, request) => {
     try {
       await axios.post(
-        `http://localhost:4000/request/review/${status}/${request._id}`, // Corrected endpoint
+        `http://localhost:4000/request/review/${status}/${request._id}`,
         {},
         { withCredentials: true }
       );
