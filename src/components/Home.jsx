@@ -5,10 +5,12 @@ import axios from "../api/axios";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 import { useSelector } from "react-redux";
+import { store } from "../store/store";
 
 const Home = () => {
   const navigate = useNavigate();
   const request = useSelector((store)=>store.request || []);
+  const connection = useSelector((store)=>store.connection || []);
   // Authentication is now handled by the ProtectedRoute component in App.jsx
 
   const [users, setUsers] = useState([]);
@@ -881,7 +883,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
               >
-                24
+                {connection.length > 0 ? connection.length : 0}
               </motion.p>
             </motion.div>
 

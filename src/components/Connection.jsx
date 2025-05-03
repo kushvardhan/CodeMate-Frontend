@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
+import { store } from "../store/store";
+
 
 const Connection = () => {
   const connections = useSelector((store) => store.connection || []);
