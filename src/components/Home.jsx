@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "../api/axios";
@@ -895,6 +896,7 @@ const Home = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
             >
+              <Link to='/connections'>
               <div className="stats-icon connections-icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -923,6 +925,7 @@ const Home = () => {
               >
                 {connections.length}
               </motion.p>
+              </Link>
             </motion.div>
 
             <motion.div
@@ -931,6 +934,7 @@ const Home = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
             >
+              <Link to='/requests'>
               <div className="stats-icon pending-icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -957,7 +961,7 @@ const Home = () => {
                 transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
               >
                 {requests.length}
-              </motion.p>
+              </motion.p></Link>
             </motion.div>
 
             <motion.div
@@ -991,6 +995,7 @@ const Home = () => {
                 8
               </motion.p>
             </motion.div>
+
           </motion.div>
         </div>
       </div>
