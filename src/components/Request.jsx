@@ -21,17 +21,19 @@ const Request = () => {
   useEffect(() => {
     const fetchRequest = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:4000/user/request/received",
-          { withCredentials: true }
-        );
-        dispatch(addRequest(res.data.data));
-      } catch (err) {
-        console.error(
-          "Error fetching requests:",
-          err.response?.data || err.message
-        );
-        // No need to manually redirect here; the Axios interceptor handles it
+        const response = await fetch("/user/request/received");
+        if (!response.ok) {
+          if (response.status === 404) {
+            console.error("Endpoint not found: /user/request/received");
+            throw new Error("No connection requests found.");
+          }
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        dispatch(addRequest(data));
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+        dispatch(addRequest([])); // Handle gracefully by showing "No requests found"
       }
     };
 
