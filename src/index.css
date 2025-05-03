@@ -4320,3 +4320,27 @@ pre,
   color: var(--color-secondary-light); /* Adjust for dark mode */
 }
 
+/* Styles for the no-requests message */
+.no-requests-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Center vertically */
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.no-requests-message {
+  font-size: var(--text-3xl); /* Large, bold text */
+  font-weight: 600;
+  color: var(--color-muted-light);
+  margin-bottom: 0.5rem;
+}
+
+.no-requests-subtext {
+  font-size: var(--text-base); /* Smaller, lighter text */
+  color: var(--color-muted);
+  max-width: 400px;
+  line-height: 1.5;
+}

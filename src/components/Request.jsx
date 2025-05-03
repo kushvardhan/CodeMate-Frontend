@@ -22,7 +22,8 @@ const Request = () => {
     const fetchRequest = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/user/request/received" , {withCredentials:true}
+          "http://localhost:4000/user/request/received",
+          { withCredentials: true }
         );
         dispatch(addRequest(res.data.data));
       } catch (err) {
@@ -86,7 +87,14 @@ const Request = () => {
 
   if (!requests) return <div>Loading...</div>;
   if (requests.length === 0)
-    return <h1 className="no-requests">No request found.</h1>;
+    return (
+      <div className="no-requests-container">
+        <h1 className="no-requests-message">No connection requests found.</h1>
+        <p className="no-requests-subtext">
+          Check back later for new connection requests.
+        </p>
+      </div>
+    );
 
   return (
     <div className="request-maindiv">
