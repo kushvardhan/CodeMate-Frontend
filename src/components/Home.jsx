@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { store } from "../store/store";
 
 const Home = () => {
-  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const request = useSelector((store)=>store.request || []);
   const connection = useSelector((store)=>store.connection || []);
@@ -23,8 +23,30 @@ const Home = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    
-    
+    const fetchData = async () => {
+      try {
+        const [requestsResponse, connectionsResponse] = await Promise.all([
+          axios.get('/user/request/received', { withCredentials: true }),
+          axios.get('/user/connections', { withCredentials: true }),
+        ]);
+
+        if (requestsResponse.data) {
+          dispatch(addRequest(requestsResponse.data));
+        }
+
+        if (connectionsResponse.data) {
+          dispatch(addConnection(connectionsResponse.data));
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+
+  useEffect(() => {
     // Fetch users from the backend
     const fetchUsers = async () => {
       try {
