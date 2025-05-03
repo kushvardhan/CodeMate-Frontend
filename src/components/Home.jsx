@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "../api/axios";
+import { addConnection } from "../slice/ConnectionSlice";
+import { addRequest } from "../slice/RequestSlice";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
-import { addRequest } from "../slice/RequestSlice";
-import { addConnection } from "../slice/ConnectionSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { store } from "../store/store";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -48,8 +46,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [requestsResponse, connectionsResponse] = await Promise.all([
-          axios.get('/user/request/received', { withCredentials: true }),
-          axios.get('/user/connections', { withCredentials: true }),
+          axios.get("/user/request/received", { withCredentials: true }),
+          axios.get("/user/connections", { withCredentials: true }),
         ]);
 
         if (requestsResponse.data) {
@@ -60,13 +58,12 @@ const Home = () => {
           dispatch(addConnection(connectionsResponse.data));
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
   }, [dispatch]);
-
 
   useEffect(() => {
     // Fetch users from the backend
@@ -175,9 +172,7 @@ const Home = () => {
     }
   }, [currentIndex, users]);
 
-  useEffect(()=>{
-
-  },[])
+  useEffect(() => {}, []);
   // Pre-calculate next index to avoid state updates during animation
   const nextCardIndex =
     currentIndex < users.length - 1 ? currentIndex + 1 : null;
@@ -891,11 +886,7 @@ const Home = () => {
           <motion.div
             className="stats-container relative z-20 p-4 rounded-lg bg-black/20 backdrop-blur-sm shadow-xl border-opacity-20"
             initial={{ opacity: 0, y: 20 }}
-            animate={
-              loadingSequence.statsLoaded
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 20 }
-            } // Fixed syntax: replaced parentheses with curly braces
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <motion.div
@@ -930,7 +921,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
               >
-                {connections.length > 0 ? connections.length : 0}
+                {connections.length}
               </motion.p>
             </motion.div>
 
@@ -965,7 +956,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
               >
-                {requests.length > 0 ? requests.length : 0 }
+                {requests.length}
               </motion.p>
             </motion.div>
 

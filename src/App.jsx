@@ -10,13 +10,13 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import axios from "./api/axios";
+import Connection from "./components/Connection";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
 import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import Connection from "./components/Connection";
 import { setUser } from "./slice/UserSlice";
 
 // Protected Route
@@ -26,7 +26,11 @@ const ProtectedRoute = ({ children }) => {
 
   if (isAuthLoading) return <div>Loading...</div>;
 
-  return isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} replace />;
+  return isAuthenticated ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
 };
 
 // Public Route
@@ -48,12 +52,54 @@ const AppRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-        <Route path="/requests" element={<ProtectedRoute><Request /></ProtectedRoute>} />
-        <Route path="/connections" element={<ProtectedRoute><Connection /></ProtectedRoute>} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignupPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/requests"
+          element={
+            <ProtectedRoute>
+              <Request />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <ProtectedRoute>
+              <Connection />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </AnimatePresence>
@@ -63,17 +109,16 @@ const AppRoutes = () => {
 // Auth persistence
 const PersistAuth = ({ children }) => {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const response = await axios.get("/user/me", { withCredentials: true });
-          if (response.data?.user) {
-            dispatch(setUser(response.data.user));
-          }
+        const response = await axios.get("/user/me", { withCredentials: true });
+        if (response.data?.user) {
+          dispatch(setUser(response.data.user));
+        } else {
+          localStorage.removeItem("token");
         }
       } catch (error) {
         console.error("Auth restore failed:", error);
@@ -81,10 +126,14 @@ const PersistAuth = ({ children }) => {
       }
     };
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && isAuthLoading) {
       checkAuth();
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, isAuthLoading]);
+
+  if (isAuthLoading) {
+    return <div>Loading...</div>; // Show a loading indicator while verifying the session
+  }
 
   return children;
 };
