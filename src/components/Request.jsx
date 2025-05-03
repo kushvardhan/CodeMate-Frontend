@@ -22,20 +22,15 @@ const Request = () => {
     const fetchRequest = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/user/request/received"
+          "http://localhost:4000/user/request/received" , {withCredentials:true}
         );
         dispatch(addRequest(res.data.data));
       } catch (err) {
-        if (err.response?.status === 401) {
-          console.error("Unauthorized: Redirecting to login...");
-          localStorage.removeItem("token");
-          navigate("/login");
-        } else {
-          console.error(
-            "Error fetching requests:",
-            err.response?.data || err.message
-          );
-        }
+        console.error(
+          "Error fetching requests:",
+          err.response?.data || err.message
+        );
+        // No need to manually redirect here; the Axios interceptor handles it
       }
     };
 
