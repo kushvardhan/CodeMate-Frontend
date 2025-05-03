@@ -22,6 +22,38 @@ const Home = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+
+        const fetchRequest = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:4000/user/request/received",
+              { withCredentials: true }
+            );
+            console.log(response.data.data);
+            dispatch(addRequest(response.data.data));
+          } catch (error) {
+            console.error("Error fetching requests:", error);
+            dispatch(addRequest([])); // Handle gracefully by showing "No requests found"
+          }
+        };
+    
+        fetchRequest();
+
+        const fetchConnection = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:4000/user/request/connections",
+              { withCredentials: true }
+            );
+            console.log("API response:", response.data.data);
+            console.log("Current state:", JSON.stringify(connections));
+            dispatch(addConnection(response.data.data)); // Replace the state with the new data
+          } catch (error) {
+            console.error("Error fetching connections:", error);
+          }
+        };
+        fetchConnection();
+
     // Fetch users from the backend
     const fetchUsers = async () => {
       try {

@@ -16,123 +16,51 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import { setUser } from "./slice/UserSlice";
 import Connection from "./components/Connection";
+import { setUser } from "./slice/UserSlice";
 
-// Protected Route component - redirects to login if not authenticated
+// Protected Route
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
   const location = useLocation();
 
-  if (isAuthLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isAuthLoading) return <div>Loading...</div>;
 
-  if (!isAuthenticated) {
-    // Redirect to login if not authenticated, but save the location they were trying to access
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  return children;
+  return isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} replace />;
 };
 
-// Public Route component - redirects to home if already authenticated
+// Public Route
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.user);
-
-  if (isAuthenticated) {
-    // Redirect to home if already authenticated
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
+  return isAuthenticated ? <Navigate to="/" replace /> : children;
 };
 
-// NotFound Route component - shows NotFoundPage for invalid routes
+// Not Found Route
 const NotFoundRoute = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
-
-  // If not authenticated, redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // If authenticated, show the NotFoundPage
-  return <NotFoundPage />;
+  return isAuthenticated ? <NotFoundPage /> : <Navigate to="/login" replace />;
 };
 
+// Main Routes
 const AppRoutes = () => {
   const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <SignupPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/requests"
-          element={
-            <ProtectedRoute>
-              <Request />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/connections"
-          element={
-            <ProtectedRoute>
-              <Connection />
-            </ProtectedRoute>
-          }
-        />
-        {/* Not Found Page - shown for invalid routes */}
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/requests" element={<ProtectedRoute><Request /></ProtectedRoute>} />
+        <Route path="/connections" element={<ProtectedRoute><Connection /></ProtectedRoute>} />
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </AnimatePresence>
   );
 };
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <PersistAuth>
-        <AppRoutes />
-      </PersistAuth>
-    </BrowserRouter>
-  );
-};
-
-// PersistAuth component - checks for token and sets user state on page load/refresh
+// Auth persistence
 const PersistAuth = ({ children }) => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -141,18 +69,14 @@ const PersistAuth = ({ children }) => {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("token");
-
         if (token) {
-          const response = await axios.get("/user/me", {
-            withCredentials: true,
-          });
-
-          if (response.data && response.data.user) {
+          const response = await axios.get("/user/me", { withCredentials: true });
+          if (response.data?.user) {
             dispatch(setUser(response.data.user));
           }
         }
       } catch (error) {
-        console.error("Error restoring auth:", error);
+        console.error("Auth restore failed:", error);
         localStorage.removeItem("token");
       }
     };
@@ -163,6 +87,16 @@ const PersistAuth = ({ children }) => {
   }, [dispatch, isAuthenticated]);
 
   return children;
+};
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <PersistAuth>
+        <AppRoutes />
+      </PersistAuth>
+    </BrowserRouter>
+  );
 };
 
 export default App;
