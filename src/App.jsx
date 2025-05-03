@@ -17,6 +17,7 @@ import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
 import { setUser } from "./slice/UserSlice";
+import Connection from "./components/Connection";
 
 // Protected Route component - redirects to login if not authenticated
 const ProtectedRoute = ({ children }) => {
@@ -103,6 +104,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Request />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <ProtectedRoute>
+              <Connection />
             </ProtectedRoute>
           }
         />

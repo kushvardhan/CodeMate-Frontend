@@ -265,7 +265,6 @@ const Request = () => {
                   {req.fromUserId.skills &&
                     req.fromUserId.skills.length > 0 && (
                       <div className="request-card-skills">
-                        <span>Skills:</span>
                         {req.fromUserId.skills.map((skill, index) => (
                           <span className="request-skill-tag" key={index}>
                             {skill}

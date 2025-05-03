@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const navigate = useNavigate();
-
+  const request = useSelector((store)=>store.request || []);
   // Authentication is now handled by the ProtectedRoute component in App.jsx
 
   const [users, setUsers] = useState([]);
@@ -125,6 +126,9 @@ const Home = () => {
     }
   }, [currentIndex, users]);
 
+  useEffect(()=>{
+
+  },[])
   // Pre-calculate next index to avoid state updates during animation
   const nextCardIndex =
     currentIndex < users.length - 1 ? currentIndex + 1 : null;
@@ -912,7 +916,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
               >
-                12
+                {request.length > 0 ? request.length : 0 }
               </motion.p>
             </motion.div>
 
