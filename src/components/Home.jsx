@@ -4,16 +4,38 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
+import { addRequest } from "../slice/RequestSlice";
+import { addConnection } from "../slice/ConnectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "../store/store";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const request = useSelector((store)=>store.request || []);
-  const connection = useSelector((store)=>store.connection || []);
-  // Authentication is now handled by the ProtectedRoute component in App.jsx
+  const requests = useSelector((state) => state.request) || [];
+  const connections = useSelector((state) => state.connection) || [];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [requestRes, connectionRes] = await Promise.all([
+          axios.get("/requests", { withCredentials: true }),
+          axios.get("/connection", { withCredentials: true }),
+        ]);
+
+        if (requestRes.data && Array.isArray(requestRes.data)) {
+          dispatch(addRequest(requestRes.data));
+        }
+
+        if (connectionRes.data && Array.isArray(connectionRes.data)) {
+          dispatch(addConnection(connectionRes.data));
+        }
+      } catch (error) {
+        console.error("Error fetching home data:", error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousCards, setPreviousCards] = useState([]); // Store swiped cards for rewind function
@@ -908,7 +930,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
               >
-                {connection.length > 0 ? connection.length : 0}
+                {connections.length > 0 ? connections.length : 0}
               </motion.p>
             </motion.div>
 
@@ -943,7 +965,7 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
               >
-                {request.length > 0 ? request.length : 0 }
+                {requests.length > 0 ? requests.length : 0 }
               </motion.p>
             </motion.div>
 
