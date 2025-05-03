@@ -87,17 +87,6 @@ const Request = () => {
     return text;
   };
 
-  if (!requests) return <div>Loading...</div>;
-  if (requests.length === 0)
-    return (
-      <div className="no-requests-container">
-        <h1 className="no-requests-message">No connection requests found.</h1>
-        <p className="no-requests-subtext">
-          Check back later for new connection requests.
-        </p>
-      </div>
-    );
-
   return (
     <div className="request-maindiv">
       <SuccessPopup
@@ -168,54 +157,65 @@ const Request = () => {
       <div className="request-container">
         <h1 className="request-title">Requests</h1>
         <div className="request-cards-horizontal">
-          {requests.map((req) => (
-            <div className="request-card-horizontal" key={req._id}>
-              <img
-                src={req.fromUserId.photoUrl}
-                alt={`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}
-                className="request-card-image"
-              />
-              <div className="request-card-content">
-                <h2 className="request-card-name">{`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}</h2>
-                <p className="request-card-about">
-                  {truncateText(req.fromUserId.about, 20)}
-                </p>
-                <div className="request-card-info">
-                  <div className="request-card-age-gender">
-                    <div className="info-item">
-                      <span>Age:</span>
-                      <span>{req.fromUserId.age} years</span>
+          {requests.length === 0 ? (
+            <div className="no-requests-container">
+              <h1 className="no-requests-message">
+                No connection requests found.
+              </h1>
+              <p className="no-requests-subtext">
+                Check back later for new connection requests.
+              </p>
+            </div>
+          ) : (
+            requests.map((req) => (
+              <div className="request-card-horizontal" key={req._id}>
+                <img
+                  src={req.fromUserId.photoUrl}
+                  alt={`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}
+                  className="request-card-image"
+                />
+                <div className="request-card-content">
+                  <h2 className="request-card-name">{`${req.fromUserId.firstName} ${req.fromUserId.lastName}`}</h2>
+                  <p className="request-card-about">
+                    {truncateText(req.fromUserId.about, 20)}
+                  </p>
+                  <div className="request-card-info">
+                    <div className="request-card-age-gender">
+                      <div className="info-item">
+                        <span>Age:</span>
+                        <span>{req.fromUserId.age} years</span>
+                      </div>
+                      <div className="info-item">
+                        {getGenderSymbol(req.fromUserId.gender)}
+                        <span>{req.fromUserId.gender}</span>
+                      </div>
                     </div>
-                    <div className="info-item">
-                      {getGenderSymbol(req.fromUserId.gender)}
-                      <span>{req.fromUserId.gender}</span>
+                    <div className="request-card-skills">
+                      {req.fromUserId.skills.map((skill, index) => (
+                        <span className="request-skill-tag" key={index}>
+                          {skill}
+                        </span>
+                      ))}
                     </div>
-                  </div>
-                  <div className="request-card-skills">
-                    {req.fromUserId.skills.map((skill, index) => (
-                      <span className="request-skill-tag" key={index}>
-                        {skill}
-                      </span>
-                    ))}
                   </div>
                 </div>
+                <div className="request-card-actions">
+                  <button
+                    className="accept-button"
+                    onClick={() => handleRequestAction("accepted", req)}
+                  >
+                    ✓
+                  </button>
+                  <button
+                    className="reject-button"
+                    onClick={() => handleRequestAction("rejected", req)}
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
-              <div className="request-card-actions">
-                <button
-                  className="accept-button"
-                  onClick={() => handleRequestAction("accepted", req)}
-                >
-                  ✓
-                </button>
-                <button
-                  className="reject-button"
-                  onClick={() => handleRequestAction("rejected", req)}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
