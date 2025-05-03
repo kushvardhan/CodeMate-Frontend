@@ -5,7 +5,7 @@ const connectionSlice = createSlice({
   initialState: [],
   reducers: {
     addConnection: (state, action) => {
-      state.push(action.payload);
+      return action.payload; // Replace the state with the new payload
     },
   },
 });

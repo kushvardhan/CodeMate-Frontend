@@ -45,7 +45,7 @@ const Request = () => {
       );
 
       if (status === "accepted") {
-        dispatch(addConnection(request.fromUserId));
+        dispatch(addConnection([request.fromUserId])); // Ensure it's an array
         setPopup({
           isVisible: true,
           message: `You accepted ${request.fromUserId.firstName}'s request.`,
@@ -88,39 +88,19 @@ const Request = () => {
   };
 
   if (!requests) return;
-  if (requests.length === 0) return (
-    <div className="notfound-request">
-      <div className="profile-top-nav-two">
-        <button
-          onClick={() => navigate("/")}
-          className="back-button"
-          aria-label="Go back"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+  if (requests.length === 0)
+    return (
+      <div className="notfound-request">
+        <div className="profile-top-nav-two">
+          <button
+            onClick={() => navigate("/")}
+            className="back-button"
+            aria-label="Go back"
           >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          <span>Home</span>
-        </button>
-        <button
-          onClick={toggleDarkMode}
-          className={`theme-toggle ${darkMode ? "dark" : "light"}`}
-          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {darkMode ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -128,37 +108,58 @@ const Request = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <circle cx="12" cy="12" r="5"></circle>
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+              <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          )}
-        </button>
+            <span>Home</span>
+          </button>
+          <button
+            onClick={toggleDarkMode}
+            className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
+          >
+            {darkMode ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            )}
+          </button>
+        </div>
+        <h1 className="request-title-two">Requests</h1>
+        <div className="no-requests-container">
+          <h1 className="no-requests-message">No connection requests found.</h1>
+          <p className="no-requests-subtext">
+            Check back later for new connection requests.
+          </p>
+        </div>
       </div>
-      <h1 className="request-title-two">Requests</h1>
-      <div className="no-requests-container">
-    <h1 className="no-requests-message">
-      No connection requests found.
-    </h1>
-    <p className="no-requests-subtext">
-      Check back later for new connection requests.
-    </p>
-  </div>
-    </div>
- );
+    );
 
   return (
     <div className="request-maindiv">
