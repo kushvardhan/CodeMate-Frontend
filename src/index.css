@@ -4382,53 +4382,101 @@ pre,
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Navbar adjustments for very small screens (≤ 350px) */
-@media (max-width: 350px) {
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0.5rem;
-    height: 60px;
+/* Mobile Navbar Styles */
+.mobile-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
+  height: 60px;
+  position: relative;
+}
+
+.mobile-navbar-left,
+.mobile-navbar-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px; /* Prevent shrinking */
+}
+
+.mobile-navbar-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-button-mobile {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-svg {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Navbar adjustments for screens between 300px and 500px */
+@media (max-width: 500px) and (min-width: 300px) {
+  .mobile-navbar-container {
+    padding: 0 0.75rem;
   }
 
-  .navbar-left-mobile,
-  .navbar-right-mobile-small {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-  }
-
-  .navbar-center-mobile {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .theme-toggle {
+  .mobile-navbar-left,
+  .mobile-navbar-right {
     width: 36px;
     height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+    min-width: 36px;
   }
 
+  .theme-toggle,
   .menu-button-mobile {
     width: 36px;
     height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
   }
 
   .logo-svg {
@@ -4438,16 +4486,20 @@ pre,
 
   .logo-text {
     font-size: 1.2rem;
-    white-space: nowrap;
   }
 }
 
 /* Adjustments for extra small screens (≤ 320px) */
 @media (max-width: 320px) {
-  .navbar-left-mobile,
-  .navbar-right-mobile-small {
+  .mobile-navbar-container {
+    padding: 0 0.5rem;
+  }
+
+  .mobile-navbar-left,
+  .mobile-navbar-right {
     width: 32px;
     height: 32px;
+    min-width: 32px;
   }
 
   .theme-toggle,
@@ -4466,97 +4518,19 @@ pre,
   }
 }
 
-/* Navbar adjustments for small screens (≤ 500px) */
-@media (max-width: 500px) {
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
-    height: 60px;
-    position: relative;
-  }
-
-  .navbar-left-mobile {
-    display: none; /* Hide theme toggle button in the navbar */
-  }
-
-  .menu-dropdown .theme-toggle {
-    display: flex; /* Show theme toggle inside the menu dropdown */
-    margin: 0.5rem 0;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .navbar-center-mobile {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .navbar-right-mobile {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: auto;
-  }
-
-  .theme-toggle {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin-right: 0.5rem; /* Add spacing */
-  }
-
-  .menu-button-mobile {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-  }
-
-  .logo-svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  .logo-text {
-    font-size: 1.2rem;
-    white-space: nowrap;
-  }
+/* Additional navbar styles */
+.navbar-right-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
-/* Navbar adjustments for very small screens (≤ 300px) */
-@media (max-width: 300px) {
-  .navbar-container {
-    padding: 0 0.5rem;
-  }
-
-  .navbar-left-mobile {
-    display: none; /* Hide theme toggle button */
-  }
-
-  .menu-dropdown .theme-toggle {
-    display: flex; /* Show theme toggle inside menu dropdown */
-    margin: 0.5rem 0;
-  }
-
-  .logo-svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .logo-text {
-    font-size: 1rem;
-  }
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }

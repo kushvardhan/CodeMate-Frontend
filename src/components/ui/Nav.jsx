@@ -331,202 +331,120 @@ const Nav = () => {
 
         {/* Mobile Layout */}
         {isMobile && (
-          <>
-            {/* For screens 400px and wider */}
-            {!isVerySmallScreen && (
-              <>
-                {/* Toggle button on left */}
-                <div className="navbar-left-mobile">
-                  <button
-                    onClick={toggleDarkMode}
-                    className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+          <div className="mobile-navbar-container">
+            {/* Theme Toggle on Left */}
+            <div className="mobile-navbar-left">
+              <button
+                onClick={toggleDarkMode}
+                className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+                aria-label="Toggle theme"
+              >
+                {darkMode ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    {darkMode ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                      </svg>
-                    )}
-                  </button>
-                </div>
-
-                {/* CodeMate in center */}
-                <div className="navbar-center-mobile">
-                  <Link to="/" className="logo-link">
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 512 512"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="logo-svg"
-                    >
-                      <g
-                        stroke={darkMode ? "#818CF8" : "#4F46E5"}
-                        strokeWidth="24"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M160 180L110 256L160 332" />
-                        <path d="M352 180L402 256L352 332" />
-                        <path d="M280 160L232 352" />
-                      </g>
-                      <g>
-                        <circle cx="180" cy="256" r="30" fill="#38BDF8" />
-                        <circle cx="332" cy="256" r="30" fill="#E879F9" />
-                        <path
-                          d="M210 256H302"
-                          stroke="white"
-                          strokeWidth="8"
-                          strokeLinecap="round"
-                          strokeDasharray="12 8"
-                        />
-                        <path
-                          d="M256 256m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0"
-                          fill="white"
-                        />
-                      </g>
-                    </svg>
-                    <span className="logo-text">CodeMate</span>
-                  </Link>
-                </div>
-
-                {/* Menu hamburger on right */}
-                <div className="navbar-right-mobile">
-                  <div
-                    className={`menu-dropdown ${isMenuOpen ? "open" : ""}`}
-                    ref={menuRef}
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    <div
-                      tabIndex={0}
-                      role="button"
-                      className="menu-button-mobile"
-                      onClick={toggleMenu}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="menu-icon"
-                      >
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
 
-            {/* For screens smaller than 400px */}
-            {isVerySmallScreen && (
-              <>
-                {/* CodeMate in center */}
-                <div className="navbar-center-mobile">
-                  <Link to="/" className="logo-link">
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 512 512"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="logo-svg"
-                    >
-                      <g
-                        stroke={darkMode ? "#818CF8" : "#4F46E5"}
-                        strokeWidth="24"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M160 180L110 256L160 332" />
-                        <path d="M352 180L402 256L352 332" />
-                        <path d="M280 160L232 352" />
-                      </g>
-                      <g>
-                        <circle cx="180" cy="256" r="30" fill="#38BDF8" />
-                        <circle cx="332" cy="256" r="30" fill="#E879F9" />
-                        <path
-                          d="M210 256H302"
-                          stroke="white"
-                          strokeWidth="8"
-                          strokeLinecap="round"
-                          strokeDasharray="12 8"
-                        />
-                        <path
-                          d="M256 256m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0"
-                          fill="white"
-                        />
-                      </g>
-                    </svg>
-                    <span className="logo-text">CodeMate</span>
-                  </Link>
-                </div>
-
-                {/* Right side container for toggle and menu */}
-                <div className="navbar-right-mobile-small">
-                  {/* Menu hamburger below toggle */}
-                  <div
-                    className={`menu-dropdown ${isMenuOpen ? "open" : ""}`}
-                    ref={menuRef}
+            {/* Logo in Center */}
+            <div className="mobile-navbar-center">
+              <Link to="/" className="logo-link">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 512 512"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="logo-svg"
+                >
+                  <g
+                    stroke={darkMode ? "#818CF8" : "#4F46E5"}
+                    strokeWidth="24"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    <div
-                      tabIndex={0}
-                      role="button"
-                      className="menu-button-mobile"
-                      onClick={toggleMenu}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="menu-icon"
-                      >
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                      </svg>
-                    </div>
-                  </div>
+                    <path d="M160 180L110 256L160 332" />
+                    <path d="M352 180L402 256L352 332" />
+                    <path d="M280 160L232 352" />
+                  </g>
+                  <g>
+                    <circle cx="180" cy="256" r="30" fill="#38BDF8" />
+                    <circle cx="332" cy="256" r="30" fill="#E879F9" />
+                    <path
+                      d="M210 256H302"
+                      stroke="white"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeDasharray="12 8"
+                    />
+                    <path
+                      d="M256 256m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0"
+                      fill="white"
+                    />
+                  </g>
+                </svg>
+                <span className="logo-text">CodeMate</span>
+              </Link>
+            </div>
+
+            {/* Menu Button on Right */}
+            <div className="mobile-navbar-right">
+              <div
+                className={`menu-dropdown ${isMenuOpen ? "open" : ""}`}
+                ref={menuRef}
+              >
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="menu-button-mobile"
+                  onClick={toggleMenu}
+                  aria-label="Toggle menu"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="menu-icon"
+                  >
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
 
             {/* Dropdown menu (shared for both layouts) */}
             {isMenuOpen && (
@@ -731,7 +649,7 @@ const Nav = () => {
                 </motion.li>
               </motion.ul>
             )}
-          </>
+          </div>
         )}
       </div>
       {/* Spacer to prevent content from being hidden under the navbar */}

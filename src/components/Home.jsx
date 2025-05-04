@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import axios from "../api/axios";
 import { addConnection } from "../slice/ConnectionSlice";
 import { addRequest } from "../slice/RequestSlice";
@@ -178,7 +178,7 @@ const Home = () => {
   const nextCardIndex =
     currentIndex < users.length - 1 ? currentIndex + 1 : null;
 
-  const handleSwipeLeft = () => {
+  const handleSwipeLeft = async () => {
     console.log("Swiped left (pass)");
     if (isCardSwiping) return;
 
@@ -191,6 +191,23 @@ const Home = () => {
       ...prev,
       { card: currentCard, direction: "left" },
     ]);
+
+    // Send "ignored" status to the API
+    try {
+      const userId = currentCard.id;
+      console.log(`Ignored user with ID: ${userId}`);
+
+      // Make API call to update status
+      await axios.post(
+        `/request/send/ignored/${userId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Error sending ignored status:", error);
+    }
 
     // Ensure the next card is properly positioned in the center above all cards
     setTimeout(() => {
@@ -227,7 +244,7 @@ const Home = () => {
     }, 300); // Reduced timeout for quicker positioning
   };
 
-  const handleSwipeRight = () => {
+  const handleSwipeRight = async () => {
     console.log("Swiped right (like)");
     if (isCardSwiping) return;
 
@@ -240,6 +257,23 @@ const Home = () => {
       ...prev,
       { card: currentCard, direction: "right" },
     ]);
+
+    // Send "interested" status to the API
+    try {
+      const userId = currentCard.id;
+      console.log(`Interested in user with ID: ${userId}`);
+
+      // Make API call to update status
+      await axios.post(
+        `/request/send/interested/${userId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Error sending interested status:", error);
+    }
 
     // Ensure the next card is properly positioned in the center above all cards
     setTimeout(() => {
@@ -277,7 +311,7 @@ const Home = () => {
   };
 
   // Rewind function to bring back the last card
-  const handleRewind = () => {
+  const handleRewind = async () => {
     // Check if there are any previous cards
     if (previousCards.length === 0) {
       console.log("No cards to rewind");
@@ -295,6 +329,23 @@ const Home = () => {
       "Direction was:",
       lastCard.direction
     );
+
+    // If we're rewinding a card, we should cancel the previous action
+    try {
+      const userId = lastCard.card.id;
+      console.log(`Canceling previous action for user with ID: ${userId}`);
+
+      // Make API call to cancel the previous action
+      await axios.post(
+        `/request/cancel/${userId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Error canceling previous action:", error);
+    }
 
     // Remove the last card from previousCards
     setPreviousCards((prev) => prev.slice(0, -1));
@@ -896,35 +947,35 @@ const Home = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
             >
-              <Link to='/connections'>
-              <div className="stats-icon connections-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              <Link to="/connections">
+                <div className="stats-icon connections-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"></path>
+                    <path d="M23 14h-4a2 2 0 0 0-2 2v4"></path>
+                    <path d="M23 10V4a2 2 0 0 0-2-2h-6"></path>
+                    <path d="M12 12L6 6"></path>
+                    <path d="M6 10V6h4"></path>
+                  </svg>
+                </div>
+                <h3 className="stats-title">Connections</h3>
+                <motion.p
+                  className="stats-value"
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
                 >
-                  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"></path>
-                  <path d="M23 14h-4a2 2 0 0 0-2 2v4"></path>
-                  <path d="M23 10V4a2 2 0 0 0-2-2h-6"></path>
-                  <path d="M12 12L6 6"></path>
-                  <path d="M6 10V6h4"></path>
-                </svg>
-              </div>
-              <h3 className="stats-title">Connections</h3>
-              <motion.p
-                className="stats-value"
-                initial={{ scale: 0.5 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
-              >
-                {connections.length}
-              </motion.p>
+                  {connections.length}
+                </motion.p>
               </Link>
             </motion.div>
 
@@ -934,34 +985,35 @@ const Home = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
             >
-              <Link to='/requests'>
-              <div className="stats-icon pending-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              <Link to="/requests">
+                <div className="stats-icon pending-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <h3 className="stats-title">Pending</h3>
+                <motion.p
+                  className="stats-value"
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
                 >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <h3 className="stats-title">Pending</h3>
-              <motion.p
-                className="stats-value"
-                initial={{ scale: 0.5 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
-              >
-                {requests.length}
-              </motion.p></Link>
+                  {requests.length}
+                </motion.p>
+              </Link>
             </motion.div>
 
             <motion.div
@@ -995,7 +1047,6 @@ const Home = () => {
                 8
               </motion.p>
             </motion.div>
-
           </motion.div>
         </div>
       </div>
