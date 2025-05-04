@@ -460,7 +460,10 @@ const Connection = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() =>
                     navigate(`/user/info/${connection._id}`, {
-                      state: { fromConnection: true },
+                      state: {
+                        fromConnection: true,
+                        userData: connection,
+                      },
                     })
                   }
                 >

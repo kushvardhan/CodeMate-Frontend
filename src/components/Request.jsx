@@ -473,7 +473,11 @@ const Request = () => {
                   className="request-action-button view-profile"
                   onClick={() =>
                     navigate(`/user/info/${req.fromUserId._id}`, {
-                      state: { fromRequest: true, requestId: req._id },
+                      state: {
+                        fromRequest: true,
+                        requestId: req._id,
+                        userData: req.fromUserId,
+                      },
                     })
                   }
                   whileHover={{ scale: 1.05 }}

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { useDispatch } from "react-redux";
-import { addConnection} from "../slice/ConnectionSlice";
+import { addConnection } from "../slice/ConnectionSlice";
 import { removeRequest } from "../slice/RequestSlice";
 import SuccessPopup from "./ui/SuccessPopup";
 
@@ -57,13 +57,16 @@ const UserInfo = () => {
 
         // If we're coming from connections, we can try to fetch from connections list
         if (fromConnection) {
-          const connectionsResponse = await axios.get("/user/request/connections", {
-            withCredentials: true,
-          });
+          const connectionsResponse = await axios.get(
+            "/user/request/connections",
+            {
+              withCredentials: true,
+            }
+          );
 
           if (connectionsResponse.data && connectionsResponse.data.data) {
             const foundUser = connectionsResponse.data.data.find(
-              connection => connection._id === userId
+              (connection) => connection._id === userId
             );
 
             if (foundUser) {
@@ -82,7 +85,7 @@ const UserInfo = () => {
 
           if (requestsResponse.data && requestsResponse.data.data) {
             const foundRequest = requestsResponse.data.data.find(
-              request => request.fromUserId._id === userId
+              (request) => request.fromUserId._id === userId
             );
 
             if (foundRequest) {
@@ -99,10 +102,16 @@ const UserInfo = () => {
           withCredentials: true,
         });
 
-        if (profileResponse.data && profileResponse.data.data && profileResponse.data.data._id === userId) {
+        if (
+          profileResponse.data &&
+          profileResponse.data.data &&
+          profileResponse.data.data._id === userId
+        ) {
           setUser(profileResponse.data.data);
         } else {
-          setError("User information not found. The user may not be in your connections or requests.");
+          setError(
+            "User information not found. The user may not be in your connections or requests."
+          );
         }
       } catch (err) {
         console.error("Error fetching user info:", err);
@@ -121,28 +130,43 @@ const UserInfo = () => {
   }, [userId, fromConnection, fromRequest, location.state]);
 
   const handleAcceptRequest = async () => {
-    if (!requestId) return;
+    if (!requestId) {
+      setPopup({
+        isVisible: true,
+        message:
+          "Request ID not found. Please try again from the requests page.",
+        color: "red",
+      });
+      return;
+    }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `/request/review/accepted/${requestId}`,
         {},
         { withCredentials: true }
       );
 
-      dispatch(addConnection([user]));
-      dispatch(removeRequest(requestId));
+      if (response.status === 200 || response.status === 201) {
+        // Only update the store if the API call was successful
+        if (user) {
+          dispatch(addConnection([user]));
+          dispatch(removeRequest(requestId));
+        }
 
-      setPopup({
-        isVisible: true,
-        message: `You accepted ${user.firstName}'s request.`,
-        color: "green",
-      });
+        setPopup({
+          isVisible: true,
+          message: `You accepted ${user?.firstName || "this user"}'s request.`,
+          color: "green",
+        });
 
-      // Navigate back to requests page after a delay
-      setTimeout(() => {
-        navigate("/requests");
-      }, 2000);
+        // Navigate back to requests page after a delay
+        setTimeout(() => {
+          navigate("/requests");
+        }, 2000);
+      } else {
+        throw new Error("Failed to accept request");
+      }
     } catch (err) {
       console.error("Error accepting request:", err);
       setPopup({
@@ -154,27 +178,40 @@ const UserInfo = () => {
   };
 
   const handleRejectRequest = async () => {
-    if (!requestId) return;
+    if (!requestId) {
+      setPopup({
+        isVisible: true,
+        message:
+          "Request ID not found. Please try again from the requests page.",
+        color: "red",
+      });
+      return;
+    }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `/request/review/rejected/${requestId}`,
         {},
         { withCredentials: true }
       );
 
-      dispatch(removeRequest(requestId));
+      if (response.status === 200 || response.status === 201) {
+        // Only update the store if the API call was successful
+        dispatch(removeRequest(requestId));
 
-      setPopup({
-        isVisible: true,
-        message: `You rejected ${user.firstName}'s request.`,
-        color: "red",
-      });
+        setPopup({
+          isVisible: true,
+          message: `You rejected ${user?.firstName || "this user"}'s request.`,
+          color: "red",
+        });
 
-      // Navigate back to requests page after a delay
-      setTimeout(() => {
-        navigate("/requests");
-      }, 2000);
+        // Navigate back to requests page after a delay
+        setTimeout(() => {
+          navigate("/requests");
+        }, 2000);
+      } else {
+        throw new Error("Failed to reject request");
+      }
     } catch (err) {
       console.error("Error rejecting request:", err);
       setPopup({
@@ -221,7 +258,9 @@ const UserInfo = () => {
           <button
             onClick={toggleDarkMode}
             className={`theme-toggle ${darkMode ? "dark" : "light"}`}
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {darkMode ? (
               <svg
@@ -293,7 +332,9 @@ const UserInfo = () => {
           <button
             onClick={toggleDarkMode}
             className={`theme-toggle ${darkMode ? "dark" : "light"}`}
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {darkMode ? (
               <svg
@@ -438,7 +479,9 @@ const UserInfo = () => {
           <div className="user-info-image-container">
             <img
               src={user?.photoUrl || "/default-avatar.png"}
-              alt={`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
+              alt={`${user?.firstName || "Unknown"} ${
+                user?.lastName || "User"
+              }`}
               className="user-info-image"
             />
           </div>
@@ -446,8 +489,12 @@ const UserInfo = () => {
             {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
           </h1>
           <div className="user-info-meta">
-            {user?.age && <span className="user-info-age">{user.age} years</span>}
-            {user?.gender && <span className="user-info-gender">{user.gender}</span>}
+            {user?.age && (
+              <span className="user-info-age">{user.age} years</span>
+            )}
+            {user?.gender && (
+              <span className="user-info-gender">{user.gender}</span>
+            )}
             {user?.location && (
               <span className="user-info-location">
                 <svg
@@ -472,7 +519,9 @@ const UserInfo = () => {
 
         <motion.div className="user-info-section" variants={itemVariants}>
           <h2 className="user-info-section-title">About</h2>
-          <p className="user-info-about">{user?.about || "No information provided."}</p>
+          <p className="user-info-about">
+            {user?.about || "No information provided."}
+          </p>
         </motion.div>
 
         {user?.skills && user.skills.length > 0 && (
