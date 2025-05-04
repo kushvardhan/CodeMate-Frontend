@@ -4382,79 +4382,181 @@ pre,
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Base styles for the navigation bar */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-  height: 60px;
-}
-
-/* Logo styling */
-.navbar-logo {
-  flex: 1;
-  text-align: center;
-}
-
-/* Theme toggle button styling */
-.theme-toggle {
-  order: 1;
-}
-
-/* Hamburger menu button styling */
-.menu-toggle {
-  order: 3;
-}
-
-/* Media query for screens less than 500px */
-@media (max-width: 500px) {
-  .navbar {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .theme-toggle {
-    order: 1;
-    margin-right: auto;
-  }
-
-  .navbar-logo {
-    order: 2;
-    flex: none;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .menu-toggle {
-    order: 3;
-    margin-left: auto;
-  }
-}
-
-/* Media query for screens less than 350px */
+/* Navbar adjustments for very small screens (≤ 350px) */
 @media (max-width: 350px) {
-  .navbar {
-    flex-direction: row;
+  .navbar-container {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    height: 60px;
+  }
+
+  .navbar-left-mobile,
+  .navbar-right-mobile-small {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  .navbar-center-mobile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .theme-toggle {
-    order: 1;
-    margin-right: auto;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
 
-  .navbar-logo {
-    order: 2;
-    flex: none;
+  .menu-button-mobile {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+}
+
+/* Adjustments for extra small screens (≤ 320px) */
+@media (max-width: 320px) {
+  .navbar-left-mobile,
+  .navbar-right-mobile-small {
+    width: 32px;
+    height: 32px;
+  }
+
+  .theme-toggle,
+  .menu-button-mobile {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+  }
+}
+
+/* Navbar adjustments for small screens (≤ 500px) */
+@media (max-width: 500px) {
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 60px;
+    position: relative;
+  }
+
+  .navbar-left-mobile {
+    display: none; /* Hide theme toggle button in the navbar */
+  }
+
+  .menu-dropdown .theme-toggle {
+    display: flex; /* Show theme toggle inside the menu dropdown */
+    margin: 0.5rem 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .navbar-center-mobile {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .menu-toggle {
-    order: 3;
-    margin-left: auto;
+  .navbar-right-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+  }
+
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 0.5rem; /* Add spacing */
+  }
+
+  .menu-button-mobile {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+}
+
+/* Navbar adjustments for very small screens (≤ 300px) */
+@media (max-width: 300px) {
+  .navbar-container {
+    padding: 0 0.5rem;
+  }
+
+  .navbar-left-mobile {
+    display: none; /* Hide theme toggle button */
+  }
+
+  .menu-dropdown .theme-toggle {
+    display: flex; /* Show theme toggle inside menu dropdown */
+    margin: 0.5rem 0;
+  }
+
+  .logo-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo-text {
+    font-size: 1rem;
   }
 }
