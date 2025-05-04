@@ -4353,11 +4353,11 @@ pre,
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
 
-.notfound-request{
-  width:100%;
-  height:100%;
+.notfound-request {
+  width: 100%;
+  height: 100%;
 }
-.profile-top-nav-two{
+.profile-top-nav-two {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -4369,16 +4369,92 @@ pre,
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.request-title-two{
+.request-title-two {
   font-size: var(--text-4xl);
   font-weight: 700;
   margin-bottom: 2rem;
-  margin-top:4rem;
+  margin-top: 4rem;
   color: var(--color-foreground);
-  
 }
 
 .dark-mode .profile-top-nav-two {
   background-color: rgba(15, 23, 42, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Base styles for the navigation bar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: 60px;
+}
+
+/* Logo styling */
+.navbar-logo {
+  flex: 1;
+  text-align: center;
+}
+
+/* Theme toggle button styling */
+.theme-toggle {
+  order: 1;
+}
+
+/* Hamburger menu button styling */
+.menu-toggle {
+  order: 3;
+}
+
+/* Media query for screens less than 500px */
+@media (max-width: 500px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .theme-toggle {
+    order: 1;
+    margin-right: auto;
+  }
+
+  .navbar-logo {
+    order: 2;
+    flex: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .menu-toggle {
+    order: 3;
+    margin-left: auto;
+  }
+}
+
+/* Media query for screens less than 350px */
+@media (max-width: 350px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .theme-toggle {
+    order: 1;
+    margin-right: auto;
+  }
+
+  .navbar-logo {
+    order: 2;
+    flex: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .menu-toggle {
+    order: 3;
+    margin-left: auto;
+  }
 }

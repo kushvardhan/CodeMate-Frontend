@@ -1,34 +1,33 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
 // Create the theme context
 export const ThemeContext = createContext();
 
 // Create a provider component
 export const ThemeProvider = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
 
   // Check for user's preferred color scheme on initial load
   useEffect(() => {
     // Check if there's a saved preference in localStorage
-    const savedTheme = localStorage.getItem('theme');
-    
+    const savedTheme = localStorage.getItem("theme");
+
     if (savedTheme) {
-      setDarkMode(savedTheme === 'dark');
+      setDarkMode(savedTheme === "dark");
     } else {
-      // If no saved preference, use system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setDarkMode(prefersDark);
+      // If no saved preference, default to dark mode
+      setDarkMode(true);
     }
   }, []);
 
   // Apply dark mode class to body whenever darkMode changes
   useEffect(() => {
     if (darkMode) {
-      document.body.classList.add('dark-mode');
-      localStorage.setItem('theme', 'dark');
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
     } else {
-      document.body.classList.remove('dark-mode');
-      localStorage.setItem('theme', 'light');
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
 
@@ -49,7 +48,7 @@ export const ThemeProvider = ({ children }) => {
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
