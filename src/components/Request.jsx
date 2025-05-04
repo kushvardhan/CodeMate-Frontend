@@ -71,7 +71,7 @@ const Request = () => {
   const handleRequestAction = async (status, request) => {
     try {
       await axios.post(
-        `http://localhost:4000/request/review/${status}/${request._id}`,
+        `/request/review/${status}/${request._id}`,
         {},
         { withCredentials: true }
       );
