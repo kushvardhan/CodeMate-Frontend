@@ -479,7 +479,10 @@ const Nav = () => {
                       className={`theme-toggle-in-menu ${
                         darkMode ? "dark" : "light"
                       }`}
-                      onClick={toggleDarkMode}
+                      onClick={() => {
+                        toggleDarkMode();
+                        setIsMenuOpen(false); // Close menu after toggle
+                      }}
                       aria-label={
                         darkMode
                           ? "Switch to light mode"
@@ -535,7 +538,7 @@ const Nav = () => {
                     delay: 0.1,
                   }}
                 >
-                  <Link to="/profile">
+                  <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -563,7 +566,7 @@ const Nav = () => {
                     delay: 0.2,
                   }}
                 >
-                  <Link to="/connections">
+                  <Link to="/connections" onClick={() => setIsMenuOpen(false)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -593,7 +596,7 @@ const Nav = () => {
                     delay: 0.3,
                   }}
                 >
-                  <Link to="/requests">
+                  <Link to="/requests" onClick={() => setIsMenuOpen(false)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -624,6 +627,9 @@ const Nav = () => {
                   <a
                     onClick={async () => {
                       try {
+                        // Close the menu
+                        setIsMenuOpen(false);
+
                         // Call the backend logout endpoint to clear cookies
                         await axios.post(
                           "/logout",
