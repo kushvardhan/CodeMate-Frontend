@@ -110,7 +110,7 @@ const Request = () => {
     }
   };
 
-  const truncateText = (text, wordLimit) => {
+  const truncateText = (text, wordLimit = 10) => {
     if (!text) return ""; // Return an empty string if text is undefined or null
     const words = text.split(" ");
     if (words.length > wordLimit) {
@@ -448,20 +448,20 @@ const Request = () => {
 
                 {req.fromUserId.about && (
                   <p className="request-card-about">
-                    {truncateText(req.fromUserId.about, 100)}
+                    {truncateText(req.fromUserId.about, 10)}
                   </p>
                 )}
 
                 {req.fromUserId.skills && req.fromUserId.skills.length > 0 && (
                   <div className="request-card-skills">
-                    {req.fromUserId.skills.slice(0, 3).map((skill, index) => (
+                    {req.fromUserId.skills.slice(0, 2).map((skill, index) => (
                       <span className="request-skill-tag" key={index}>
                         {skill}
                       </span>
                     ))}
-                    {req.fromUserId.skills.length > 3 && (
+                    {req.fromUserId.skills.length > 2 && (
                       <span className="request-skill-more">
-                        +{req.fromUserId.skills.length - 3}
+                        +{req.fromUserId.skills.length - 2}
                       </span>
                     )}
                   </div>
@@ -470,15 +470,19 @@ const Request = () => {
 
               <div className="request-card-actions">
                 <motion.button
-                  className="request-action-button accept"
-                  onClick={() => handleRequestAction("accepted", req)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  className="request-action-button view-profile"
+                  onClick={() =>
+                    navigate(`/user/info/${req.fromUserId._id}`, {
+                      state: { fromRequest: true, requestId: req._id },
+                    })
+                  }
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -486,32 +490,56 @@ const Request = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <polyline points="20 6 9 17 4 12"></polyline>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
                   </svg>
-                  <span>Accept</span>
+                  <span>View Profile</span>
                 </motion.button>
-                <motion.button
-                  className="request-action-button reject"
-                  onClick={() => handleRequestAction("rejected", req)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <div className="request-quick-actions">
+                  <motion.button
+                    className="request-action-button accept"
+                    onClick={() => handleRequestAction("accepted", req)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                  <span>Decline</span>
-                </motion.button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Accept</span>
+                  </motion.button>
+                  <motion.button
+                    className="request-action-button reject"
+                    onClick={() => handleRequestAction("rejected", req)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span>Decline</span>
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           ))}

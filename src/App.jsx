@@ -18,7 +18,8 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import { setUser, clearUser } from "./slice/UserSlice.js";
+import UserInfo from './components/UserInfo';
+import { clearUser, setUser } from "./slice/UserSlice.js";
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -98,6 +99,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Connection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/info/:userId"
+          element={
+            <ProtectedRoute>
+              <UserInfo />
             </ProtectedRoute>
           }
         />

@@ -1,5 +1,5 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import {motion} from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
@@ -75,7 +75,7 @@ const Connection = () => {
     }
   };
 
-  const truncateText = (text, wordLimit) => {
+  const truncateText = (text, wordLimit = 10) => {
     if (!text) return ""; // Return an empty string if text is undefined or null
     const words = text.split(" ");
     if (words.length > wordLimit) {
@@ -412,20 +412,20 @@ const Connection = () => {
 
                 {connection.about && (
                   <p className="connection-card-about">
-                    {truncateText(connection.about, 20)}
+                    {truncateText(connection.about, 10)}
                   </p>
                 )}
 
                 {connection.skills && connection.skills.length > 0 && (
                   <div className="connection-card-skills">
-                    {connection.skills.slice(0, 4).map((skill, index) => (
+                    {connection.skills.slice(0, 2).map((skill, index) => (
                       <span className="connection-skill-tag" key={index}>
                         {skill}
                       </span>
                     ))}
-                    {connection.skills.length > 4 && (
+                    {connection.skills.length > 2 && (
                       <span className="connection-skill-more">
-                        +{connection.skills.length - 4}
+                        +{connection.skills.length - 2}
                       </span>
                     )}
                   </div>
@@ -458,7 +458,11 @@ const Connection = () => {
                   className="connection-action-button profile"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => alert("View profile feature coming soon!")}
+                  onClick={() =>
+                    navigate(`/user/info/${connection._id}`, {
+                      state: { fromConnection: true },
+                    })
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

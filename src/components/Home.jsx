@@ -535,19 +535,19 @@ const Home = () => {
     "⨉",
     "≔",
     "≅",
-    "!",
+    "",
     "</>",
-    "≠",
+    "* *\*",
     "!==",
     "#",
     "$",
-    "⋈",
+    "print(",
     "₰",
     "૱",
-    "=>",
+    "ctrl+C",
     "⩽",
     "⧺",
-    "≈",
+    "ctrl+V",
     "∑",
     "func(..",
     "∂",
@@ -558,9 +558,7 @@ const Home = () => {
     "∩",
     "∪",
     "∴",
-    "∵",
     "∼",
-    "≡",
     "⊆",
     "⊇",
     "⊂",
@@ -617,7 +615,7 @@ const Home = () => {
     name: symbol,
     color: symbolColors[i % symbolColors.length],
     position: allPositions[i % allPositions.length],
-    size: `${Math.random() * 20 + 15}px`, // Random size between 15px and 35px
+    size: `${Math.random() * 20 + 12}px`, // Random size between 15px and 35px
     animationDelay: `${Math.random() * 2}s`, // Random delay between 0s and 2s
   }));
 
