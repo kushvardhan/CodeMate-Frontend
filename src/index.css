@@ -4384,18 +4384,19 @@ pre,
 
 /* Mobile Navbar Styles */
 .mobile-navbar-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
   align-items: center;
   width: 100%;
   padding: 0 1rem;
   height: 60px;
   position: relative;
+  gap: 10px; /* Add gap to prevent overlap */
 }
 
-.mobile-navbar-left,
-.mobile-navbar-right {
-  flex: 0 0 auto;
+.mobile-navbar-left {
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4405,14 +4406,22 @@ pre,
 }
 
 .mobile-navbar-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  grid-column: 2;
+  justify-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.mobile-navbar-right {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px; /* Prevent shrinking */
 }
 
 .theme-toggle {
@@ -4464,6 +4473,7 @@ pre,
 @media (max-width: 500px) and (min-width: 300px) {
   .mobile-navbar-container {
     padding: 0 0.75rem;
+    grid-template-columns: 36px 1fr 36px;
   }
 
   .mobile-navbar-left,
@@ -4493,6 +4503,7 @@ pre,
 @media (max-width: 320px) {
   .mobile-navbar-container {
     padding: 0 0.5rem;
+    grid-template-columns: 32px 1fr 32px;
   }
 
   .mobile-navbar-left,
@@ -4524,6 +4535,27 @@ pre,
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+/* Dropdown menu positioning */
+.menu-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  z-index: 100;
+  width: max-content;
+  min-width: 150px;
+}
+
+/* Mobile dropdown menu specific positioning */
+.mobile-navbar-right .dropdown-menu {
+  right: 0;
+  top: 45px;
 }
 
 .theme-toggle {

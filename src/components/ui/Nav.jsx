@@ -19,8 +19,8 @@ const Nav = () => {
   // Check if mobile and very small screen based on window width
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 500);
-      setIsVerySmallScreen(window.innerWidth <= 300); // Update for very small screens
+      setIsMobile(window.innerWidth <= 768);
+      setIsVerySmallScreen(window.innerWidth <= 320); // Update for very small screens
     };
 
     // Initial check
