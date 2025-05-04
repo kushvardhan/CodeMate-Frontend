@@ -13,27 +13,42 @@ const Home = () => {
   const requests = useSelector((state) => state.request) || [];
   const connections = useSelector((state) => state.connection) || [];
 
+  // Fetch requests and connections data immediately when component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [requestRes, connectionRes] = await Promise.all([
-          axios.get("/requests", { withCredentials: true }),
-          axios.get("/connection", { withCredentials: true }),
+        const [requestsResponse, connectionsResponse] = await Promise.all([
+          axios.get("/user/request/received", { withCredentials: true }),
+          axios.get("/user/request/connections", { withCredentials: true }),
         ]);
 
-        if (requestRes.data && Array.isArray(requestRes.data)) {
-          dispatch(addRequest(requestRes.data));
+        console.log("Requests data:", requestsResponse.data);
+        console.log("Connections data:", connectionsResponse.data);
+
+        if (requestsResponse.data && requestsResponse.data.data) {
+          dispatch(addRequest(requestsResponse.data.data));
+        } else if (requestsResponse.data) {
+          dispatch(addRequest(requestsResponse.data));
         }
 
-        if (connectionRes.data && Array.isArray(connectionRes.data)) {
-          dispatch(addConnection(connectionRes.data));
+        if (connectionsResponse.data && connectionsResponse.data.data) {
+          dispatch(addConnection(connectionsResponse.data.data));
+        } else if (connectionsResponse.data) {
+          dispatch(addConnection(connectionsResponse.data));
         }
       } catch (error) {
         console.error("Error fetching home data:", error);
       }
     };
 
+    // Fetch data immediately when component mounts
     fetchData();
+
+    // Set up interval to refresh data every 10 seconds for real-time updates
+    const intervalId = setInterval(fetchData, 10000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
   }, [dispatch]);
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,28 +58,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [requestsResponse, connectionsResponse] = await Promise.all([
-          axios.get("/user/request/received", { withCredentials: true }),
-          axios.get("/user/connections", { withCredentials: true }),
-        ]);
-
-        if (requestsResponse.data) {
-          dispatch(addRequest(requestsResponse.data));
-        }
-
-        if (connectionsResponse.data) {
-          dispatch(addConnection(connectionsResponse.data));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [dispatch]);
+  // This useEffect has been consolidated with the one above
 
   useEffect(() => {
     // Fetch users from the backend
@@ -542,7 +536,7 @@ const Home = () => {
     "≔",
     "≅",
     "!",
-    "?",
+    "</>",
     "≠",
     "!==",
     "#",
@@ -557,7 +551,7 @@ const Home = () => {
     "⧺",
     "≈",
     "∑",
-    "∫",
+    "func(..",
     "∂",
     "∞",
     "⊕",
