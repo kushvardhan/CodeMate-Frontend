@@ -16,11 +16,11 @@ const Nav = () => {
   const [isVerySmallScreen, setIsVerySmallScreen] = useState(false); // Track very small screens
   const menuRef = useRef(null);
 
-  // Check if mobile and very small screen based on window width
+  // Check if mobile and screen sizes based on window width
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
-      setIsVerySmallScreen(window.innerWidth <= 320); // Update for very small screens
+      setIsVerySmallScreen(window.innerWidth <= 500); // Consider screens <= 500px as very small
     };
 
     // Initial check
@@ -332,45 +332,52 @@ const Nav = () => {
         {/* Mobile Layout */}
         {isMobile && (
           <div className="mobile-navbar-container">
-            {/* Theme Toggle on Left */}
-            <div className="mobile-navbar-left">
-              <button
-                onClick={toggleDarkMode}
-                className={`theme-toggle ${darkMode ? "dark" : "light"}`}
-                aria-label="Toggle theme"
-              >
-                {darkMode ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                  </svg>
-                )}
-              </button>
-            </div>
+            {/* Theme Toggle on Left - Only visible on screens > 500px */}
+            {!isVerySmallScreen && (
+              <div className="mobile-navbar-left">
+                <button
+                  onClick={toggleDarkMode}
+                  className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+                  aria-label="Toggle theme"
+                >
+                  {darkMode ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="5"></circle>
+                      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* Empty div for small screens to maintain grid layout */}
+            {isVerySmallScreen && (
+              <div className="mobile-navbar-left-empty"></div>
+            )}
 
             {/* Logo in Center */}
             <div className="mobile-navbar-center">
@@ -455,6 +462,7 @@ const Nav = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
+                {/* Always show theme toggle in dropdown for small screens */}
                 {isVerySmallScreen && (
                   <motion.li
                     initial={{ opacity: 0, x: -20 }}
@@ -465,9 +473,12 @@ const Nav = () => {
                       damping: 20,
                       delay: 0.1,
                     }}
+                    className="theme-toggle-menu-item"
                   >
                     <button
-                      className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+                      className={`theme-toggle-in-menu ${
+                        darkMode ? "dark" : "light"
+                      }`}
                       onClick={toggleDarkMode}
                       aria-label={
                         darkMode
@@ -476,34 +487,40 @@ const Nav = () => {
                       }
                     >
                       {darkMode ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <circle cx="12" cy="12" r="5"></circle>
-                          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                        </svg>
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                          </svg>
+                          <span>Light Mode</span>
+                        </>
                       ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                          </svg>
+                          <span>Dark Mode</span>
+                        </>
                       )}
                     </button>
                   </motion.li>

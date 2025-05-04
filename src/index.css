@@ -4473,17 +4473,24 @@ pre,
 @media (max-width: 500px) and (min-width: 300px) {
   .mobile-navbar-container {
     padding: 0 0.75rem;
-    grid-template-columns: 36px 1fr 36px;
+    grid-template-columns: 0 1fr 36px; /* Remove left column width for small screens */
   }
 
-  .mobile-navbar-left,
+  .mobile-navbar-left {
+    display: none; /* Hide the left toggle button on small screens */
+  }
+
+  .mobile-navbar-left-empty {
+    grid-column: 1;
+    width: 0;
+  }
+
   .mobile-navbar-right {
     width: 36px;
     height: 36px;
     min-width: 36px;
   }
 
-  .theme-toggle,
   .menu-button-mobile {
     width: 36px;
     height: 36px;
@@ -4497,23 +4504,44 @@ pre,
   .logo-text {
     font-size: 1.2rem;
   }
+
+  /* Style for theme toggle in dropdown menu */
+  .theme-toggle-in-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-size: 1rem;
+  }
 }
 
 /* Adjustments for extra small screens (≤ 320px) */
 @media (max-width: 320px) {
   .mobile-navbar-container {
     padding: 0 0.5rem;
-    grid-template-columns: 32px 1fr 32px;
+    grid-template-columns: 0 1fr 32px; /* Remove left column width for small screens */
   }
 
-  .mobile-navbar-left,
+  .mobile-navbar-left {
+    display: none; /* Hide the left toggle button on small screens */
+  }
+
+  .mobile-navbar-left-empty {
+    grid-column: 1;
+    width: 0;
+  }
+
   .mobile-navbar-right {
     width: 32px;
     height: 32px;
     min-width: 32px;
   }
 
-  .theme-toggle,
   .menu-button-mobile {
     width: 32px;
     height: 32px;
@@ -4526,6 +4554,11 @@ pre,
 
   .logo-text {
     font-size: 1rem;
+  }
+
+  /* Smaller dropdown menu for very small screens */
+  .theme-toggle-in-menu {
+    font-size: 0.9rem;
   }
 }
 
@@ -4549,13 +4582,48 @@ pre,
   margin-top: 0.5rem;
   z-index: 100;
   width: max-content;
-  min-width: 150px;
+  min-width: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Mobile dropdown menu specific positioning */
 .mobile-navbar-right .dropdown-menu {
   right: 0;
   top: 45px;
+}
+
+/* Theme toggle menu item styling */
+.theme-toggle-menu-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark .theme-toggle-menu-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle-in-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle-in-menu:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .theme-toggle-in-menu:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .theme-toggle {
