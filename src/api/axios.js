@@ -12,9 +12,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.error("Unauthorized: Redirecting to login...");
-      localStorage.removeItem("token"); // Clear any invalid tokens
-      window.location.href = "/login"; // Redirect to login page
+      console.error("Unauthorized: Session expired or invalid.");
+      // Do not clear the token or redirect here; let the session verification handle it
     }
     return Promise.reject(error);
   }

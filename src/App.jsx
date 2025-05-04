@@ -1,3 +1,4 @@
+// src/App.jsx
 import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +18,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import { setUser } from "./slice/UserSlice";
+import { setUser, clearUser } from "./slice/UserSlice.js";
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -109,30 +110,31 @@ const AppRoutes = () => {
 // Auth persistence
 const PersistAuth = ({ children }) => {
   const dispatch = useDispatch();
-  const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
+  const { isAuthLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get("/user/me", { withCredentials: true });
+        const response = await axios.get("/user/me", {
+          withCredentials: true,
+        });
+
         if (response.data?.user) {
-          dispatch(setUser(response.data.user));
+          dispatch(setUser(response.data.user)); // Restore user session
         } else {
-          localStorage.removeItem("token");
+          dispatch(clearUser());
         }
       } catch (error) {
-        console.error("Auth restore failed:", error);
-        localStorage.removeItem("token");
+        console.error("Session verification failed:", error);
+        dispatch(clearUser());
       }
     };
 
-    if (!isAuthenticated && isAuthLoading) {
-      checkAuth();
-    }
-  }, [dispatch, isAuthenticated, isAuthLoading]);
+    checkAuth(); // Always run this once when app loads
+  }, [dispatch]);
 
   if (isAuthLoading) {
-    return <div>Loading...</div>; // Show a loading indicator while verifying the session
+    return <div>Loading...</div>;
   }
 
   return children;
