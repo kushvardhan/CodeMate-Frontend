@@ -1,8 +1,8 @@
-import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axios"; // Import the custom axios instance with correct baseURL
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
 import { addRequest, removeRequest } from "../slice/RequestSlice";
@@ -70,30 +70,40 @@ const Request = () => {
 
   const handleRequestAction = async (status, request) => {
     try {
-      await axios.post(
-        `/request/review/${status}/${request._id}`,
+      // Updated endpoint to match backend API structure
+      const response = await axios.post(
+        `/user/request/review/${status}/${request._id}`,
         {},
         { withCredentials: true }
       );
 
-      if (status === "accepted") {
-        dispatch(addConnection([request.fromUserId])); // Ensure it's an array
-        setPopup({
-          isVisible: true,
-          message: `You accepted ${request.fromUserId.firstName}'s request.`,
-          color: "green",
-        });
-      } else if (status === "rejected") {
-        setPopup({
-          isVisible: true,
-          message: `You rejected ${request.fromUserId.firstName}'s request.`,
-          color: "red",
-        });
-      }
+      if (response.status === 200 || response.status === 201) {
+        if (status === "accepted") {
+          dispatch(addConnection([request.fromUserId])); // Ensure it's an array
+          setPopup({
+            isVisible: true,
+            message: `You accepted ${request.fromUserId.firstName}'s request.`,
+            color: "green",
+          });
+        } else if (status === "rejected") {
+          setPopup({
+            isVisible: true,
+            message: `You rejected ${request.fromUserId.firstName}'s request.`,
+            color: "red",
+          });
+        }
 
-      dispatch(removeRequest(request._id));
+        dispatch(removeRequest(request._id));
+      }
     } catch (err) {
       console.error("Error handling request action:", err);
+      setPopup({
+        isVisible: true,
+        message: `Failed to ${
+          status === "accepted" ? "accept" : "reject"
+        } request. Please try again.`,
+        color: "red",
+      });
     }
   };
 
