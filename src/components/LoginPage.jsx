@@ -417,17 +417,7 @@ const LoginPage = () => {
             </div>
 
             <div className="form-group">
-              <div className="flex justify-start items-center mb-1">
-                <a
-                  href="#"
-                  className={`text-xs ${
-                    darkMode ? "text-primary-light" : "text-primary"
-                  } hover:underline opacity-80`}
-                  style={{ fontSize: "0.7rem" }}
-                >
-                  Forgot password?
-                </a>
-              </div>
+
               <input
                 type="password"
                 id="password"

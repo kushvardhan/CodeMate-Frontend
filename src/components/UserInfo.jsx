@@ -526,6 +526,7 @@ const UserInfo = () => {
           onClick={() => navigate(-1)}
           className="back-button"
           aria-label="Go back"
+          title="Go back to previous page"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -540,11 +541,11 @@ const UserInfo = () => {
           >
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          <span>Back</span>
+          <span className="button-text">Back</span>
         </button>
         <button
           onClick={toggleDarkMode}
-          className={`theme-toggle ${darkMode ? "dark" : "light"}`}
+          className="theme-toggle"
           aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
         >
           {darkMode ? (
@@ -756,6 +757,7 @@ const UserInfo = () => {
                   onClick={handleRejectRequest}
                   whileHover={{ scale: 1.05, y: -3 }}
                   whileTap={{ scale: 0.95 }}
+                  title="Reject request"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
