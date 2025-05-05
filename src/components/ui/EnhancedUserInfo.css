@@ -113,16 +113,7 @@
   text-shadow: 0 0 8px currentColor;
   font-size: 1.5rem;
   z-index: 1;
-}
-
-.light-mode .symbol {
-  color: var(--light-accent);
-  opacity: 0.35;
-}
-
-.dark-mode .symbol {
-  color: #8762f5; /* Lighter purple for better visibility */
-  opacity: 0.15;
+  opacity: 0.35; /* Base opacity for all symbols */
 }
 
 /* Navigation */
@@ -308,6 +299,7 @@
     var(--light-accent-hover)
   );
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensure content stays within bounds */
 }
 
 .dark-mode .user-info-image-container {
@@ -326,6 +318,7 @@
   border-radius: var(--border-radius-full);
   transition: transform var(--transition-medium);
   border: 3px solid white;
+  overflow: hidden; /* Prevent image from overflowing */
 }
 
 .dark-mode .user-info-image {
@@ -362,7 +355,7 @@
 }
 
 .user-info-image-container:hover .user-info-image {
-  transform: scale(1.05);
+  transform: scale(1.02); /* Reduced scale effect */
 }
 
 @keyframes rotate {
@@ -514,7 +507,7 @@
 }
 
 .user-info-skill-tag:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .light-mode .user-info-skill-tag:hover {

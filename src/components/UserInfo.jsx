@@ -6,6 +6,7 @@ import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
 import { removeRequest } from "../slice/RequestSlice";
+import DefaultAvatar from "./ui/DefaultAvatar";
 import "./ui/EnhancedUserInfo.css";
 import SuccessPopup from "./ui/SuccessPopup";
 
@@ -449,20 +450,176 @@ const UserInfo = () => {
     );
   }
 
-  // Code symbols for background
+  // Code symbols with different colors - evenly distributed across the screen
   const codeSymbols = [
-    { symbol: "</>", x: "10%", y: "20%", size: "2rem", rotation: -15 },
-    { symbol: "{ }", x: "85%", y: "15%", size: "2.5rem", rotation: 10 },
-    { symbol: "[]", x: "75%", y: "75%", size: "2rem", rotation: -5 },
-    { symbol: "=>", x: "15%", y: "85%", size: "2.2rem", rotation: 15 },
-    { symbol: "&&", x: "50%", y: "90%", size: "1.8rem", rotation: -10 },
-    { symbol: "function()", x: "20%", y: "40%", size: "2rem", rotation: 5 },
-    { symbol: "const", x: "80%", y: "35%", size: "1.7rem", rotation: -8 },
-    { symbol: "return", x: "40%", y: "15%", size: "1.9rem", rotation: 12 },
-    { symbol: "import", x: "65%", y: "60%", size: "1.8rem", rotation: 8 },
-    { symbol: "export", x: "25%", y: "55%", size: "1.7rem", rotation: -12 },
-    { symbol: "async", x: "70%", y: "25%", size: "1.9rem", rotation: 7 },
-    { symbol: "await", x: "30%", y: "70%", size: "1.8rem", rotation: -7 },
+    // Purple family
+    {
+      symbol: "</>",
+      x: "5%",
+      y: "5%",
+      size: "2rem",
+      rotation: -15,
+      lightColor: "#7c3aed",
+      darkColor: "#b4a7ea", // Slightly more muted in dark mode
+    }, // Violet
+
+    // Blue family
+    {
+      symbol: "{ }",
+      x: "25%",
+      y: "8%",
+      size: "2.2rem",
+      rotation: 10,
+      lightColor: "#3b82f6",
+      darkColor: "#8ab0e0", // Slightly more muted in dark mode
+    }, // Blue
+
+    // Teal/Cyan family
+    {
+      symbol: "function()",
+      x: "45%",
+      y: "12%",
+      size: "1.8rem",
+      rotation: 5,
+      lightColor: "#0ea5e9",
+      darkColor: "#92d8e0", // Slightly more muted in dark mode
+    }, // Sky blue
+
+    // Green family
+    {
+      symbol: "import",
+      x: "75%",
+      y: "5%",
+      size: "1.7rem",
+      rotation: 8,
+      lightColor: "#10b981",
+      darkColor: "#94d3b8", // Slightly more muted in dark mode
+    }, // Emerald
+
+    // Yellow/Orange family
+    {
+      symbol: "[]",
+      x: "92%",
+      y: "10%",
+      size: "2rem",
+      rotation: -5,
+      lightColor: "#f59e0b",
+      darkColor: "#d9b84d", // Slightly more muted in dark mode
+    }, // Amber
+
+    // Middle-left area
+    {
+      symbol: "=>",
+      x: "8%",
+      y: "30%",
+      size: "1.9rem",
+      rotation: 15,
+      lightColor: "#ec4899",
+      darkColor: "#fbcfe8",
+    }, // Pink
+
+    {
+      symbol: "const",
+      x: "15%",
+      y: "45%",
+      size: "1.7rem",
+      rotation: -8,
+      lightColor: "#8b5cf6",
+      darkColor: "#ddd6fe",
+    }, // Purple
+
+    // Middle-right area
+    {
+      symbol: "export",
+      x: "85%",
+      y: "35%",
+      size: "1.6rem",
+      rotation: -12,
+      lightColor: "#06b6d4",
+      darkColor: "#cffafe",
+    }, // Cyan
+
+    {
+      symbol: "&&",
+      x: "92%",
+      y: "50%",
+      size: "1.8rem",
+      rotation: -10,
+      lightColor: "#14b8a6",
+      darkColor: "#99f6e4",
+    }, // Teal
+
+    // Center area (positioned to not be hidden by the card)
+    {
+      symbol: "let",
+      x: "30%",
+      y: "30%",
+      size: "1.6rem",
+      rotation: 9,
+      lightColor: "#6366f1",
+      darkColor: "#c7d2fe",
+    }, // Indigo
+
+    {
+      symbol: "var",
+      x: "70%",
+      y: "70%",
+      size: "1.7rem",
+      rotation: -7,
+      lightColor: "#0284c7",
+      darkColor: "#bae6fd",
+    }, // Light Blue
+
+    // Bottom area
+    {
+      symbol: "return",
+      x: "10%",
+      y: "85%",
+      size: "1.8rem",
+      rotation: 12,
+      lightColor: "#2563eb",
+      darkColor: "#bfdbfe",
+    }, // Blue
+
+    {
+      symbol: "await",
+      x: "30%",
+      y: "92%",
+      size: "1.7rem",
+      rotation: -7,
+      lightColor: "#7c3aed",
+      darkColor: "#c4b5fd",
+    }, // Violet
+
+    {
+      symbol: "async",
+      x: "55%",
+      y: "88%",
+      size: "1.9rem",
+      rotation: 7,
+      lightColor: "#0d9488",
+      darkColor: "#99f6e4",
+    }, // Teal
+
+    {
+      symbol: "class",
+      x: "75%",
+      y: "80%",
+      size: "1.8rem",
+      rotation: -5,
+      lightColor: "#4f46e5",
+      darkColor: "#c7d2fe",
+    }, // Indigo
+
+    {
+      symbol: "this",
+      x: "90%",
+      y: "90%",
+      size: "1.7rem",
+      rotation: 10,
+      lightColor: "#db2777",
+      darkColor: "#fbcfe8",
+    }, // Pink
   ];
 
   // User info display
@@ -494,10 +651,14 @@ const UserInfo = () => {
               top: symbol.y,
               fontSize: symbol.size,
               transform: `rotate(${symbol.rotation}deg)`,
+              color: darkMode ? symbol.darkColor : symbol.lightColor,
+              textShadow: darkMode
+                ? `0 0 5px ${symbol.darkColor}` // Reduced glow in dark mode
+                : `0 0 8px ${symbol.lightColor}`,
             }}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: 0.1,
+              opacity: darkMode ? 0.2 : 0.35, // Even less prominent in dark mode
               scale: 1,
               rotate: [
                 symbol.rotation,
@@ -593,9 +754,9 @@ const UserInfo = () => {
               className="user-info-image-container"
               whileHover={{ scale: 1.05 }}
             >
-              {user?.profilePicture ? (
+              {user?.photoUrl ? (
                 <img
-                  src={user.profilePicture}
+                  src={user.photoUrl}
                   alt={`${user?.firstName || "Unknown"} ${
                     user?.lastName || "User"
                   }`}
@@ -696,7 +857,7 @@ const UserInfo = () => {
                   <motion.span
                     className="user-info-skill-tag"
                     key={index}
-                    whileHover={{ y: -5, scale: 1.05 }}
+                    whileHover={{ y: -2, scale: 1.02 }}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 * index }}
