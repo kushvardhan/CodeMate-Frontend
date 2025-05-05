@@ -276,6 +276,9 @@ const Nav = () => {
                       <a
                         onClick={async () => {
                           try {
+                            // First dispatch logout action to clear Redux state
+                            dispatch(logoutUser());
+
                             // Call the backend logout endpoint to clear cookies
                             await axios.post(
                               "/logout",
@@ -285,21 +288,25 @@ const Nav = () => {
                           } catch (error) {
                             console.error("Error during logout:", error);
                           } finally {
-                            // Dispatch logout action to clear Redux state
-                            dispatch(logoutUser());
-                            // Clear any stored tokens
+                            // Clear all client-side auth data
+                            // Clear localStorage
                             localStorage.removeItem("token");
+
                             // Clear all cookies by setting them to expire
                             document.cookie.split(";").forEach((cookie) => {
-                              document.cookie = cookie
-                                .replace(/^ +/, "")
-                                .replace(
-                                  /=.*/,
-                                  `=;expires=${new Date().toUTCString()};path=/`
-                                );
+                              const [name] = cookie.split("=");
+                              if (name) {
+                                document.cookie = `${name.trim()}=;expires=${new Date(
+                                  0
+                                ).toUTCString()};path=/`;
+                              }
                             });
-                            // Navigate to login page
-                            navigate("/login");
+
+                            // Clear sessionStorage if used
+                            sessionStorage.clear();
+
+                            // Force reload to ensure complete state reset
+                            window.location.href = "/login";
                           }
                         }}
                         className="logout-link"
@@ -630,24 +637,37 @@ const Nav = () => {
                         // Close the menu
                         setIsMenuOpen(false);
 
+                        // First dispatch logout action to clear Redux state
+                        dispatch(logoutUser());
+
                         // Call the backend logout endpoint to clear cookies
                         await axios.post(
                           "/logout",
                           {},
                           { withCredentials: true }
                         );
-                        // Dispatch logout action to clear Redux state
-                        dispatch(logoutUser());
-                        // Clear any stored tokens
-                        localStorage.removeItem("token");
-                        // Navigate to login page
-                        navigate("/login");
                       } catch (error) {
                         console.error("Error during logout:", error);
-                        // Even if the API call fails, still clear local state and redirect
-                        dispatch(logoutUser());
+                      } finally {
+                        // Clear all client-side auth data
+                        // Clear localStorage
                         localStorage.removeItem("token");
-                        navigate("/login");
+
+                        // Clear all cookies by setting them to expire
+                        document.cookie.split(";").forEach((cookie) => {
+                          const [name] = cookie.split("=");
+                          if (name) {
+                            document.cookie = `${name.trim()}=;expires=${new Date(
+                              0
+                            ).toUTCString()};path=/`;
+                          }
+                        });
+
+                        // Clear sessionStorage if used
+                        sessionStorage.clear();
+
+                        // Force reload to ensure complete state reset
+                        window.location.href = "/login";
                       }
                     }}
                     className="logout-link"
