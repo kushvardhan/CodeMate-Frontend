@@ -593,13 +593,19 @@ const UserInfo = () => {
               className="user-info-image-container"
               whileHover={{ scale: 1.05 }}
             >
-              <img
-                src={user?.profilePicture || "/default-avatar.png"}
-                alt={`${user?.firstName || "Unknown"} ${
-                  user?.lastName || "User"
-                }`}
-                className="user-info-image"
-              />
+              {user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt={`${user?.firstName || "Unknown"} ${
+                    user?.lastName || "User"
+                  }`}
+                  className="user-info-image"
+                />
+              ) : (
+                <div className="user-info-image">
+                  <DefaultAvatar />
+                </div>
+              )}
             </motion.div>
             <h1 className="user-info-name">
               {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
