@@ -5,6 +5,9 @@
   text-align: center;
 }
 
+/* Import UserInfo styles */
+@import "./components/ui/UserInfo.css";
+
 .logo {
   height: 6em;
   padding: 1.5em;
