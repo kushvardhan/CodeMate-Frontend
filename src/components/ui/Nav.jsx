@@ -276,6 +276,9 @@ const Nav = () => {
                       <a
                         onClick={async () => {
                           try {
+                            // Set flag to prevent auto-login on page refresh
+                            localStorage.setItem("wasLoggedOut", "true");
+
                             // First dispatch logout action to clear Redux state
                             dispatch(logoutUser());
 
@@ -636,6 +639,9 @@ const Nav = () => {
                       try {
                         // Close the menu
                         setIsMenuOpen(false);
+
+                        // Set flag to prevent auto-login on page refresh
+                        localStorage.setItem("wasLoggedOut", "true");
 
                         // First dispatch logout action to clear Redux state
                         dispatch(logoutUser());

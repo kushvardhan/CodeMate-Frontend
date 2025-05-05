@@ -1,15 +1,41 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { setUser } from "../slice/UserSlice";
+import { clearUser, setUser } from "../slice/UserSlice";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
+
+  // Clear any existing user data when the login page loads
+  useEffect(() => {
+    // Clear Redux state
+    dispatch(clearUser());
+
+    // Clear localStorage except for theme preference
+    const theme = localStorage.getItem("theme");
+    localStorage.clear();
+    if (theme) {
+      localStorage.setItem("theme", theme);
+    }
+
+    // Set wasLoggedOut flag to prevent auto-login
+    localStorage.setItem("wasLoggedOut", "true");
+
+    // Clear all cookies by setting them to expire
+    document.cookie.split(";").forEach((cookie) => {
+      const [name] = cookie.split("=");
+      if (name && !name.includes("theme")) {
+        document.cookie = `${name.trim()}=;expires=${new Date(
+          0
+        ).toUTCString()};path=/`;
+      }
+    });
+  }, [dispatch]);
 
   // Always redirect to profile page after login
   const from = "/profile";

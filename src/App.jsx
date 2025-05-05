@@ -18,7 +18,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import UserInfo from './components/UserInfo';
+import UserInfo from "./components/UserInfo";
 import { clearUser, setUser } from "./slice/UserSlice.js";
 
 // Protected Route
@@ -122,6 +122,16 @@ const PersistAuth = ({ children }) => {
   const { isAuthLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
+    // Check if user explicitly logged out (we'll set this flag in localStorage)
+    const wasLoggedOut = localStorage.getItem("wasLoggedOut") === "true";
+
+    // If user explicitly logged out, don't try to restore the session
+    if (wasLoggedOut) {
+      dispatch(clearUser());
+      localStorage.removeItem("wasLoggedOut"); // Clear the flag
+      return;
+    }
+
     const checkAuth = async () => {
       try {
         const response = await axios.get("/user/me", {
@@ -139,7 +149,7 @@ const PersistAuth = ({ children }) => {
       }
     };
 
-    checkAuth(); // Always run this once when app loads
+    checkAuth(); // Run this once when app loads if user didn't explicitly log out
   }, [dispatch]);
 
   if (isAuthLoading) {
@@ -150,6 +160,14 @@ const PersistAuth = ({ children }) => {
 };
 
 const App = () => {
+  // Run sanitization on app load to prevent data leakage
+  useEffect(() => {
+    // Import dynamically to avoid circular dependencies
+    import("./utils/authUtils").then(({ sanitizeStorageOnLoad }) => {
+      sanitizeStorageOnLoad();
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <PersistAuth>
