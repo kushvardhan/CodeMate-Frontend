@@ -7,6 +7,10 @@
 
 /* Import UserInfo styles */
 @import "./components/ui/UserInfo.css";
+@import "./components/ui/GlassmorphismStyles.css";
+
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap");
 
 .logo {
   height: 6em;
