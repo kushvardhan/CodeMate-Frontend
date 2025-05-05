@@ -18,11 +18,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import UserInfoGlassmorphism from "./components/UserInfoGlassmorphism";
-import UserInfoHero from "./components/UserInfoHero";
-import UserInfoMinimalist from "./components/UserInfoMinimalist";
-import UserInfoSelector from "./components/UserInfoSelector";
-import UserInfoSidebar from "./components/UserInfoSidebar";
+import UserInfo from "./components/UserInfo";
 import { clearUser, setUser } from "./slice/UserSlice.js";
 
 // Protected Route
@@ -110,39 +106,7 @@ const AppRoutes = () => {
           path="/user/info/:userId"
           element={
             <ProtectedRoute>
-              <UserInfoSelector />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/info/:userId/glassmorphism"
-          element={
-            <ProtectedRoute>
-              <UserInfoGlassmorphism />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/info/:userId/sidebar"
-          element={
-            <ProtectedRoute>
-              <UserInfoSidebar />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/info/:userId/hero"
-          element={
-            <ProtectedRoute>
-              <UserInfoHero />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/info/:userId/minimalist"
-          element={
-            <ProtectedRoute>
-              <UserInfoMinimalist />
+              <UserInfo />
             </ProtectedRoute>
           }
         />
