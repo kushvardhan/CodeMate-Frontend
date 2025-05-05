@@ -144,7 +144,7 @@ const UserInfo = () => {
 
     try {
       const response = await axios.post(
-        `/user/request/review/accepted/${requestId}`,
+        `/api/request/accept/${requestId}`,
         {},
         { withCredentials: true }
       );
@@ -192,7 +192,7 @@ const UserInfo = () => {
 
     try {
       const response = await axios.post(
-        `/user/request/review/rejected/${requestId}`,
+        `/api/request/reject/${requestId}`,
         {},
         { withCredentials: true }
       );

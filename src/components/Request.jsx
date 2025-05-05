@@ -72,7 +72,9 @@ const Request = () => {
     try {
       // Updated endpoint to match backend API structure
       const response = await axios.post(
-        `/user/request/review/${status}/${request._id}`,
+        `/api/request/${status === "accepted" ? "accept" : "reject"}/${
+          request._id
+        }`,
         {},
         { withCredentials: true }
       );
