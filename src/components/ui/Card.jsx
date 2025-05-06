@@ -1,12 +1,9 @@
-import axios from "axios";
 import { motion } from "framer-motion";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
 const Card = ({
   user,
-  onSwipeLeft,
-  onSwipeRight,
   isNextCard = false,
   isCardSwiping = false,
   swipeDirection = null,
@@ -120,8 +117,8 @@ const Card = ({
     hover: { scale: 1.05 },
   };
 
-  // State to track drag direction
-  const [dragDirection, setDragDirection] = React.useState(null);
+  // No longer needed as drag is handled by parent
+  // const [dragDirection, setDragDirection] = React.useState(null);
 
   // Effect to handle external swipe triggers (from buttons or parent component)
   React.useEffect(() => {
@@ -252,22 +249,19 @@ const Card = ({
     }
   }, [isCardSwiping, swipeDirection]);
 
-  // State to track swipe progress (0-100%)
-  const [swipeProgress, setSwipeProgress] = React.useState(0);
+  // No longer needed as drag is handled by parent
+  // const [swipeProgress, setSwipeProgress] = React.useState(0);
 
-  // State to track if we're showing the next card
-  const [showingNextCard, setShowingNextCard] = React.useState(false);
+  // We don't need these states anymore as drag is handled by parent
+  const showingNextCard = false; // Just a constant now
 
-  // State to track if this is the top card
-  const [isTopCard, setIsTopCard] = React.useState(!isNextCard && !isPreview);
-
-  // Reset the card position when it becomes the top card
+  // We don't need the complex card positioning logic anymore
+  // as it's handled by the parent component
   React.useEffect(() => {
-    setIsTopCard(!isNextCard && !isPreview);
+    // No need to reset state as we're not handling drag anymore
 
     if (!isNextCard && !isPreview) {
-      setDragDirection("none");
-      setSwipeProgress(0);
+      // No state to reset
 
       // Ensure the card is in the center position
       setTimeout(() => {
@@ -354,8 +348,8 @@ const Card = ({
     }
   }, [isNextCard, isPreview]);
 
-  // Optimized drag handler to reduce stuttering
-  const handleDrag = (event, info) => {
+  // Drag is now handled by parent component
+  /* const handleDrag = (event, info) => {
     // Don't process drag if we're already showing the next card
     if (showingNextCard) return;
 
@@ -453,16 +447,17 @@ const Card = ({
       console.log(`${status} with the ID: ${user.id}`);
 
       await axios.post(
-        `http://localhost:4000/request/send/${status}/${user.id}`,
+        `/user/request/send/${status}/${user.id}`,
         {},
         { withCredentials: true }
       );
     } catch (error) {
       console.error(`Error sending ${direction} swipe request:`, error.message);
     }
-  };
+  }; */
 
-  const handleDragEnd = (event, { offset, velocity }) => {
+  // Drag end is now handled by parent component
+  /* const handleDragEnd = (event, { offset, velocity }) => {
     // Don't process drag end if we're already showing the next card
     if (showingNextCard) return;
 
@@ -509,7 +504,7 @@ const Card = ({
         void element.offsetWidth;
       }
     }
-  };
+  }; */
 
   return (
     <motion.div
@@ -522,22 +517,7 @@ const Card = ({
       whileHover={
         showingNextCard || isNextCard || isPreview ? undefined : "hover"
       }
-      drag={showingNextCard || isNextCard || isPreview ? false : "x"}
-      dragConstraints={{
-        left: -1000,
-        right: 1000,
-        top: 0,
-        bottom: 0,
-      }}
-      dragElastic={1}
-      dragMomentum={true}
-      dragTransition={{
-        power: 0.2,
-        timeConstant: 400,
-        restDelta: 0.5,
-      }}
-      onDrag={!isPreview ? handleDrag : undefined}
-      onDragEnd={!isPreview ? handleDragEnd : undefined}
+      drag={false} // Disable drag as it's handled by parent component
     >
       <div
         className="dev-card-content"

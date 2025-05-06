@@ -193,7 +193,7 @@ const Home = () => {
 
       // Make API call to update status
       await axios.post(
-        `/request/send/ignored/${userId}`,
+        `/user/request/send/ignored/${userId}`,
         {},
         {
           withCredentials: true,
@@ -241,7 +241,7 @@ const Home = () => {
 
       // Make API call to update status
       await axios.post(
-        `/request/send/interested/${userId}`,
+        `/user/request/send/interested/${userId}`,
         {},
         {
           withCredentials: true,
@@ -295,7 +295,7 @@ const Home = () => {
 
       // Make API call to cancel the previous action
       await axios.post(
-        `/request/cancel/${userId}`,
+        `/user/request/cancel/${userId}`,
         {},
         {
           withCredentials: true,
@@ -609,16 +609,20 @@ const Home = () => {
                   </motion.button>
                 )}
 
-                {/* Tinder-style card stack - all cards perfectly centered and stacked */}
+                {/* Tinder-style card stack - exactly like Tinder */}
                 <div
                   className="tinder-cards-wrapper"
                   style={{
                     position: "relative",
-                    width: "100%",
-                    height: "450px",
+                    width: "300px", // Fixed width for cards
+                    height: "450px", // Fixed height for cards
+                    margin: "0 auto", // Center the card stack
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  {/* Stack of cards - all perfectly centered */}
+                  {/* Stack of cards - exactly like Tinder */}
                   {users
                     .slice(currentIndex, currentIndex + 3)
                     .map((user, index) => (
@@ -629,21 +633,17 @@ const Home = () => {
                         }`}
                         style={{
                           position: "absolute",
-                          left: "50%",
-                          top: "50%",
-                          transform: `translate(-50%, -50%) scale(${
-                            1 - index * 0.05
-                          })`,
-                          zIndex: 10 - index,
-                          opacity: 1 - index * 0.2,
-                          width: "100%",
-                          height: "100%",
+                          width: "300px", // Fixed width
+                          height: "450px", // Fixed height
+                          borderRadius: "10px",
+                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                          background: "white",
+                          zIndex: 10 - index, // Only z-index differs to create the stack
                           transformOrigin: "center center",
                           transition:
-                            index === 0
-                              ? "none"
-                              : "transform 0.2s ease, opacity 0.2s ease",
+                            index === 0 ? "none" : "transform 0.2s ease",
                           pointerEvents: index === 0 ? "auto" : "none",
+                          overflow: "hidden", // Ensure content doesn't overflow
                         }}
                       >
                         {index === 0 ? (
@@ -663,11 +663,7 @@ const Home = () => {
                               );
 
                               // Apply transform directly to the card
-                              card.style.transform = `translate(${
-                                info.offset.x
-                              }px, ${
-                                -Math.abs(info.offset.x) * 0.05
-                              }px) rotate(${rotate}deg)`;
+                              card.style.transform = `translateX(${info.offset.x}px) rotate(${rotate}deg)`;
 
                               // Apply color overlay based on direction
                               if (info.offset.x > 50) {
@@ -688,7 +684,8 @@ const Home = () => {
                                 card.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
                               } else {
                                 // Reset when near center
-                                card.style.boxShadow = "";
+                                card.style.boxShadow =
+                                  "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
                               }
                             }}
@@ -713,20 +710,21 @@ const Home = () => {
                               if (isSwipeLeft) {
                                 // Animate the card off-screen to the left
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(-${window.innerWidth}px, 0) rotate(-30deg)`;
+                                card.style.transform = `translateX(-${window.innerWidth}px) rotate(-30deg)`;
                                 setTimeout(() => handleSwipeLeft(), 300);
                               } else if (isSwipeRight) {
                                 // Animate the card off-screen to the right
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(${window.innerWidth}px, 0) rotate(30deg)`;
+                                card.style.transform = `translateX(${window.innerWidth}px) rotate(30deg)`;
                                 setTimeout(() => handleSwipeRight(), 300);
                               } else {
                                 // Spring back to center if not swiped far enough
                                 card.style.transition =
                                   "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                                 card.style.transform =
-                                  "translate(-50%, -50%) scale(1)";
-                                card.style.boxShadow = "";
+                                  "translateX(0) rotate(0)"; // Return to center position
+                                card.style.boxShadow =
+                                  "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
                               }
                             }}
@@ -734,8 +732,6 @@ const Home = () => {
                               width: "100%",
                               height: "100%",
                               position: "relative",
-                              borderRadius: "10px",
-                              overflow: "hidden",
                             }}
                           >
                             <Card
