@@ -275,6 +275,7 @@ const Card = ({
           ".dev-card:not(.next-card):not(.preview-card)"
         );
         if (cardElement) {
+          // Force absolute center positioning with !important
           cardElement.style.cssText = `
             transition: none !important;
             transform: translateX(0) rotate(0) scale(1) !important;
@@ -282,11 +283,10 @@ const Card = ({
             box-shadow: none !important;
             border: none !important;
             position: absolute !important;
-            left: 0 !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0 !important;
-            margin: auto !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            margin: 0 !important;
             z-index: 10 !important;
           `;
           cardElement.setAttribute("data-drag", "none");
@@ -303,14 +303,12 @@ const Card = ({
           // Force the card to be centered with !important styles
           card.style.cssText = `
             transition: transform 0.3s ease, opacity 0.3s ease !important;
-            transform: translateX(0) translateY(10px) scale(0.95) !important;
+            transform: translate(-50%, -50%) translateY(10px) scale(0.95) !important;
             opacity: 0.85 !important;
             position: absolute !important;
-            left: 0 !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0 !important;
-            margin: auto !important;
+            left: 50% !important;
+            top: 50% !important;
+            margin: 0 !important;
             z-index: 5 !important;
           `;
 
@@ -324,11 +322,10 @@ const Card = ({
           if (parentContainer) {
             parentContainer.style.cssText = `
               position: absolute !important;
-              left: 0 !important;
-              right: 0 !important;
-              top: 0 !important;
-              bottom: 0 !important;
-              margin: auto !important;
+              left: 50% !important;
+              top: 50% !important;
+              transform: translate(-50%, -50%) !important;
+              margin: 0 !important;
               display: flex !important;
               justify-content: center !important;
               align-items: center !important;
@@ -349,10 +346,7 @@ const Card = ({
               perspective: 1000px !important;
               transform-style: preserve-3d !important;
               margin: 0 auto !important;
-              left: 0 !important;
-              right: 0 !important;
               transform: translateX(0) !important;
-              inset: 0 !important;
             `;
           }
         });
@@ -498,19 +492,21 @@ const Card = ({
         // Tinder uses a spring animation for the return
         element.style.cssText = `
           position: absolute !important;
-          left: 0 !important;
-          right: 0 !important;
-          top: 0 !important;
-          bottom: 0 !important;
-          margin: auto !important;
+          left: 50% !important;
+          top: 50% !important;
+          transform: translate(-50%, -50%) rotate(0deg) !important;
+          margin: 0 !important;
           transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000) !important;
-          transform: translateX(0) translateY(0) rotate(0deg) !important;
           box-shadow: none !important;
           z-index: 10 !important;
+          border: none !important;
         `;
 
         // Reset progress
         setSwipeProgress(0);
+
+        // Force a reflow to apply the changes immediately
+        void element.offsetWidth;
       }
     }
   };

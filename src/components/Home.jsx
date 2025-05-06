@@ -208,14 +208,14 @@ const Home = () => {
       if (nextCardIndex !== null) {
         setCurrentIndex(nextCardIndex);
 
+        // Reset all card positions to ensure proper centering
         const nextCard = document.querySelector(".tinder-current-card");
         if (nextCard) {
           nextCard.style.cssText = `
             position: absolute !important;
-            left: 0 !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0 !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) translateZ(0) scale(1.1) !important;
             margin: auto !important;
             display: flex !important;
             justify-content: center !important;
@@ -224,7 +224,27 @@ const Home = () => {
             transform-style: preserve-3d !important;
             transform-origin: center center !important;
             will-change: transform !important;
-            transform: translateX(0) translateY(0) translateZ(0) !important;
+            transition: transform 0.3s ease !important;
+          `;
+        }
+
+        // Also reset the card stack container
+        const cardStack = document.querySelector(".tinder-card-stack");
+        if (cardStack) {
+          cardStack.style.cssText = `
+            position: relative !important;
+            width: 100% !important;
+            max-width: 340px !important;
+            height: 550px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            perspective: 1000px !important;
+            transform-style: preserve-3d !important;
+            margin: 0 auto !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateX(0) !important;
           `;
         }
       } else {
@@ -274,14 +294,14 @@ const Home = () => {
       if (nextCardIndex !== null) {
         setCurrentIndex(nextCardIndex);
 
+        // Reset all card positions to ensure proper centering
         const nextCard = document.querySelector(".tinder-current-card");
         if (nextCard) {
           nextCard.style.cssText = `
             position: absolute !important;
-            left: 0 !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0 !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) translateZ(0) scale(1.1) !important;
             margin: auto !important;
             display: flex !important;
             justify-content: center !important;
@@ -290,7 +310,27 @@ const Home = () => {
             transform-style: preserve-3d !important;
             transform-origin: center center !important;
             will-change: transform !important;
-            transform: translateX(0) translateY(0) translateZ(0) !important;
+            transition: transform 0.3s ease !important;
+          `;
+        }
+
+        // Also reset the card stack container
+        const cardStack = document.querySelector(".tinder-card-stack");
+        if (cardStack) {
+          cardStack.style.cssText = `
+            position: relative !important;
+            width: 100% !important;
+            max-width: 340px !important;
+            height: 550px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            perspective: 1000px !important;
+            transform-style: preserve-3d !important;
+            margin: 0 auto !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateX(0) !important;
           `;
         }
       } else {
@@ -537,7 +577,7 @@ const Home = () => {
     "≅",
     "",
     "</>",
-    "* *\*",
+    "* **",
     "!==",
     "#",
     "$",
@@ -559,7 +599,7 @@ const Home = () => {
     "∪",
     "∴",
     "∼",
-    "⊆",
+    "for n:∞",
     "⊇",
     "⊂",
     "⊃",
@@ -619,17 +659,18 @@ const Home = () => {
     animationDelay: `${Math.random() * 2}s`, // Random delay between 0s and 2s
   }));
 
-  const handleDrag = (event, info) => {
-    const screenWidth = window.innerWidth;
-    const cardWidth = info.point.x;
-
-    // Restrict the card's movement to stay within the screen width
-    if (cardWidth < -screenWidth / 2) {
-      info.point.x = -screenWidth / 2;
-    } else if (cardWidth > screenWidth / 2) {
-      info.point.x = screenWidth / 2;
-    }
-  };
+  // This function is not used but kept for reference
+  // const handleDrag = (event, info) => {
+  //   const screenWidth = window.innerWidth;
+  //   const cardWidth = info.point.x;
+  //
+  //   // Restrict the card's movement to stay within the screen width
+  //   if (cardWidth < -screenWidth / 2) {
+  //     info.point.x = -screenWidth / 2;
+  //   } else if (cardWidth > screenWidth / 2) {
+  //     info.point.x = screenWidth / 2;
+  //   }
+  // };
 
   return (
     <div className="min-h-screen transition-all duration-300 text-white relative overflow-hidden">
@@ -868,13 +909,26 @@ const Home = () => {
                       }
                     }}
                     onDragEnd={() => {
+                      // Reset the card position immediately to prevent position memory
                       const currentCard = document.querySelector(
                         ".tinder-current-card"
                       );
                       if (currentCard) {
-                        currentCard.style.transition = "transform 0.3s ease"; // Re-enable transition
-                        currentCard.style.transform =
-                          "translate(-50%, -50%) translateZ(0) scale(1.1)"; // Reset to center
+                        // Force reset to center position with !important
+                        currentCard.style.cssText = `
+                          position: absolute !important;
+                          left: 50% !important;
+                          top: 50% !important;
+                          transform: translate(-50%, -50%) translateZ(0) scale(1.1) !important;
+                          margin: auto !important;
+                          display: flex !important;
+                          justify-content: center !important;
+                          align-items: center !important;
+                          z-index: 10 !important;
+                          transform-style: preserve-3d !important;
+                          transform-origin: center center !important;
+                          transition: transform 0.3s ease !important;
+                        `;
                       }
                     }}
                     className="card-container"
