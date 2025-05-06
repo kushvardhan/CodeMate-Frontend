@@ -3042,10 +3042,17 @@ pre,
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* Ensure top card is always visible */
+/* Ensure top card is always visible and properly positioned */
 .top-card {
   visibility: visible !important;
   opacity: 1 !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 300px !important;
+  height: 450px !important;
+  z-index: 10 !important;
 }
 
 /* Responsive adjustments for the card */

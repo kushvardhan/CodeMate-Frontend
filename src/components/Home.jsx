@@ -645,9 +645,7 @@ const Home = () => {
                             index === 0 ? "none" : "transform 0.2s ease",
                           pointerEvents: index === 0 ? "auto" : "none",
                           overflow: "hidden", // Ensure content doesn't overflow
-                          left: "50%", // Center horizontally
-                          top: "50%", // Center vertically
-                          transform: "translate(-50%, -50%)", // Perfect centering
+                          // Position is handled by CSS class
                         }}
                       >
                         {index === 0 ? (
@@ -667,7 +665,7 @@ const Home = () => {
                               );
 
                               // Apply transform directly to the card - starting from centered position
-                              card.style.transform = `translate(calc(-50% + ${info.offset.x}px), -50%) rotate(${rotate}deg)`;
+                              card.style.transform = `translate(-50%, -50%) translateX(${info.offset.x}px) rotate(${rotate}deg)`;
                               // Ensure the card is visible
                               card.style.visibility = "visible";
 
@@ -716,19 +714,19 @@ const Home = () => {
                               if (isSwipeLeft) {
                                 // Animate the card off-screen to the left
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(calc(-50% - ${window.innerWidth}px), -50%) rotate(-30deg)`;
+                                card.style.transform = `translate(-50%, -50%) translateX(-${window.innerWidth}px) rotate(-30deg)`;
                                 setTimeout(() => handleSwipeLeft(), 300);
                               } else if (isSwipeRight) {
                                 // Animate the card off-screen to the right
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(calc(-50% + ${window.innerWidth}px), -50%) rotate(30deg)`;
+                                card.style.transform = `translate(-50%, -50%) translateX(${window.innerWidth}px) rotate(30deg)`;
                                 setTimeout(() => handleSwipeRight(), 300);
                               } else {
                                 // Spring back to center if not swiped far enough
                                 card.style.transition =
                                   "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                                 card.style.transform =
-                                  "translate(-50%, -50%) rotate(0)"; // Return to perfect center position
+                                  "translate(-50%, -50%) translateX(0) rotate(0)"; // Return to perfect center position
                                 card.style.boxShadow =
                                   "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
