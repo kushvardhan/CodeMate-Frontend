@@ -249,10 +249,6 @@ const Card = ({
     }
   }, [isCardSwiping, swipeDirection]);
 
-  // No longer needed as drag is handled by parent
-  // const [swipeProgress, setSwipeProgress] = React.useState(0);
-
-  // We don't need these states anymore as drag is handled by parent
   const showingNextCard = false; // Just a constant now
 
   // We don't need the complex card positioning logic anymore
