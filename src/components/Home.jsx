@@ -620,6 +620,7 @@ const Home = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    overflow: "visible", // Allow cards to be visible outside container
                   }}
                 >
                   {/* Stack of cards - exactly like Tinder */}
@@ -644,6 +645,9 @@ const Home = () => {
                             index === 0 ? "none" : "transform 0.2s ease",
                           pointerEvents: index === 0 ? "auto" : "none",
                           overflow: "hidden", // Ensure content doesn't overflow
+                          left: "50%", // Center horizontally
+                          top: "50%", // Center vertically
+                          transform: "translate(-50%, -50%)", // Perfect centering
                         }}
                       >
                         {index === 0 ? (
@@ -664,6 +668,8 @@ const Home = () => {
 
                               // Apply transform directly to the card
                               card.style.transform = `translateX(${info.offset.x}px) rotate(${rotate}deg)`;
+                              // Ensure the card is visible
+                              card.style.visibility = "visible";
 
                               // Apply color overlay based on direction
                               if (info.offset.x > 50) {
@@ -732,6 +738,7 @@ const Home = () => {
                               width: "100%",
                               height: "100%",
                               position: "relative",
+                              visibility: "visible", // Ensure the card is always visible
                             }}
                           >
                             <Card

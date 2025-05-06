@@ -3042,6 +3042,12 @@ pre,
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
+/* Ensure top card is always visible */
+.top-card {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /* Responsive adjustments for the card */
 @media (max-width: 1200px) {
   .card-container {
