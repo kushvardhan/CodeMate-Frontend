@@ -203,50 +203,16 @@ const Home = () => {
       console.error("Error sending ignored status:", error);
     }
 
-    // Immediately update the index to show the next card
+    // Simply update the index to show the next card
+    // The card stack will automatically rerender with the new cards centered
     if (nextCardIndex !== null) {
-      // Update the index first
       setCurrentIndex(nextCardIndex);
-
-      // Then immediately reset all card positions to ensure proper centering
-      // This ensures the next card appears instantly in the center
-      requestAnimationFrame(() => {
-        // Reset the current card (which is now the next card)
-        const currentCard = document.querySelector(".tinder-current-card");
-        if (currentCard) {
-          currentCard.style.cssText = `
-            position: absolute !important;
-            left: 50% !important;
-            top: 50% !important;
-            transform: translate(-50%, -50%) scale(1) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            z-index: 10 !important;
-            transform-style: preserve-3d !important;
-            transform-origin: center center !important;
-            transition: none !important;
-            width: 100% !important;
-            height: 100% !important;
-          `;
-        }
-
-        // Reset the background cards
-        const backgroundCards = document.querySelectorAll(
-          ".preview-stack-card, .deep-stack-card"
-        );
-        backgroundCards.forEach((card) => {
-          card.style.transition = "none";
-        });
-      });
 
       // Reset swiping state after a short delay
       setTimeout(() => {
         setIsCardSwiping(false);
         setSwipeDirection(null);
-      }, 100); // Very short timeout for quick reset
+      }, 300);
     } else {
       setAllCardsFinished(true);
       setIsCardSwiping(false);
@@ -285,50 +251,16 @@ const Home = () => {
       console.error("Error sending interested status:", error);
     }
 
-    // Immediately update the index to show the next card
+    // Simply update the index to show the next card
+    // The card stack will automatically rerender with the new cards centered
     if (nextCardIndex !== null) {
-      // Update the index first
       setCurrentIndex(nextCardIndex);
-
-      // Then immediately reset all card positions to ensure proper centering
-      // This ensures the next card appears instantly in the center
-      requestAnimationFrame(() => {
-        // Reset the current card (which is now the next card)
-        const currentCard = document.querySelector(".tinder-current-card");
-        if (currentCard) {
-          currentCard.style.cssText = `
-            position: absolute !important;
-            left: 50% !important;
-            top: 50% !important;
-            transform: translate(-50%, -50%) scale(1) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            z-index: 10 !important;
-            transform-style: preserve-3d !important;
-            transform-origin: center center !important;
-            transition: none !important;
-            width: 100% !important;
-            height: 100% !important;
-          `;
-        }
-
-        // Reset the background cards
-        const backgroundCards = document.querySelectorAll(
-          ".preview-stack-card, .deep-stack-card"
-        );
-        backgroundCards.forEach((card) => {
-          card.style.transition = "none";
-        });
-      });
 
       // Reset swiping state after a short delay
       setTimeout(() => {
         setIsCardSwiping(false);
         setSwipeDirection(null);
-      }, 100); // Very short timeout for quick reset
+      }, 300);
     } else {
       setAllCardsFinished(true);
       setIsCardSwiping(false);
@@ -380,94 +312,15 @@ const Home = () => {
     setIsCardSwiping(true);
     setSwipeDirection("rewind");
 
-    // Ensure the next card is properly positioned in the center
-    const nextCards = document.querySelectorAll(
-      ".preview-stack-card, .deep-stack-card"
-    );
-    nextCards.forEach((card) => {
-      card.style.cssText = `
-        position: absolute !important;
-        left: 0 !important;
-        right: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        margin: auto !important;
-        transform-origin: center center !important;
-        will-change: transform, opacity !important;
-        transition: transform 0.3s ease, opacity 0.3s ease !important;
-        transform-style: preserve-3d !important;
-      `;
-    });
-
-    // Reset the tinder-card-stack container to ensure proper positioning
-    const cardStack = document.querySelector(".tinder-card-stack");
-    if (cardStack) {
-      cardStack.style.cssText = `
-        position: relative !important;
-        width: 100% !important;
-        max-width: 340px !important;
-        height: 550px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        perspective: 1000px !important;
-        transform-style: preserve-3d !important;
-        margin: 0 auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: translateX(0) !important;
-        inset: 0 !important;
-      `;
-    }
-
     // Decrement the index to show the previous card
+    // The card stack will automatically rerender with the correct cards centered
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
 
     // Reset swiping state after animation
     setTimeout(() => {
       setIsCardSwiping(false);
       setSwipeDirection(null);
-
-      // Ensure the next card is properly positioned in the center
-      const nextCards = document.querySelectorAll(
-        ".preview-stack-card, .deep-stack-card"
-      );
-      nextCards.forEach((card) => {
-        card.style.cssText = `
-          position: absolute !important;
-          left: 0 !important;
-          right: 0 !important;
-          top: 0 !important;
-          bottom: 0 !important;
-          margin: auto !important;
-          transform-origin: center center !important;
-          will-change: transform, opacity !important;
-          transition: transform 0.3s ease, opacity 0.3s ease !important;
-          transform-style: preserve-3d !important;
-        `;
-      });
-
-      // Reset the tinder-card-stack container again to ensure proper positioning
-      const cardStack = document.querySelector(".tinder-card-stack");
-      if (cardStack) {
-        cardStack.style.cssText = `
-          position: relative !important;
-          width: 100% !important;
-          max-width: 340px !important;
-          height: 550px !important;
-          display: flex !important;
-          justify-content: center !important;
-          align-items: center !important;
-          perspective: 1000px !important;
-          transform-style: preserve-3d !important;
-          margin: 0 auto !important;
-          left: 0 !important;
-          right: 0 !important;
-          transform: translateX(0) !important;
-          inset: 0 !important;
-        `;
-      }
-    }, 600); // Match the longer timeout for consistency
+    }, 300);
   };
 
   // State to track loading sequence
@@ -495,71 +348,15 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
-  // Effect to ensure the next card is properly positioned when the component mounts
+  // Effect to ensure cards are properly positioned when the component mounts
   useEffect(() => {
-    // Reset the card stack position
-    const cardStack = document.querySelector(".tinder-card-stack");
-    if (cardStack) {
-      cardStack.style.cssText = `
-        position: relative !important;
-        width: 100% !important;
-        max-width: 340px !important;
-        height: 550px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        perspective: 1000px !important;
-        transform-style: preserve-3d !important;
-        margin: 0 auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: translateX(0) !important;
-        inset: 0 !important;
-      `;
-    }
+    // With our new implementation, we don't need to manually position cards
+    // React will handle the positioning based on the component's render
+    // This effect is kept for potential future use
 
-    // Reset all next cards to ensure they appear in the center
-    const nextCards = document.querySelectorAll(
-      ".preview-stack-card, .deep-stack-card"
-    );
-    nextCards.forEach((card) => {
-      card.style.cssText = `
-        position: absolute !important;
-        left: 0 !important;
-        right: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        margin: auto !important;
-        transform-origin: center center !important;
-        will-change: transform, opacity !important;
-        transition: transform 0.3s ease, opacity 0.3s ease !important;
-        transform-style: preserve-3d !important;
-        z-index: 5 !important;
-        opacity: 0.85 !important;
-        transform: translateX(0) translateY(10px) scale(0.95) !important;
-      `;
-    });
-
-    // Reset the current card to ensure it appears in the center
-    const currentCard = document.querySelector(".tinder-current-card");
-    if (currentCard) {
-      currentCard.style.cssText = `
-        position: absolute !important;
-        left: 0 !important;
-        right: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        margin: auto !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        z-index: 10 !important;
-        transform-style: preserve-3d !important;
-        transform-origin: center center !important;
-        will-change: transform !important;
-        transform: translateX(0) translateY(0) translateZ(0) !important;
-      `;
-    }
+    // Reset any swiping state on mount
+    setIsCardSwiping(false);
+    setSwipeDirection(null);
   }, []);
 
   // Code symbols with small special symbols
@@ -812,159 +609,148 @@ const Home = () => {
                   </motion.button>
                 )}
 
-                {/* Static background cards - perfectly centered and stacked */}
+                {/* Tinder-style card stack - all cards perfectly centered and stacked */}
                 <div
-                  className="static-card-stack"
+                  className="tinder-cards-wrapper"
                   style={{
                     position: "relative",
                     width: "100%",
-                    height: "100%",
-                    overflow: "hidden", // Prevent cards from appearing outside the stack
+                    height: "450px",
                   }}
                 >
-                  {/* Next card - always centered */}
-                  {currentIndex + 1 < users.length && (
-                    <div
-                      className="static-card-position preview-stack-card"
-                      style={{
-                        position: "absolute",
-                        left: "50%", // Center horizontally
-                        top: "50%", // Center vertically
-                        transform: "translate(-50%, -50%) scale(0.95)", // Center with slight scale down
-                        zIndex: "5",
-                        opacity: "0.9", // Slightly less visible
-                        transformStyle: "preserve-3d",
-                        transformOrigin: "center center",
-                        willChange: "transform, opacity",
-                        transition: "none", // No transition to ensure instant positioning
-                        pointerEvents: "none", // Prevent interaction with this card
-                      }}
-                    >
-                      <Card user={users[currentIndex + 1]} isNextCard={true} />
-                    </div>
-                  )}
+                  {/* Stack of cards - all perfectly centered */}
+                  {users
+                    .slice(currentIndex, currentIndex + 3)
+                    .map((user, index) => (
+                      <div
+                        key={user.id}
+                        className={`tinder-card ${
+                          index === 0 ? "top-card" : ""
+                        }`}
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          top: "50%",
+                          transform: `translate(-50%, -50%) scale(${
+                            1 - index * 0.05
+                          })`,
+                          zIndex: 10 - index,
+                          opacity: 1 - index * 0.2,
+                          width: "100%",
+                          height: "100%",
+                          transformOrigin: "center center",
+                          transition:
+                            index === 0
+                              ? "none"
+                              : "transform 0.2s ease, opacity 0.2s ease",
+                          pointerEvents: index === 0 ? "auto" : "none",
+                        }}
+                      >
+                        {index === 0 ? (
+                          <motion.div
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }} // Constraints don't matter as we're handling manually
+                            dragElastic={1} // Full elasticity for natural feel
+                            onDrag={(_, info) => {
+                              // Get the card element
+                              const card = document.querySelector(".top-card");
+                              if (!card) return;
 
-                  {/* Add a third card for deeper stack effect - always centered */}
-                  {currentIndex + 2 < users.length && (
-                    <div
-                      className="static-card-position deep-stack-card"
-                      style={{
-                        position: "absolute",
-                        left: "50%", // Center horizontally
-                        top: "50%", // Center vertically
-                        transform: "translate(-50%, -50%) scale(0.9)", // Center with more scale down
-                        zIndex: "4",
-                        opacity: "0.7", // Even less visible
-                        transformStyle: "preserve-3d",
-                        transformOrigin: "center center",
-                        willChange: "transform, opacity",
-                        transition: "none", // No transition to ensure instant positioning
-                        pointerEvents: "none", // Prevent interaction with this card
-                      }}
-                    >
-                      <Card user={users[currentIndex + 2]} isNextCard={true} />
-                    </div>
-                  )}
-                </div>
+                              // Calculate rotation based on drag distance (Tinder-like)
+                              const rotate = Math.min(
+                                Math.max(info.offset.x * 0.1, -15),
+                                15
+                              );
 
-                {/* Current card - always centered by default */}
-                <div
-                  className="tinder-current-card"
-                  style={{
-                    position: "absolute",
-                    left: "50%", // Center horizontally
-                    top: "50%", // Center vertically
-                    transform: "translate(-50%, -50%) scale(1)", // Perfect center positioning
-                    margin: "0",
-                    padding: "0",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: "10",
-                    transformStyle: "preserve-3d",
-                    transformOrigin: "center center",
-                    willChange: "transform",
-                    transition: "none", // No transition to ensure instant positioning
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <motion.div
-                    drag="x"
-                    dragConstraints={{
-                      left: -window.innerWidth / 2,
-                      right: window.innerWidth / 2,
-                    }}
-                    dragElastic={0.7} // Slightly elastic drag for better feel
-                    dragTransition={{
-                      power: 0.2,
-                      timeConstant: 400,
-                    }}
-                    onDragStart={() => {
-                      // No need to modify anything on drag start
-                      // The card should move freely during drag
-                    }}
-                    onDragEnd={(_, info) => {
-                      // Check if the card was swiped far enough
-                      const swipe = info.offset.x;
-                      const swipeThreshold = 80;
-                      const swipeVelocity = Math.abs(info.velocity.x);
+                              // Apply transform directly to the card
+                              card.style.transform = `translate(${
+                                info.offset.x
+                              }px, ${
+                                -Math.abs(info.offset.x) * 0.05
+                              }px) rotate(${rotate}deg)`;
 
-                      // Determine if it's a valid swipe
-                      const isSwipeLeft =
-                        swipe < -swipeThreshold ||
-                        (swipe < -40 && swipeVelocity > 0.8);
-                      const isSwipeRight =
-                        swipe > swipeThreshold ||
-                        (swipe > 40 && swipeVelocity > 0.8);
+                              // Apply color overlay based on direction
+                              if (info.offset.x > 50) {
+                                // Green for right swipe (like)
+                                const opacity = Math.min(
+                                  Math.abs(info.offset.x) / 300,
+                                  0.8
+                                );
+                                card.style.boxShadow = `0 0 20px 5px rgba(52, 199, 89, ${opacity})`;
+                                card.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
+                              } else if (info.offset.x < -50) {
+                                // Red for left swipe (nope)
+                                const opacity = Math.min(
+                                  Math.abs(info.offset.x) / 300,
+                                  0.8
+                                );
+                                card.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
+                                card.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
+                              } else {
+                                // Reset when near center
+                                card.style.boxShadow = "";
+                                card.style.border = "none";
+                              }
+                            }}
+                            onDragEnd={(_, info) => {
+                              // Get the card element
+                              const card = document.querySelector(".top-card");
+                              if (!card) return;
 
-                      if (isSwipeLeft) {
-                        handleSwipeLeft();
-                      } else if (isSwipeRight) {
-                        handleSwipeRight();
-                      } else {
-                        // If not swiped far enough, reset to center
-                        const currentCard = document.querySelector(
-                          ".tinder-current-card"
-                        );
-                        if (currentCard) {
-                          currentCard.style.cssText = `
-                            position: absolute !important;
-                            left: 50% !important;
-                            top: 50% !important;
-                            transform: translate(-50%, -50%) scale(1) !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            display: flex !important;
-                            justify-content: center !important;
-                            align-items: center !important;
-                            z-index: 10 !important;
-                            transform-style: preserve-3d !important;
-                            transform-origin: center center !important;
-                            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-                            width: 100% !important;
-                            height: 100% !important;
-                          `;
-                        }
-                      }
-                    }}
-                    className="card-container"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Card
-                      user={users[currentIndex]}
-                      onSwipeLeft={handleSwipeLeft}
-                      onSwipeRight={handleSwipeRight}
-                      isCardSwiping={isCardSwiping}
-                      swipeDirection={swipeDirection}
-                    />
-                  </motion.div>
+                              // Check if the card was swiped far enough
+                              const swipe = info.offset.x;
+                              const swipeThreshold = 80;
+                              const swipeVelocity = Math.abs(info.velocity.x);
+
+                              // Determine if it's a valid swipe
+                              const isSwipeLeft =
+                                swipe < -swipeThreshold ||
+                                (swipe < -40 && swipeVelocity > 0.8);
+                              const isSwipeRight =
+                                swipe > swipeThreshold ||
+                                (swipe > 40 && swipeVelocity > 0.8);
+
+                              if (isSwipeLeft) {
+                                // Animate the card off-screen to the left
+                                card.style.transition = "transform 0.3s ease";
+                                card.style.transform = `translate(-${window.innerWidth}px, 0) rotate(-30deg)`;
+                                setTimeout(() => handleSwipeLeft(), 300);
+                              } else if (isSwipeRight) {
+                                // Animate the card off-screen to the right
+                                card.style.transition = "transform 0.3s ease";
+                                card.style.transform = `translate(${window.innerWidth}px, 0) rotate(30deg)`;
+                                setTimeout(() => handleSwipeRight(), 300);
+                              } else {
+                                // Spring back to center if not swiped far enough
+                                card.style.transition =
+                                  "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                                card.style.transform =
+                                  "translate(-50%, -50%) scale(1)";
+                                card.style.boxShadow = "";
+                                card.style.border = "none";
+                              }
+                            }}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              position: "relative",
+                              borderRadius: "10px",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Card
+                              user={user}
+                              onSwipeLeft={handleSwipeLeft}
+                              onSwipeRight={handleSwipeRight}
+                              isCardSwiping={isCardSwiping}
+                              swipeDirection={swipeDirection}
+                            />
+                          </motion.div>
+                        ) : (
+                          <Card user={user} isNextCard={true} />
+                        )}
+                      </div>
+                    ))}
                 </div>
               </div>
             ) : (
