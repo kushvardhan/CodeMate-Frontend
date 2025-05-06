@@ -514,6 +514,15 @@ const Card = ({
         showingNextCard || isNextCard || isPreview ? undefined : "hover"
       }
       drag={false} // Disable drag as it's handled by parent component
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        left: 0,
+        top: 0,
+        borderRadius: "10px",
+        overflow: "hidden",
+      }}
     >
       <div
         className="dev-card-content"
@@ -524,8 +533,11 @@ const Card = ({
           boxShadow: darkMode
             ? "0 4px 15px rgba(0, 0, 0, 0.5)"
             : "0 4px 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: "12px",
+          borderRadius: "10px",
           overflow: "hidden",
+          width: "100%",
+          height: "100%",
+          position: "relative",
         }}
       >
         <motion.img
@@ -554,6 +566,7 @@ const Card = ({
             left: 0,
             filter:
               "brightness(1.05) contrast(1.05)" /* Slightly enhance brightness and contrast */,
+            zIndex: 1,
           }}
           onLoad={(e) => {
             // Force browser to render the image at full quality immediately
@@ -563,7 +576,16 @@ const Card = ({
             e.target.classList.add("loaded");
           }}
         />
-        <div className="dev-card-overlay">
+        <div
+          className="dev-card-overlay"
+          style={{
+            zIndex: 2,
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}
+        >
           <div className="dev-card-info">
             <h2 className="dev-card-name">{userData.name}</h2>
             {userData.location && (
