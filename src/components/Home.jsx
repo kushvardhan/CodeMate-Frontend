@@ -613,7 +613,7 @@ const Home = () => {
                 <div
                   className="tinder-cards-wrapper"
                   style={{
-                    position: "relative",
+                    position: "relative", 
                     width: "300px", // Fixed width for cards
                     height: "450px", // Fixed height for cards
                     margin: "0 auto", // Center the card stack
