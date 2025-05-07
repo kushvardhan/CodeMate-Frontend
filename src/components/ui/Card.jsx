@@ -14,7 +14,7 @@ const Card = ({
 
   // Default user data if not provided
   const defaultUser = {
-    name: "Kush Vardhan",
+    name: "User 1",
     bio: "Passionate about creating beautiful and functional web applications. Love working with React, Node.js, and exploring new technologies.",
     skills: ["React", "Node.js", "JavaScript", "TypeScript", "MongoDB"],
     image:
@@ -585,6 +585,12 @@ const Card = ({
             bottom: 0,
             left: 0,
             right: 0,
+            top: 0, // Cover the entire card
+            background:
+              "linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 20%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.1) 90%, transparent 100%)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
           }}
         >
           <div className="dev-card-info">

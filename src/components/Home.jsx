@@ -613,7 +613,7 @@ const Home = () => {
                 <div
                   className="tinder-cards-wrapper"
                   style={{
-                    position: "relative", 
+                    position: "relative",
                     width: "300px", // Fixed width for cards
                     height: "450px", // Fixed height for cards
                     margin: "0 auto", // Center the card stack
@@ -621,6 +621,7 @@ const Home = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     overflow: "visible", // Allow cards to be visible outside container
+                    perspective: "1000px", // Add perspective for 3D effect
                   }}
                 >
                   {/* Stack of cards - exactly like Tinder */}
