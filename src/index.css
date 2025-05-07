@@ -3045,7 +3045,8 @@ pre,
   align-items: center !important;
   overflow: visible !important; /* Allow for swiping outside the container */
   border-radius: 10px !important;
-  background: transparent !important; /* Make background transparent */
+  background: white !important; /* Make background white to hide cards behind it */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important; /* Add shadow */
 }
 
 /* Ensure the Card component takes up the full space of its container */
@@ -3060,6 +3061,12 @@ pre,
   border-radius: 10px !important;
   overflow: hidden !important;
   background: white !important; /* Ensure white background */
+}
+
+/* Style for background cards */
+.tinder-card:not(.top-card) {
+  opacity: 0.9 !important; /* Slightly transparent */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important; /* Lighter shadow */
 }
 
 /* Responsive adjustments for the card */

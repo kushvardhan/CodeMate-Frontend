@@ -646,7 +646,15 @@ const Home = () => {
                             index === 0 ? "none" : "transform 0.2s ease",
                           pointerEvents: index === 0 ? "auto" : "none",
                           overflow: "hidden", // Ensure content doesn't overflow
-                          // Position is handled by CSS class
+                          // Position the background cards slightly offset and scaled down
+                          ...(index > 0 && {
+                            transform: `translate(-50%, -50%) translateY(${
+                              index * 4
+                            }px) scale(${1 - index * 0.05})`,
+                            left: "50%",
+                            top: "50%",
+                          }),
+                          // Top card position is handled by CSS class
                         }}
                       >
                         {index === 0 ? (
@@ -749,7 +757,16 @@ const Home = () => {
                             />
                           </motion.div>
                         ) : (
-                          <Card user={user} isNextCard={true} />
+                          // Background cards - simplified version
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              position: "relative",
+                            }}
+                          >
+                            <Card user={user} isNextCard={true} />
+                          </div>
                         )}
                       </div>
                     ))}
