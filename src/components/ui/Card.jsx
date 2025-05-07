@@ -9,6 +9,7 @@ const Card = ({
   swipeDirection = null,
   isPreview = false,
 }) => {
+  // Get theme context for potential future use
   const { darkMode } = useTheme();
 
   // Default user data if not provided
@@ -522,22 +523,21 @@ const Card = ({
         top: 0,
         borderRadius: "10px",
         overflow: "hidden",
+        background: "white", // Ensure white background
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow
       }}
     >
       <div
         className="dev-card-content"
         style={{
-          backgroundColor: darkMode
-            ? "rgba(255, 255, 255, 0.05)"
-            : "transparent",
-          boxShadow: darkMode
-            ? "0 4px 15px rgba(0, 0, 0, 0.5)"
-            : "0 4px 10px rgba(0, 0, 0, 0.1)",
+          backgroundColor: "transparent", // Always transparent to show image
           borderRadius: "10px",
           overflow: "hidden",
           width: "100%",
           height: "100%",
           position: "relative",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <motion.img
@@ -567,6 +567,7 @@ const Card = ({
             filter:
               "brightness(1.05) contrast(1.05)" /* Slightly enhance brightness and contrast */,
             zIndex: 1,
+            display: "block" /* Ensure image is displayed as block */,
           }}
           onLoad={(e) => {
             // Force browser to render the image at full quality immediately

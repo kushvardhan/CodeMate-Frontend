@@ -3064,9 +3064,9 @@ pre,
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  overflow: hidden !important;
+  overflow: visible !important; /* Allow for swiping outside the container */
   border-radius: 10px !important;
-  background: white !important;
+  background: transparent !important; /* Make background transparent */
 }
 
 /* Ensure the Card component takes up the full space of its container */
@@ -3080,6 +3080,7 @@ pre,
   margin: 0 !important;
   border-radius: 10px !important;
   overflow: hidden !important;
+  background: white !important; /* Ensure white background */
 }
 
 /* Responsive adjustments for the card */
