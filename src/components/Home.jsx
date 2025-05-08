@@ -691,7 +691,7 @@ const Home = () => {
                             dragConstraints={{ left: 0, right: 0 }} // Constraints don't matter as we're handling manually
                             dragElastic={1} // Full elasticity for natural feel
                             onDrag={(_, info) => {
-                              // Get the card element
+                              // Get the card element - specifically the top card that's being dragged
                               const card = document.querySelector(".top-card");
                               if (!card) return;
 
@@ -706,7 +706,7 @@ const Home = () => {
                               // Ensure the card is visible
                               card.style.visibility = "visible";
 
-                              // Apply color overlay based on direction
+                              // Apply color overlay based on direction - ONLY to the top card
                               if (info.offset.x > 50) {
                                 // Green for right swipe (like)
                                 const opacity = Math.min(
@@ -730,15 +730,19 @@ const Home = () => {
                                 card.style.border = "none";
                               }
 
-                              // Keep background cards in place
+                              // Keep background cards in place WITHOUT any colored borders or shadows
                               const nextCards = document.querySelectorAll(
                                 ".tinder-card:not(.top-card)"
                               );
                               nextCards.forEach((nextCard, i) => {
-                                // Keep background cards in the same position
+                                // Keep background cards in the same position with default styling
                                 nextCard.style.transform = `scale(${
                                   1 - (i + 1) * 0.02
                                 })`;
+                                // Ensure background cards don't have colored borders or shadows
+                                nextCard.style.boxShadow =
+                                  "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                nextCard.style.border = "none";
                               });
                             }}
                             onDragEnd={(_, info) => {
@@ -795,6 +799,10 @@ const Home = () => {
                                       nextCard.style.transform = `scale(${
                                         1 - (i + 1) * 0.02
                                       })`;
+                                      // Ensure background cards don't have colored borders or shadows
+                                      nextCard.style.boxShadow =
+                                        "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                      nextCard.style.border = "none";
                                     });
                                   }, 50);
                                 }, 300);
@@ -829,6 +837,10 @@ const Home = () => {
                                       nextCard.style.transform = `scale(${
                                         1 - (i + 1) * 0.02
                                       })`;
+                                      // Ensure background cards don't have colored borders or shadows
+                                      nextCard.style.boxShadow =
+                                        "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                      nextCard.style.border = "none";
                                     });
                                   }, 50);
                                 }, 300);
@@ -849,6 +861,10 @@ const Home = () => {
                                   nextCard.style.transform = `scale(${
                                     1 - (i + 1) * 0.02
                                   })`;
+                                  // Ensure background cards don't have colored borders or shadows
+                                  nextCard.style.boxShadow =
+                                    "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                  nextCard.style.border = "none";
                                 });
                               }
                             }}
