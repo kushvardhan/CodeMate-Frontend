@@ -379,6 +379,7 @@ html {
 }
 
 .user-info-action-button {
+  width:100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -390,7 +391,6 @@ html {
   font-size: var(--text-base);
   cursor: pointer;
   transition: all 0.3s ease;
-  flex: 1;
   position: relative;
   overflow: hidden;
   z-index: 1;

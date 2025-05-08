@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
@@ -45,29 +44,25 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    const fetchUserAndMessages = async () => {
-      setIsLoading(true);
-      try {
-        // Fetch user info
-        const userResponse = await axios.get(`/user/info/${userId}`, {
-          withCredentials: true,
-        });
-        setUser(userResponse.data.data);
+    // Just load sample data without any API calls
+    setIsLoading(true);
 
-        // In a real app, fetch messages here
-        // For now, using sample data
-        setMessages(generateSampleMessages(userId));
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load chat. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Sample user data
+    setUser({
+      id: userId,
+      firstName: "John",
+      lastName: "Developer",
+      photoUrl: null, // Will use DefaultAvatar
+      skills: ["React", "Node.js", "MongoDB"],
+    });
 
-    if (userId) {
-      fetchUserAndMessages();
-    }
+    // Sample messages
+    setMessages(generateSampleMessages(userId));
+
+    // Simulate loading delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
   }, [userId]);
 
   useEffect(() => {
