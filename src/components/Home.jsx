@@ -649,9 +649,6 @@ const Home = () => {
                     width: "300px", // Fixed width for cards
                     height: "450px", // Fixed height for cards
                     margin: "0 auto", // Center the card stack
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     overflow: "visible", // Allow cards to be visible outside container
                     perspective: "1000px", // Add perspective for 3D effect
                   }}
@@ -680,11 +677,9 @@ const Home = () => {
                           overflow: "hidden", // Ensure content doesn't overflow
                           // Position the background cards slightly offset and scaled down
                           ...(index > 0 && {
-                            transform: `translate(-50%, -50%) translateY(${
-                              index * 4
-                            }px) scale(${1 - index * 0.05})`,
-                            left: "50%",
-                            top: "50%",
+                            transform: `translateY(${index * 4}px) scale(${
+                              1 - index * 0.05
+                            })`,
                           }),
                           // Top card position is handled by CSS class
                         }}
@@ -705,8 +700,8 @@ const Home = () => {
                                 15
                               );
 
-                              // Apply transform directly to the card - starting from centered position
-                              card.style.transform = `translate(-50%, -50%) translateX(${info.offset.x}px) rotate(${rotate}deg)`;
+                              // Apply transform directly to the card
+                              card.style.transform = `translateX(${info.offset.x}px) rotate(${rotate}deg)`;
                               // Ensure the card is visible
                               card.style.visibility = "visible";
 
@@ -755,7 +750,7 @@ const Home = () => {
                               if (isSwipeLeft) {
                                 // Animate the card off-screen to the left
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(-50%, -50%) translateX(-${window.innerWidth}px) rotate(-30deg)`;
+                                card.style.transform = `translateX(-${window.innerWidth}px) rotate(-30deg)`;
 
                                 // Call handleSwipeLeft after animation completes
                                 setTimeout(() => {
@@ -765,15 +760,14 @@ const Home = () => {
                                   setTimeout(() => {
                                     if (card && card.parentNode) {
                                       card.style.transition = "none";
-                                      card.style.transform =
-                                        "translate(-50%, -50%)";
+                                      card.style.transform = "none";
                                     }
                                   }, 50);
                                 }, 300);
                               } else if (isSwipeRight) {
                                 // Animate the card off-screen to the right
                                 card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translate(-50%, -50%) translateX(${window.innerWidth}px) rotate(30deg)`;
+                                card.style.transform = `translateX(${window.innerWidth}px) rotate(30deg)`;
 
                                 // Call handleSwipeRight after animation completes
                                 setTimeout(() => {
@@ -783,8 +777,7 @@ const Home = () => {
                                   setTimeout(() => {
                                     if (card && card.parentNode) {
                                       card.style.transition = "none";
-                                      card.style.transform =
-                                        "translate(-50%, -50%)";
+                                      card.style.transform = "none";
                                     }
                                   }, 50);
                                 }, 300);
@@ -793,7 +786,7 @@ const Home = () => {
                                 card.style.transition =
                                   "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                                 card.style.transform =
-                                  "translate(-50%, -50%) translateX(0) rotate(0)"; // Return to perfect center position
+                                  "translateX(0) rotate(0)"; // Return to center position
                                 card.style.boxShadow =
                                   "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
