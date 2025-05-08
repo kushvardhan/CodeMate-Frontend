@@ -15,8 +15,10 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   // Sample data for demonstration
   const currentUser = {
@@ -73,8 +75,25 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // Add scroll event listener to show/hide scroll button
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      // Show button if user has scrolled up more than 200px from bottom
+      const isScrolledUp =
+        container.scrollHeight - container.scrollTop - container.clientHeight >
+        200;
+      setShowScrollButton(isScrolledUp);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToBottom = (behavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
   const handleSendMessage = (e) => {
@@ -107,21 +126,21 @@ const Chat = () => {
         senderId: "current-user-id",
         receiverId: partnerId,
         content: "Hey there! How's your coding project going?",
-        timestamp: new Date(now.getTime() - 60 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 120 * 60000).toISOString(), // 2 hours ago
       },
       {
         id: "msg2",
         senderId: partnerId,
         receiverId: "current-user-id",
         content: "It's going well! I'm working on a React component right now.",
-        timestamp: new Date(now.getTime() - 55 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 118 * 60000).toISOString(),
       },
       {
         id: "msg3",
         senderId: "current-user-id",
         receiverId: partnerId,
         content: "Nice! Are you using any specific libraries?",
-        timestamp: new Date(now.getTime() - 50 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 115 * 60000).toISOString(),
       },
       {
         id: "msg4",
@@ -129,7 +148,7 @@ const Chat = () => {
         receiverId: "current-user-id",
         content:
           "Yes, I'm using Framer Motion for animations and Tailwind for styling. The combination is really powerful!",
-        timestamp: new Date(now.getTime() - 45 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 110 * 60000).toISOString(),
       },
       {
         id: "msg5",
@@ -137,7 +156,7 @@ const Chat = () => {
         receiverId: partnerId,
         content:
           "That sounds great! I've been meaning to try Tailwind. Would you recommend it for someone just starting with CSS frameworks?",
-        timestamp: new Date(now.getTime() - 30 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 105 * 60000).toISOString(),
       },
       {
         id: "msg6",
@@ -145,14 +164,155 @@ const Chat = () => {
         receiverId: "current-user-id",
         content:
           "Absolutely! It has a bit of a learning curve but once you get used to the utility-first approach, it's super productive.",
-        timestamp: new Date(now.getTime() - 25 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 100 * 60000).toISOString(),
       },
       {
         id: "msg7",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "Do you have any resources you'd recommend for learning Tailwind?",
+        timestamp: new Date(now.getTime() - 95 * 60000).toISOString(),
+      },
+      {
+        id: "msg8",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "The official documentation is really good, but I also found some great tutorials on YouTube. I'll send you the links.",
+        timestamp: new Date(now.getTime() - 90 * 60000).toISOString(),
+      },
+      {
+        id: "msg9",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "https://tailwindcss.com/docs and https://www.youtube.com/watch?v=UBOj6rqRUME",
+        timestamp: new Date(now.getTime() - 89 * 60000).toISOString(),
+      },
+      {
+        id: "msg10",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "Thanks! I'll check them out. What kind of project are you working on?",
+        timestamp: new Date(now.getTime() - 80 * 60000).toISOString(),
+      },
+      {
+        id: "msg11",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "I'm building a portfolio website with a blog section. I want to showcase my projects and share my learning journey.",
+        timestamp: new Date(now.getTime() - 75 * 60000).toISOString(),
+      },
+      {
+        id: "msg12",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "That sounds awesome! Are you using any backend technology for the blog?",
+        timestamp: new Date(now.getTime() - 70 * 60000).toISOString(),
+      },
+      {
+        id: "msg13",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "I'm using Node.js with Express for the API and MongoDB for the database. It's a MERN stack application.",
+        timestamp: new Date(now.getTime() - 65 * 60000).toISOString(),
+      },
+      {
+        id: "msg14",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "Nice choice! I've been working with the MERN stack too. Have you deployed it yet?",
+        timestamp: new Date(now.getTime() - 60 * 60000).toISOString(),
+      },
+      {
+        id: "msg15",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "Not yet, I'm still working on the frontend. I'm planning to deploy it on Vercel for the frontend and Render for the backend.",
+        timestamp: new Date(now.getTime() - 55 * 60000).toISOString(),
+      },
+      {
+        id: "msg16",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content: "That's a good combination. Vercel is great for React apps.",
+        timestamp: new Date(now.getTime() - 50 * 60000).toISOString(),
+      },
+      {
+        id: "msg17",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "Yeah, I love their CI/CD pipeline. It makes deployment so easy.",
+        timestamp: new Date(now.getTime() - 45 * 60000).toISOString(),
+      },
+      {
+        id: "msg18",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content: "Absolutely! Are you using any state management library?",
+        timestamp: new Date(now.getTime() - 40 * 60000).toISOString(),
+      },
+      {
+        id: "msg19",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "I'm using Redux Toolkit. It simplifies a lot of the Redux boilerplate.",
+        timestamp: new Date(now.getTime() - 35 * 60000).toISOString(),
+      },
+      {
+        id: "msg20",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "Good choice! Redux Toolkit is much more developer-friendly than plain Redux.",
+        timestamp: new Date(now.getTime() - 30 * 60000).toISOString(),
+      },
+      {
+        id: "msg21",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "Definitely! What about you? What are you working on these days?",
+        timestamp: new Date(now.getTime() - 25 * 60000).toISOString(),
+      },
+      {
+        id: "msg22",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content:
+          "I'm building a social media platform for developers, kind of like this one! It's a place where developers can connect and collaborate.",
+        timestamp: new Date(now.getTime() - 20 * 60000).toISOString(),
+      },
+      {
+        id: "msg23",
+        senderId: partnerId,
+        receiverId: "current-user-id",
+        content:
+          "That sounds really interesting! I'd love to check it out when it's ready.",
+        timestamp: new Date(now.getTime() - 15 * 60000).toISOString(),
+      },
+      {
+        id: "msg24",
+        senderId: "current-user-id",
+        receiverId: partnerId,
+        content: "Sure thing! I'll send you an invite when it's in beta.",
+        timestamp: new Date(now.getTime() - 10 * 60000).toISOString(),
+      },
+      {
+        id: "msg25",
         senderId: partnerId,
         receiverId: "current-user-id",
         content: "Maybe we could collaborate on a project sometime?",
-        timestamp: new Date(now.getTime() - 10 * 60000).toISOString(),
+        timestamp: new Date(now.getTime() - 5 * 60000).toISOString(),
       },
     ];
   };
@@ -408,7 +568,7 @@ const Chat = () => {
         initial="hidden"
         animate="visible"
       >
-        <div className="messages-container">
+        <div className="messages-container" ref={messagesContainerRef}>
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
@@ -432,6 +592,32 @@ const Chat = () => {
           </AnimatePresence>
           <div ref={messagesEndRef} />
         </div>
+
+        {showScrollButton && (
+          <motion.button
+            className="scroll-to-bottom-button"
+            onClick={() => scrollToBottom()}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </motion.button>
+        )}
 
         <form className="message-input-container" onSubmit={handleSendMessage}>
           <input
