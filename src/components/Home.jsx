@@ -646,12 +646,10 @@ const Home = () => {
                 <div
                   className="tinder-cards-wrapper"
                   style={{
-                    position: "absolute",
+                    position: "relative",
                     width: "300px", // Fixed width for cards
                     height: "450px", // Fixed height for cards
-                    left: "50%", // Center horizontally
-                    transform: "translateX(-50%)", // Center horizontally
-                    top: "0", // Position at the top
+                    margin: "0 auto", // Center horizontally
                     overflow: "visible", // Allow cards to be visible outside container
                     perspective: "1000px", // Add perspective for 3D effect
                   }}
@@ -673,19 +671,18 @@ const Home = () => {
                           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
                           background: "white",
                           zIndex: 10 - index, // Only z-index differs to create the stack
-                          transformOrigin: "center bottom", // Origin at bottom center for better stacking
+                          transformOrigin: "center center", // Origin at center for better stacking
                           transition: "transform 0.3s ease", // Smooth transition for all cards
                           pointerEvents: index === 0 ? "auto" : "none",
                           overflow: "hidden", // Ensure content doesn't overflow
                           left: "0", // Position at left edge
                           top: "0", // Position at top edge
-                          // Position the background cards slightly offset and scaled down
+                          right: "0", // Position at right edge
+                          bottom: "0", // Position at bottom edge
+                          margin: "auto", // Center in parent
+                          // All cards are in the same position, only z-index differs
                           transform:
-                            index === 0
-                              ? "none"
-                              : `translateY(${index * 4}px) scale(${
-                                  1 - index * 0.05
-                                })`,
+                            index === 0 ? "none" : `scale(${1 - index * 0.02})`,
                         }}
                       >
                         {index === 0 ? (
@@ -733,18 +730,14 @@ const Home = () => {
                                 card.style.border = "none";
                               }
 
-                              // Move the next cards slightly based on the drag
+                              // Keep background cards in place
                               const nextCards = document.querySelectorAll(
                                 ".tinder-card:not(.top-card)"
                               );
                               nextCards.forEach((nextCard, i) => {
-                                // Subtle movement of background cards
-                                const moveX = info.offset.x * 0.05;
-                                const moveRotate = rotate * 0.2;
-                                nextCard.style.transform = `translateY(${
-                                  (i + 1) * 4
-                                }px) translateX(${moveX}px) rotate(${moveRotate}deg) scale(${
-                                  1 - (i + 1) * 0.05
+                                // Keep background cards in the same position
+                                nextCard.style.transform = `scale(${
+                                  1 - (i + 1) * 0.02
                                 })`;
                               });
                             }}
@@ -776,13 +769,12 @@ const Home = () => {
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translateX(-${window.innerWidth}px) rotate(-30deg)`;
 
-                                // Prepare next card to move up
+                                // Keep next card in place
                                 if (nextCards.length > 0) {
                                   const nextCard = nextCards[0];
                                   nextCard.style.transition =
                                     "transform 0.3s ease";
-                                  nextCard.style.transform =
-                                    "translateY(0) scale(1)";
+                                  nextCard.style.transform = "none";
                                 }
 
                                 // Call handleSwipeLeft after animation completes
@@ -800,9 +792,9 @@ const Home = () => {
                                     nextCards.forEach((nextCard, i) => {
                                       nextCard.style.transition =
                                         "transform 0.3s ease";
-                                      nextCard.style.transform = `translateY(${
-                                        i * 4
-                                      }px) scale(${1 - i * 0.05})`;
+                                      nextCard.style.transform = `scale(${
+                                        1 - (i + 1) * 0.02
+                                      })`;
                                     });
                                   }, 50);
                                 }, 300);
@@ -811,13 +803,12 @@ const Home = () => {
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translateX(${window.innerWidth}px) rotate(30deg)`;
 
-                                // Prepare next card to move up
+                                // Keep next card in place
                                 if (nextCards.length > 0) {
                                   const nextCard = nextCards[0];
                                   nextCard.style.transition =
                                     "transform 0.3s ease";
-                                  nextCard.style.transform =
-                                    "translateY(0) scale(1)";
+                                  nextCard.style.transform = "none";
                                 }
 
                                 // Call handleSwipeRight after animation completes
@@ -835,9 +826,9 @@ const Home = () => {
                                     nextCards.forEach((nextCard, i) => {
                                       nextCard.style.transition =
                                         "transform 0.3s ease";
-                                      nextCard.style.transform = `translateY(${
-                                        i * 4
-                                      }px) scale(${1 - i * 0.05})`;
+                                      nextCard.style.transform = `scale(${
+                                        1 - (i + 1) * 0.02
+                                      })`;
                                     });
                                   }, 50);
                                 }, 300);
@@ -855,9 +846,9 @@ const Home = () => {
                                 nextCards.forEach((nextCard, i) => {
                                   nextCard.style.transition =
                                     "transform 0.3s ease";
-                                  nextCard.style.transform = `translateY(${
-                                    (i + 1) * 4
-                                  }px) scale(${1 - (i + 1) * 0.05})`;
+                                  nextCard.style.transform = `scale(${
+                                    1 - (i + 1) * 0.02
+                                  })`;
                                 });
                               }
                             }}
