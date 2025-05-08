@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
@@ -144,7 +145,7 @@ const UserInfo = () => {
 
     try {
       const response = await axios.post(
-        `/api/request/accept/${requestId}`,
+        `/request/review/accepted/${requestId}`,
         {},
         { withCredentials: true }
       );
@@ -192,7 +193,7 @@ const UserInfo = () => {
 
     try {
       const response = await axios.post(
-        `/api/request/reject/${requestId}`,
+        `/request/review/rejected/${requestId}`,
         {},
         { withCredentials: true }
       );
@@ -891,7 +892,8 @@ const UserInfo = () => {
                 >
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
-                <span className="button-text">Message</span>
+                <Link to={`/chat/${user._id}`}>
+                <span className="button-text">Message</span></Link>
               </motion.button>
             )}
 

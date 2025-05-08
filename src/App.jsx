@@ -18,6 +18,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
+import Chat from "./components/Chat";
 import UserInfo from "./components/UserInfo";
 import { clearUser, setUser } from "./slice/UserSlice.js";
 
@@ -110,6 +111,16 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+<Route
+        path="/chat/:userId"
+        element={
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        }
+      />
+        
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </AnimatePresence>

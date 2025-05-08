@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
@@ -452,7 +452,9 @@ const Connection = () => {
                   >
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg>
-                  <span>Message</span>
+                  <Link to={`/chat/${connection._id}`}>
+                    <span>Message</span>
+                  </Link>
                 </motion.button>
                 <motion.button
                   className="connection-action-button profile"

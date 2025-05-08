@@ -72,7 +72,7 @@ const Request = () => {
     try {
       // Updated endpoint to match backend API structure
       const response = await axios.post(
-        `/api/request/${status === "accepted" ? "accept" : "reject"}/${
+        `/request/review/${status === "accepted" ? "accepted" : "rejected"}/${
           request._id
         }`,
         {},
