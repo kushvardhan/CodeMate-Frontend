@@ -3047,6 +3047,7 @@ pre,
   border-radius: 10px !important;
   background: white !important; /* Make background white to hide cards behind it */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important; /* Add shadow */
+  will-change: transform !important; /* Optimize for animations */
 }
 
 /* Ensure the Card component takes up the full space of its container */

@@ -192,31 +192,47 @@ const Home = () => {
       console.log(`Ignored user with ID: ${userId}`);
 
       // Make API call to update status
-      await axios.post(
-        `/user/request/send/ignored/${userId}`,
+      const response = await axios.post(
+        `/request/send/ignored/${userId}`,
         {},
         {
           withCredentials: true,
         }
       );
-    } catch (error) {
-      console.error("Error sending ignored status:", error);
-    }
 
-    // Simply update the index to show the next card
-    // The card stack will automatically rerender with the new cards centered
-    if (nextCardIndex !== null) {
-      setCurrentIndex(nextCardIndex);
+      console.log("API response:", response.data);
 
-      // Reset swiping state after a short delay
-      setTimeout(() => {
+      // If API call is successful, move to the next card
+      if (nextCardIndex !== null) {
+        setCurrentIndex(nextCardIndex);
+
+        // Reset swiping state after a short delay
+        setTimeout(() => {
+          setIsCardSwiping(false);
+          setSwipeDirection(null);
+        }, 300);
+      } else {
+        setAllCardsFinished(true);
         setIsCardSwiping(false);
         setSwipeDirection(null);
-      }, 300);
-    } else {
-      setAllCardsFinished(true);
-      setIsCardSwiping(false);
-      setSwipeDirection(null);
+      }
+    } catch (error) {
+      console.error("Error sending ignored status:", error);
+
+      // Even if API call fails, still move to the next card
+      if (nextCardIndex !== null) {
+        setCurrentIndex(nextCardIndex);
+
+        // Reset swiping state after a short delay
+        setTimeout(() => {
+          setIsCardSwiping(false);
+          setSwipeDirection(null);
+        }, 300);
+      } else {
+        setAllCardsFinished(true);
+        setIsCardSwiping(false);
+        setSwipeDirection(null);
+      }
     }
   };
 
@@ -240,31 +256,47 @@ const Home = () => {
       console.log(`Interested in user with ID: ${userId}`);
 
       // Make API call to update status
-      await axios.post(
-        `/user/request/send/interested/${userId}`,
+      const response = await axios.post(
+        `/request/send/interested/${userId}`,
         {},
         {
           withCredentials: true,
         }
       );
-    } catch (error) {
-      console.error("Error sending interested status:", error);
-    }
 
-    // Simply update the index to show the next card
-    // The card stack will automatically rerender with the new cards centered
-    if (nextCardIndex !== null) {
-      setCurrentIndex(nextCardIndex);
+      console.log("API response:", response.data);
 
-      // Reset swiping state after a short delay
-      setTimeout(() => {
+      // If API call is successful, move to the next card
+      if (nextCardIndex !== null) {
+        setCurrentIndex(nextCardIndex);
+
+        // Reset swiping state after a short delay
+        setTimeout(() => {
+          setIsCardSwiping(false);
+          setSwipeDirection(null);
+        }, 300);
+      } else {
+        setAllCardsFinished(true);
         setIsCardSwiping(false);
         setSwipeDirection(null);
-      }, 300);
-    } else {
-      setAllCardsFinished(true);
-      setIsCardSwiping(false);
-      setSwipeDirection(null);
+      }
+    } catch (error) {
+      console.error("Error sending interested status:", error);
+
+      // Even if API call fails, still move to the next card
+      if (nextCardIndex !== null) {
+        setCurrentIndex(nextCardIndex);
+
+        // Reset swiping state after a short delay
+        setTimeout(() => {
+          setIsCardSwiping(false);
+          setSwipeDirection(null);
+        }, 300);
+      } else {
+        setAllCardsFinished(true);
+        setIsCardSwiping(false);
+        setSwipeDirection(null);
+      }
     }
   };
 
@@ -500,7 +532,7 @@ const Home = () => {
         <div className="home-container pt-6 pb-12 mx-auto max-w-4xl bg-transparent">
           {/* Heading and subheading */}
           <motion.div
-            className="Headingandsubheading text-center mb-28 relative z-10 p-4 rounded-lg"
+            className="Headingandsubheading text-center mb-10 relative z-10 p-4 rounded-lg"
             initial={{ opacity: 0, y: -20 }}
             animate={
               loadingSequence.headingLoaded
@@ -529,7 +561,7 @@ const Home = () => {
 
           {/* Card component */}
           <motion.div
-            className="card-wrapper relative z-10 flex justify-center items-center w-full max-w-full mx-auto my-14"
+            className="card-wrapper relative z-10 flex justify-center items-center w-full max-w-full mx-auto mt-4 mb-14"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={
               loadingSequence.cardLoaded
@@ -724,12 +756,38 @@ const Home = () => {
                                 // Animate the card off-screen to the left
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translate(-50%, -50%) translateX(-${window.innerWidth}px) rotate(-30deg)`;
-                                setTimeout(() => handleSwipeLeft(), 300);
+
+                                // Call handleSwipeLeft after animation completes
+                                setTimeout(() => {
+                                  handleSwipeLeft();
+
+                                  // Reset the card's transform after it's been removed from the DOM
+                                  setTimeout(() => {
+                                    if (card && card.parentNode) {
+                                      card.style.transition = "none";
+                                      card.style.transform =
+                                        "translate(-50%, -50%)";
+                                    }
+                                  }, 50);
+                                }, 300);
                               } else if (isSwipeRight) {
                                 // Animate the card off-screen to the right
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translate(-50%, -50%) translateX(${window.innerWidth}px) rotate(30deg)`;
-                                setTimeout(() => handleSwipeRight(), 300);
+
+                                // Call handleSwipeRight after animation completes
+                                setTimeout(() => {
+                                  handleSwipeRight();
+
+                                  // Reset the card's transform after it's been removed from the DOM
+                                  setTimeout(() => {
+                                    if (card && card.parentNode) {
+                                      card.style.transition = "none";
+                                      card.style.transform =
+                                        "translate(-50%, -50%)";
+                                    }
+                                  }, 50);
+                                }, 300);
                               } else {
                                 // Spring back to center if not swiped far enough
                                 card.style.transition =
