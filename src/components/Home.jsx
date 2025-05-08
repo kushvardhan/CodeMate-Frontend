@@ -532,7 +532,7 @@ const Home = () => {
         <div className="home-container pt-6 pb-12 mx-auto max-w-4xl bg-transparent">
           {/* Heading and subheading */}
           <motion.div
-            className="Headingandsubheading text-center mb-10 relative z-10 p-4 rounded-lg"
+            className="Headingandsubheading text-center mb-6 relative z-10 p-4 rounded-lg"
             initial={{ opacity: 0, y: -20 }}
             animate={
               loadingSequence.headingLoaded
@@ -561,7 +561,7 @@ const Home = () => {
 
           {/* Card component */}
           <motion.div
-            className="card-wrapper relative z-10 flex justify-center items-center w-full max-w-full mx-auto mt-4 mb-14"
+            className="card-wrapper relative z-10 flex justify-center items-center w-full max-w-full mx-auto mt-2 mb-14"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={
               loadingSequence.cardLoaded
@@ -612,8 +612,9 @@ const Home = () => {
                 style={{
                   position: "relative",
                   margin: "0 auto", // Center the card stack
-                  overflow: "hidden", // Prevent overflow
+                  overflow: "visible", // Allow overflow for swiping
                   maxWidth: "100%", // Ensure it doesn't exceed the screen width
+                  height: "450px", // Fixed height for the container
                 }}
               >
                 {/* Rewind button */}
@@ -645,10 +646,12 @@ const Home = () => {
                 <div
                   className="tinder-cards-wrapper"
                   style={{
-                    position: "relative",
+                    position: "absolute",
                     width: "300px", // Fixed width for cards
                     height: "450px", // Fixed height for cards
-                    margin: "0 auto", // Center the card stack
+                    left: "50%", // Center horizontally
+                    transform: "translateX(-50%)", // Center horizontally
+                    top: "0", // Position at the top
                     overflow: "visible", // Allow cards to be visible outside container
                     perspective: "1000px", // Add perspective for 3D effect
                   }}
@@ -670,18 +673,19 @@ const Home = () => {
                           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
                           background: "white",
                           zIndex: 10 - index, // Only z-index differs to create the stack
-                          transformOrigin: "center center",
-                          transition:
-                            index === 0 ? "none" : "transform 0.2s ease",
+                          transformOrigin: "center bottom", // Origin at bottom center for better stacking
+                          transition: "transform 0.3s ease", // Smooth transition for all cards
                           pointerEvents: index === 0 ? "auto" : "none",
                           overflow: "hidden", // Ensure content doesn't overflow
+                          left: "0", // Position at left edge
+                          top: "0", // Position at top edge
                           // Position the background cards slightly offset and scaled down
-                          ...(index > 0 && {
-                            transform: `translateY(${index * 4}px) scale(${
-                              1 - index * 0.05
-                            })`,
-                          }),
-                          // Top card position is handled by CSS class
+                          transform:
+                            index === 0
+                              ? "none"
+                              : `translateY(${index * 4}px) scale(${
+                                  1 - index * 0.05
+                                })`,
                         }}
                       >
                         {index === 0 ? (
@@ -728,6 +732,21 @@ const Home = () => {
                                   "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
                               }
+
+                              // Move the next cards slightly based on the drag
+                              const nextCards = document.querySelectorAll(
+                                ".tinder-card:not(.top-card)"
+                              );
+                              nextCards.forEach((nextCard, i) => {
+                                // Subtle movement of background cards
+                                const moveX = info.offset.x * 0.05;
+                                const moveRotate = rotate * 0.2;
+                                nextCard.style.transform = `translateY(${
+                                  (i + 1) * 4
+                                }px) translateX(${moveX}px) rotate(${moveRotate}deg) scale(${
+                                  1 - (i + 1) * 0.05
+                                })`;
+                              });
                             }}
                             onDragEnd={(_, info) => {
                               // Get the card element
@@ -747,10 +766,24 @@ const Home = () => {
                                 swipe > swipeThreshold ||
                                 (swipe > 40 && swipeVelocity > 0.8);
 
+                              // Reset background cards
+                              const nextCards = document.querySelectorAll(
+                                ".tinder-card:not(.top-card)"
+                              );
+
                               if (isSwipeLeft) {
                                 // Animate the card off-screen to the left
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translateX(-${window.innerWidth}px) rotate(-30deg)`;
+
+                                // Prepare next card to move up
+                                if (nextCards.length > 0) {
+                                  const nextCard = nextCards[0];
+                                  nextCard.style.transition =
+                                    "transform 0.3s ease";
+                                  nextCard.style.transform =
+                                    "translateY(0) scale(1)";
+                                }
 
                                 // Call handleSwipeLeft after animation completes
                                 setTimeout(() => {
@@ -762,12 +795,30 @@ const Home = () => {
                                       card.style.transition = "none";
                                       card.style.transform = "none";
                                     }
+
+                                    // Reset all cards to their proper positions
+                                    nextCards.forEach((nextCard, i) => {
+                                      nextCard.style.transition =
+                                        "transform 0.3s ease";
+                                      nextCard.style.transform = `translateY(${
+                                        i * 4
+                                      }px) scale(${1 - i * 0.05})`;
+                                    });
                                   }, 50);
                                 }, 300);
                               } else if (isSwipeRight) {
                                 // Animate the card off-screen to the right
                                 card.style.transition = "transform 0.3s ease";
                                 card.style.transform = `translateX(${window.innerWidth}px) rotate(30deg)`;
+
+                                // Prepare next card to move up
+                                if (nextCards.length > 0) {
+                                  const nextCard = nextCards[0];
+                                  nextCard.style.transition =
+                                    "transform 0.3s ease";
+                                  nextCard.style.transform =
+                                    "translateY(0) scale(1)";
+                                }
 
                                 // Call handleSwipeRight after animation completes
                                 setTimeout(() => {
@@ -779,6 +830,15 @@ const Home = () => {
                                       card.style.transition = "none";
                                       card.style.transform = "none";
                                     }
+
+                                    // Reset all cards to their proper positions
+                                    nextCards.forEach((nextCard, i) => {
+                                      nextCard.style.transition =
+                                        "transform 0.3s ease";
+                                      nextCard.style.transform = `translateY(${
+                                        i * 4
+                                      }px) scale(${1 - i * 0.05})`;
+                                    });
                                   }, 50);
                                 }, 300);
                               } else {
@@ -790,6 +850,15 @@ const Home = () => {
                                 card.style.boxShadow =
                                   "0 4px 10px rgba(0, 0, 0, 0.1)";
                                 card.style.border = "none";
+
+                                // Reset background cards
+                                nextCards.forEach((nextCard, i) => {
+                                  nextCard.style.transition =
+                                    "transform 0.3s ease";
+                                  nextCard.style.transform = `translateY(${
+                                    (i + 1) * 4
+                                  }px) scale(${1 - (i + 1) * 0.05})`;
+                                });
                               }
                             }}
                             style={{
