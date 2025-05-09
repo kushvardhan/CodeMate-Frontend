@@ -373,7 +373,6 @@ const Chat = () => {
             </div>
 
             <div className="chat-top-center">
-              <h1 className="chat-title">Chat</h1>
               <div className="chat-user-info">
                 <div className="chat-user-avatar">
                   <DefaultAvatar />
@@ -520,7 +519,6 @@ const Chat = () => {
   //           </div>
   //
   //           <div className="chat-top-center">
-  //             <h1 className="chat-title">Chat</h1>
   //             <div className="chat-user-info">
   //               <div className="chat-user-avatar">
   //                 <DefaultAvatar />
@@ -680,7 +678,6 @@ const Chat = () => {
           </div>
 
           <div className="chat-top-center">
-            <h1 className="chat-title">Chat</h1>
             <div className="chat-user-info">
               {user?.photoUrl ? (
                 <img
