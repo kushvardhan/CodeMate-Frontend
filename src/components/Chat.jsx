@@ -122,30 +122,49 @@ const Chat = () => {
     // Regular expression to match URLs
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-    // Split the text by URLs
-    const parts = text.split(urlRegex);
+    // If no URLs found, return the original text
+    if (!text.match(urlRegex)) {
+      return text;
+    }
 
-    // Find all URLs in the text
-    const urls = text.match(urlRegex) || [];
-
-    // Combine parts and URLs
+    // Use replace with a function to convert URLs to React elements
+    let lastIndex = 0;
     const result = [];
-    parts.forEach((part, index) => {
-      result.push(part);
-      if (urls[index]) {
-        result.push(
-          <a
-            key={index}
-            href={urls[index]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="message-link"
-          >
-            {urls[index]}
-          </a>
-        );
+    let counter = 0;
+
+    // Replace each URL with a React element
+    text.replace(urlRegex, (url) => {
+      // Get the position where the URL was found
+      const matchIndex = text.indexOf(url, lastIndex);
+
+      // Add the text before the URL
+      if (matchIndex > lastIndex) {
+        result.push(text.substring(lastIndex, matchIndex));
       }
+
+      // Add the URL as a link
+      result.push(
+        <a
+          key={counter++}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="message-link"
+        >
+          {url}
+        </a>
+      );
+
+      // Update the last index
+      lastIndex = matchIndex + url.length;
+
+      return url;
     });
+
+    // Add any remaining text after the last URL
+    if (lastIndex < text.length) {
+      result.push(text.substring(lastIndex));
+    }
 
     return result;
   };
@@ -823,8 +842,8 @@ const Chat = () => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -877,8 +896,8 @@ const Chat = () => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
