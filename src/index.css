@@ -6649,6 +6649,12 @@ pre,
   align-self: flex-start;
 }
 
+/* Add spacing between consecutive messages from the same sender */
+.message.sent + .message.sent,
+.message.received + .message.received {
+  margin-top: -0.5rem;
+}
+
 .message-content {
   padding: 0.75rem 1rem;
   border-radius: 18px;
@@ -6952,6 +6958,7 @@ pre,
 
   .message {
     max-width: 85%;
+    margin-bottom: 0.8rem;
   }
 
   .message-content {
@@ -6960,6 +6967,12 @@ pre,
 
   .message-content p {
     margin: 0 0 0.3rem 0;
+  }
+
+  /* Adjust spacing between consecutive messages on small screens */
+  .message.sent + .message.sent,
+  .message.received + .message.received {
+    margin-top: -0.4rem;
   }
 
   .chat-user-name {
@@ -7079,6 +7092,13 @@ pre,
 
   .message {
     max-width: 90%;
+    margin-bottom: 0.7rem;
+  }
+
+  /* Adjust spacing between consecutive messages on very small screens */
+  .message.sent + .message.sent,
+  .message.received + .message.received {
+    margin-top: -0.35rem;
   }
 
   .message-input-container {
