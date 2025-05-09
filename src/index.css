@@ -6425,8 +6425,8 @@ pre,
 .chat-page.dark-mode {
   --text-color: #f5f5f5;
   --card-bg: #1e1e1e;
-  --border-color: #444;
-  --input-bg: #2a3a50;
+  --border-color: #4a5568;
+  --input-bg: #1a2234;
   --sent-message-bg: #2c5282;
   --received-message-bg: #2d3748;
   --time-color: #a0aec0;
@@ -6439,8 +6439,8 @@ pre,
   --bg-color: #f8f9fa;
   --text-color: #333;
   --card-bg: #ffffff;
-  --border-color: #c5d1e5;
-  --input-bg: #e2ecfa;
+  --border-color: #a3b8d9;
+  --input-bg: #e6f0ff;
   --sent-message-bg: #3182ce;
   --received-message-bg: #e2e8f0;
   --time-color: #718096;
@@ -6797,6 +6797,10 @@ pre,
   outline: none;
   transition: all 0.2s ease;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03);
+  height: 2.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .message-input:focus {
@@ -6809,8 +6813,8 @@ pre,
 }
 
 .send-button {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   background-color: var(--color-success);
@@ -6821,6 +6825,8 @@ pre,
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin: 0;
 }
 
 .dark-mode .send-button {
@@ -7009,5 +7015,30 @@ pre,
 
   .messages-wrapper {
     width: 95%;
+  }
+
+  .message-input {
+    padding: 0.5rem 0.75rem;
+    height: 2.25rem;
+    font-size: 0.95rem;
+  }
+
+  .send-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .send-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .emoji-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .chat-input-area {
+    height: 60px;
   }
 }

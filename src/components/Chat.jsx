@@ -500,22 +500,7 @@ const Chat = () => {
                 disabled
               />
             </div>
-            <button className="send-button" disabled>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-            </button>
+            {/* Send button hidden when disabled */}
           </form>
         </div>
       </div>
@@ -662,22 +647,7 @@ const Chat = () => {
   //               disabled
   //             />
   //           </div>
-  //           <button className="send-button" disabled>
-  //             <svg
-  //               xmlns="http://www.w3.org/2000/svg"
-  //               width="20"
-  //               height="20"
-  //               viewBox="0 0 24 24"
-  //               fill="none"
-  //               stroke="currentColor"
-  //               strokeWidth="2"
-  //               strokeLinecap="round"
-  //               strokeLinejoin="round"
-  //             >
-  //               <line x1="22" y1="2" x2="11" y2="13"></line>
-  //               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-  //             </svg>
-  //           </button>
+  //           {/* Send button hidden when disabled */}
   //         </form>
   //       </div>
   //     </div>
@@ -889,28 +859,38 @@ const Chat = () => {
             </div>
           )}
 
-          <motion.button
-            type="submit"
-            className="send-button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            disabled={!newMessage.trim()}
+          <motion.div
+            initial={{ opacity: 0, width: 0, marginLeft: 0 }}
+            animate={{
+              opacity: newMessage.trim() ? 1 : 0,
+              width: newMessage.trim() ? "auto" : 0,
+              marginLeft: newMessage.trim() ? "0.5rem" : 0,
+            }}
+            transition={{ duration: 0.2 }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <motion.button
+              type="submit"
+              className="send-button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              disabled={!newMessage.trim()}
             >
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </motion.button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </motion.button>
+          </motion.div>
         </form>
       </div>
     </div>
