@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import DefaultAvatar from "./ui/DefaultAvatar";
@@ -315,11 +315,28 @@ const Chat = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-        <div className="chat-top-nav">
+      <div
+        className={`chat-page h-screen flex flex-col ${
+          darkMode ? "dark-mode" : "light-mode"
+        }`}
+      >
+        {/* Fixed Top Navigation with 3D effect */}
+        <div
+          className="chat-top-nav flex justify-between items-center p-4 fixed top-0 left-0 right-0 z-50 shadow-lg"
+          style={{
+            boxShadow: darkMode
+              ? "0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2)"
+              : "0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05)",
+            transform: "translateZ(10px)",
+            backgroundColor: darkMode ? "var(--card-bg)" : "white",
+            borderBottom: `1px solid ${
+              darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+            }`,
+          }}
+        >
           <button
             onClick={() => navigate(-1)}
-            className="back-button"
+            className="back-button flex items-center"
             aria-label="Go back"
           >
             <svg
@@ -335,8 +352,11 @@ const Chat = () => {
             >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            <span>Back</span>
+            <span className="ml-2 hidden sm:inline">Back</span>
           </button>
+
+          <h1 className="text-lg font-semibold">Chat</h1>
+
           <button
             onClick={toggleDarkMode}
             className="theme-toggle"
@@ -376,10 +396,16 @@ const Chat = () => {
             )}
           </button>
         </div>
-        <div className="chat-container">
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p className="loading-text">Loading chat...</p>
+
+        <div className="flex-1 flex items-center justify-center pt-16">
+          <div className="loading-container flex flex-col items-center justify-center p-8">
+            <div
+              className="loading-spinner w-12 h-12 border-4 border-t-4 border-gray-200 rounded-full animate-spin mb-4"
+              style={{
+                borderTopColor: darkMode ? "#3182ce" : "#4f46e5",
+              }}
+            ></div>
+            <p className="loading-text text-lg font-medium">Loading chat...</p>
           </div>
         </div>
       </div>
@@ -482,20 +508,188 @@ const Chat = () => {
   */
 
   return (
-    <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-      <div className="chat-page-container">
-        <div className="chat-card">
-          {/* Chat Header */}
-          <div className="chat-card-header">
-            <button
-              onClick={() => navigate(-1)}
-              className="back-button"
-              aria-label="Go back"
+    <div
+      className={`chat-page h-screen flex flex-col ${
+        darkMode ? "dark-mode" : "light-mode"
+      }`}
+    >
+      {/* Fixed Top Navigation with 3D effect */}
+      <div
+        className="chat-top-nav flex justify-between items-center p-4 fixed top-0 left-0 right-0 z-50 shadow-lg"
+        style={{
+          boxShadow: darkMode
+            ? "0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2)"
+            : "0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05)",
+          transform: "translateZ(10px)",
+          backgroundColor: darkMode ? "var(--card-bg)" : "white",
+          borderBottom: `1px solid ${
+            darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"
+          }`,
+        }}
+      >
+        <button
+          onClick={() => navigate(-1)}
+          className="back-button flex items-center"
+          aria-label="Go back"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          <span className="ml-2 hidden sm:inline">Back</span>
+        </button>
+
+        <h1 className="text-lg font-bold">Chat</h1>
+
+        <button
+          onClick={toggleDarkMode}
+          className="theme-toggle"
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {darkMode ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* User Info Header - Fixed below top nav */}
+      <div
+        className="chat-user-header flex items-center py-2 px-4 fixed top-16 left-0 right-0 z-40 shadow-md"
+        style={{
+          backgroundColor: darkMode
+            ? "rgba(30, 30, 30, 0.95)"
+            : "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(8px)",
+          borderBottom: `1px solid ${
+            darkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)"
+          }`,
+        }}
+      >
+        <div className="flex items-center">
+          {user?.photoUrl ? (
+            <img
+              src={user.photoUrl}
+              alt={`${user?.firstName || "Unknown"} ${
+                user?.lastName || "User"
+              }`}
+              className="w-9 h-9 rounded-full object-cover mr-3"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full mr-3 flex items-center justify-center overflow-hidden">
+              <DefaultAvatar />
+            </div>
+          )}
+          <div>
+            <h2 className="font-semibold text-base">
+              {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
+            </h2>
+            <p className="text-xs opacity-70 mt-0.5">
+              {user?.skills?.slice(0, 2).join(", ")}
+              {user?.skills?.length > 2 && ` +${user.skills.length - 2} more`}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Chat Container with proper spacing for fixed headers */}
+      <div className="flex-1 flex flex-col pt-32 pb-20">
+        {/* Scrollable Messages Container */}
+        <motion.div
+          className="flex-1 overflow-hidden"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <div
+            className="messages-container h-full overflow-y-auto px-4 py-2"
+            ref={messagesContainerRef}
+            style={{
+              maxHeight: "calc(100vh - 130px - 70px)",
+            }}
+          >
+            <AnimatePresence>
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  className={`message ${
+                    message.senderId === currentUser.id ? "sent" : "received"
+                  }`}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <div className="message-content">
+                    <p>{message.content}</p>
+                    <span className="message-time">
+                      {formatMessageTime(message.timestamp)}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            <div ref={messagesEndRef} />
+          </div>
+
+          {showScrollButton && (
+            <motion.button
+              className="scroll-to-bottom-button fixed right-6 bottom-24 z-30 w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
+              style={{
+                backgroundColor: darkMode
+                  ? "rgba(49, 130, 206, 0.9)"
+                  : "rgba(79, 70, 229, 0.9)",
+                color: "white",
+                boxShadow: darkMode
+                  ? "0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05)",
+              }}
+              onClick={() => scrollToBottom()}
+              initial={{ opacity: 0, scale: 0.8, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 10 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -503,165 +697,90 @@ const Chat = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
+                <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
-              <span>Back</span>
-            </button>
-            <div className="chat-user-info">
-              {user?.photoUrl ? (
-                <img
-                  src={user.photoUrl}
-                  alt={`${user?.firstName || "Unknown"} ${
-                    user?.lastName || "User"
-                  }`}
-                  className="chat-user-avatar"
-                />
-              ) : (
-                <div className="chat-user-avatar">
-                  <DefaultAvatar />
-                </div>
-              )}
-              <h2 className="chat-user-name">
-                {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
-              </h2>
-            </div>
-            <button
-              onClick={toggleDarkMode}
-              className="theme-toggle"
-              aria-label={
-                darkMode ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
-              {darkMode ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="5"></circle>
-                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              )}
-            </button>
-          </div>
+            </motion.button>
+          )}
+        </motion.div>
+      </div>
 
-          {/* Chat Body */}
-          <motion.div
-            className="chat-card-body"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+      {/* Fixed Input Area at Bottom */}
+      <div
+        className="chat-input-area fixed bottom-0 left-0 right-0 p-4 z-40"
+        style={{
+          backgroundColor: darkMode
+            ? "rgba(30, 30, 30, 0.95)"
+            : "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(8px)",
+          borderTop: `1px solid ${
+            darkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)"
+          }`,
+          boxShadow: darkMode
+            ? "0 -4px 12px rgba(0, 0, 0, 0.2)"
+            : "0 -4px 12px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <div className="max-w-4xl mx-auto w-full">
+          <form
+            className="message-input-container flex items-center p-2 rounded-full"
+            onSubmit={handleSendMessage}
+            style={{
+              backgroundColor: darkMode
+                ? "rgba(45, 55, 72, 0.5)"
+                : "rgba(237, 242, 247, 0.8)",
+              boxShadow: darkMode
+                ? "0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.05)"
+                : "0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(0, 0, 0, 0.05)",
+              border: `1px solid ${
+                darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
+              }`,
+            }}
           >
-            <div className="messages-container" ref={messagesContainerRef}>
-              <AnimatePresence>
-                {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
-                    className={`message ${
-                      message.senderId === currentUser.id ? "sent" : "received"
-                    }`}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit={{ opacity: 0, y: 20 }}
-                  >
-                    <div className="message-content">
-                      <p>{message.content}</p>
-                      <span className="message-time">
-                        {formatMessageTime(message.timestamp)}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              <div ref={messagesEndRef} />
-            </div>
-
-            {showScrollButton && (
-              <motion.button
-                className="scroll-to-bottom-button"
-                onClick={() => scrollToBottom()}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </motion.button>
-            )}
-          </motion.div>
-
-          {/* Chat Footer - Input Area */}
-          <div className="chat-card-footer">
-            <form
-              className="message-input-container"
-              onSubmit={handleSendMessage}
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              className="message-input flex-1 px-4 py-2 bg-transparent border-none outline-none"
+              style={{
+                color: darkMode
+                  ? "rgba(255, 255, 255, 0.9)"
+                  : "rgba(0, 0, 0, 0.8)",
+              }}
+              ref={messageInputRef}
+            />
+            <motion.button
+              type="submit"
+              className="send-button ml-2 w-10 h-10 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: darkMode
+                  ? "rgba(49, 130, 206, 0.9)"
+                  : "rgba(79, 70, 229, 0.9)",
+                color: "white",
+                boxShadow: darkMode
+                  ? "0 2px 6px rgba(0, 0, 0, 0.3)"
+                  : "0 2px 6px rgba(0, 0, 0, 0.1)",
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              disabled={!newMessage.trim()}
             >
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="message-input"
-                ref={messageInputRef}
-              />
-              <motion.button
-                type="submit"
-                className="send-button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={!newMessage.trim()}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </motion.button>
-            </form>
-          </div>
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </motion.button>
+          </form>
         </div>
       </div>
     </div>
@@ -669,5 +788,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-
