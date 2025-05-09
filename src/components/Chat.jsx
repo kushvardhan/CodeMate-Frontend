@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -113,6 +114,33 @@ const Chat = () => {
   const formatMessageTime = (timestamp) => {
     return format(new Date(timestamp), "h:mm a");
   };
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  const handleEmojiClick = (emojiObject) => {
+    setNewMessage((prevMessage) => prevMessage + emojiObject.emoji);
+    setShowEmojiPicker(false);
+    messageInputRef.current?.focus();
+  };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Generate sample messages for demonstration
   const generateSampleMessages = (partnerId) => {
@@ -321,41 +349,16 @@ const Chat = () => {
         {/* Fixed Top Navigation */}
         <div className="chat-top-nav">
           <div className="msg-cont">
-            <button
-              onClick={() => navigate(-1)}
-              className="back-button"
-              aria-label="Go back"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+            <div className="chat-top-left">
+              <button
+                onClick={() => navigate(-1)}
+                className="back-button"
+                aria-label="Go back"
               >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-              <span>Back</span>
-            </button>
-
-            <h1>Chat</h1>
-
-            <button
-              onClick={toggleDarkMode}
-              className="theme-toggle"
-              aria-label={
-                darkMode ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
-              {darkMode ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -363,38 +366,61 @@ const Chat = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <circle cx="12" cy="12" r="5"></circle>
-                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
                 </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
+                <span>Back</span>
+              </button>
+            </div>
 
-        {/* User Info Header - Fixed below top nav */}
-        <div className="chat-user-header">
-          <div className="msg-cont">
-            <div className="chat-user-info">
-              <div className="chat-user-avatar">
-                <DefaultAvatar />
-              </div>
-              <div>
+            <div className="chat-top-center">
+              <h1 className="chat-title">Chat</h1>
+              <div className="chat-user-info">
+                <div className="chat-user-avatar">
+                  <DefaultAvatar />
+                </div>
                 <h2 className="chat-user-name">Loading...</h2>
               </div>
+            </div>
+
+            <div className="chat-top-right">
+              <button
+                onClick={toggleDarkMode}
+                className="theme-toggle"
+                aria-label={
+                  darkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+              >
+                {darkMode ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -470,37 +496,16 @@ const Chat = () => {
   //       {/* Fixed Top Navigation */}
   //       <div className="chat-top-nav">
   //         <div className="msg-cont">
-  //           <button
-  //             onClick={() => navigate(-1)}
-  //             className="back-button"
-  //             aria-label="Go back"
-  //           >
-  //             <svg
-  //               xmlns="http://www.w3.org/2000/svg"
-  //               width="24"
-  //               height="24"
-  //               viewBox="0 0 24 24"
-  //               fill="none"
-  //               stroke="currentColor"
-  //               strokeWidth="2"
-  //               strokeLinecap="round"
-  //               strokeLinejoin="round"
+  //           <div className="chat-top-left">
+  //             <button
+  //               onClick={() => navigate(-1)}
+  //               className="back-button"
+  //               aria-label="Go back"
   //             >
-  //               <path d="M19 12H5M12 19l-7-7 7-7" />
-  //             </svg>
-  //             <span>Back</span>
-  //           </button>
-  //           <h1>Chat</h1>
-  //           <button
-  //             onClick={toggleDarkMode}
-  //             className="theme-toggle"
-  //             aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-  //           >
-  //             {darkMode ? (
   //               <svg
   //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="20"
-  //                 height="20"
+  //                 width="24"
+  //                 height="24"
   //                 viewBox="0 0 24 24"
   //                 fill="none"
   //                 stroke="currentColor"
@@ -508,38 +513,59 @@ const Chat = () => {
   //                 strokeLinecap="round"
   //                 strokeLinejoin="round"
   //               >
-  //                 <circle cx="12" cy="12" r="5"></circle>
-  //                 <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+  //                 <path d="M19 12H5M12 19l-7-7 7-7" />
   //               </svg>
-  //             ) : (
-  //               <svg
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="20"
-  //                 height="20"
-  //                 viewBox="0 0 24 24"
-  //                 fill="none"
-  //                 stroke="currentColor"
-  //                 strokeWidth="2"
-  //                 strokeLinecap="round"
-  //                 strokeLinejoin="round"
-  //               >
-  //                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  //               </svg>
-  //             )}
-  //           </button>
-  //         </div>
-  //       </div>
+  //               <span>Back</span>
+  //             </button>
+  //           </div>
   //
-  //       {/* User Info Header */}
-  //       <div className="chat-user-header">
-  //         <div className="msg-cont">
-  //           <div className="chat-user-info">
-  //             <div className="chat-user-avatar">
-  //               <DefaultAvatar />
-  //             </div>
-  //             <div>
+  //           <div className="chat-top-center">
+  //             <h1 className="chat-title">Chat</h1>
+  //             <div className="chat-user-info">
+  //               <div className="chat-user-avatar">
+  //                 <DefaultAvatar />
+  //               </div>
   //               <h2 className="chat-user-name">Error</h2>
   //             </div>
+  //           </div>
+  //
+  //           <div className="chat-top-right">
+  //             <button
+  //               onClick={toggleDarkMode}
+  //               className="theme-toggle"
+  //               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+  //             >
+  //               {darkMode ? (
+  //                 <svg
+  //                   xmlns="http://www.w3.org/2000/svg"
+  //                   width="20"
+  //                   height="20"
+  //                   viewBox="0 0 24 24"
+  //                   fill="none"
+  //                   stroke="currentColor"
+  //                   strokeWidth="2"
+  //                   strokeLinecap="round"
+  //                   strokeLinejoin="round"
+  //                 >
+  //                   <circle cx="12" cy="12" r="5"></circle>
+  //                   <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+  //                 </svg>
+  //               ) : (
+  //                 <svg
+  //                   xmlns="http://www.w3.org/2000/svg"
+  //                   width="20"
+  //                   height="20"
+  //                   viewBox="0 0 24 24"
+  //                   fill="none"
+  //                   stroke="currentColor"
+  //                   strokeWidth="2"
+  //                   strokeLinecap="round"
+  //                   strokeLinejoin="round"
+  //                 >
+  //                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  //                 </svg>
+  //               )}
+  //             </button>
   //           </div>
   //         </div>
   //       </div>
@@ -630,41 +656,16 @@ const Chat = () => {
       {/* Fixed Top Navigation */}
       <div className="chat-top-nav">
         <div className="msg-cont">
-          <button
-            onClick={() => navigate(-1)}
-            className="back-button"
-            aria-label="Go back"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className="chat-top-left">
+            <button
+              onClick={() => navigate(-1)}
+              className="back-button"
+              aria-label="Go back"
             >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span>Back</span>
-          </button>
-
-          <h1>Chat</h1>
-
-          <button
-            onClick={toggleDarkMode}
-            className="theme-toggle"
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -672,49 +673,73 @@ const Chat = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <circle cx="12" cy="12" r="5"></circle>
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-      {/* User Info Header - Fixed below top nav */}
-      <div className="chat-user-header">
-        <div className="msg-cont">
-          <div className="chat-user-info">
-            {user?.photoUrl ? (
-              <img
-                src={user.photoUrl}
-                alt={`${user?.firstName || "Unknown"} ${
-                  user?.lastName || "User"
-                }`}
-                className="chat-user-avatar"
-              />
-            ) : (
-              <div className="chat-user-avatar">
-                <DefaultAvatar />
-              </div>
-            )}
-            <div>
+              <span>Back</span>
+            </button>
+          </div>
+
+          <div className="chat-top-center">
+            <h1 className="chat-title">Chat</h1>
+            <div className="chat-user-info">
+              {user?.photoUrl ? (
+                <img
+                  src={user.photoUrl}
+                  alt={`${user?.firstName || "Unknown"} ${
+                    user?.lastName || "User"
+                  }`}
+                  className="chat-user-avatar"
+                />
+              ) : (
+                <div className="chat-user-avatar">
+                  <DefaultAvatar />
+                </div>
+              )}
               <h2 className="chat-user-name">
                 {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
               </h2>
             </div>
+          </div>
+
+          <div className="chat-top-right">
+            <button
+              onClick={toggleDarkMode}
+              className="theme-toggle"
+              aria-label={
+                darkMode ? "Switch to light mode" : "Switch to dark mode"
+              }
+            >
+              {darkMode ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </div>
