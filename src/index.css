@@ -6569,7 +6569,7 @@ pre,
   width: 100%;
   flex: 1;
   overflow-y: auto;
-  padding: 1rem 0;
+  padding: 0.75rem 0;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 160px); /* Adjust for top nav and input */
@@ -6632,7 +6632,7 @@ pre,
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
 .message {
@@ -6954,6 +6954,14 @@ pre,
     max-width: 85%;
   }
 
+  .message-content {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .message-content p {
+    margin: 0 0 0.3rem 0;
+  }
+
   .chat-user-name {
     font-size: 0.9rem;
   }
@@ -6979,13 +6987,21 @@ pre,
   .chat-top-center .chat-user-info {
     gap: 0.3rem;
   }
+
+  .messages-container {
+    padding: 0.5rem 0;
+  }
 }
 
 @media (max-width: 768px) {
   .messages-wrapper,
   .message-input-container {
-    width: 90%;
+    width: 95%;
     max-width: none;
+  }
+
+  .msg-cont {
+    padding: 0 0.3rem;
   }
 }
 
@@ -7009,12 +7025,17 @@ pre,
   }
 
   .message-input-container {
-    padding: 0.5rem 1.25rem;
-    width: 95%;
+    padding: 0.5rem 0.5rem;
+    width: 100%;
   }
 
   .messages-wrapper {
-    width: 95%;
+    width: 100%;
+    padding: 0;
+  }
+
+  .msg-cont {
+    padding: 0 0.15rem;
   }
 
   .message-input {
@@ -7040,5 +7061,32 @@ pre,
 
   .chat-input-area {
     height: 60px;
+  }
+
+  .message {
+    max-width: 85%;
+  }
+}
+
+@media (max-width: 375px) {
+  .message-content {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .msg-cont {
+    padding: 0 0.1rem;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .message-input-container {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .emoji-button {
+    width: 32px;
+    height: 32px;
   }
 }
