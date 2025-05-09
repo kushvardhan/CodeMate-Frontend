@@ -6451,7 +6451,7 @@ pre,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.1rem 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   position: fixed;
@@ -6466,11 +6466,24 @@ pre,
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+.chat-top-nav h1{
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.msg-cont{
+  height: calc(100vw - chat-top-nav);
+  background-color: beige;
+  width : 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+}
 
 .chat-user-header {
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1rem;
   background-color: var(--color-background);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: fixed;
@@ -6529,9 +6542,11 @@ pre,
 }
 
 .chat-main-container {
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
   padding-top: 120px;
   padding-bottom: 80px;
 }
@@ -6574,8 +6589,15 @@ pre,
   overflow-y: auto;
   height: 100%;
   width: 100%;
-  padding: 0.5rem;
+  padding: 0;
   max-height: calc(100vh - 130px - 70px);
+}
+
+.messages-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5rem 1rem;
 }
 
 .chat-input-area {
@@ -6600,7 +6622,7 @@ pre,
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   width: 100%;
 }
@@ -6631,33 +6653,43 @@ pre,
 .message {
   display: flex;
   max-width: 70%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
 }
 
 .message.sent {
   align-self: flex-end;
+  justify-content: flex-end;
 }
 
 .message.received {
   align-self: flex-start;
+  justify-content: flex-start;
 }
 
 .message-content {
   padding: 0.75rem 1rem;
   border-radius: 18px;
   position: relative;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 .message.sent .message-content {
-  background-color: var(--sent-message-bg);
+  background-color: var(--color-primary);
   color: white;
   border-bottom-right-radius: 4px;
 }
 
 .message.received .message-content {
-  background-color: var(--received-message-bg);
-  color: var(--text-color);
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-foreground);
   border-bottom-left-radius: 4px;
+}
+
+.dark-mode .message.received .message-content {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-dark-text);
 }
 
 .message-content p {
@@ -6679,6 +6711,7 @@ pre,
 
 .message-input-container {
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem;
   background-color: var(--card-bg);
@@ -6688,6 +6721,7 @@ pre,
 }
 
 .message-input {
+  max-width: 800px;
   flex: 1;
   padding: 0.75rem 1rem;
   border: 1px solid rgba(0, 0, 0, 0.1);

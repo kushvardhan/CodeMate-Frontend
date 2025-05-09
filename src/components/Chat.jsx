@@ -577,7 +577,8 @@ const Chat = () => {
       </div>
 
       {/* User Info Header - Fixed below top nav */}
-      <div className="chat-user-header">
+      #<div className="msg-cont">
+              <div className="chat-user-header">
         <div className="chat-user-info">
           {user?.photoUrl ? (
             <img
@@ -614,28 +615,30 @@ const Chat = () => {
           animate="visible"
           ref={messagesContainerRef}
         >
-          <AnimatePresence>
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                className={`message ${
-                  message.senderId === currentUser.id ? "sent" : "received"
-                }`}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, y: 20 }}
-              >
-                <div className="message-content">
-                  <p>{message.content}</p>
-                  <span className="message-time">
-                    {formatMessageTime(message.timestamp)}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-          <div ref={messagesEndRef} />
+          <div className="messages-wrapper">
+            <AnimatePresence>
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  className={`message ${
+                    message.senderId === currentUser.id ? "sent" : "received"
+                  }`}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <div className="message-content">
+                    <p>{message.content}</p>
+                    <span className="message-time">
+                      {formatMessageTime(message.timestamp)}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            <div ref={messagesEndRef} />
+          </div>
         </motion.div>
 
         {showScrollButton && (
@@ -701,6 +704,9 @@ const Chat = () => {
           </svg>
         </motion.button>
       </form>
+
+      </div>
+
     </div>
   );
 };
