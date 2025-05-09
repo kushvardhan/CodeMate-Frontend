@@ -115,6 +115,41 @@ const Chat = () => {
     return format(new Date(timestamp), "h:mm a");
   };
 
+  // Convert URLs in text to clickable links
+  const linkifyText = (text) => {
+    if (!text) return "";
+
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    // Split the text by URLs
+    const parts = text.split(urlRegex);
+
+    // Find all URLs in the text
+    const urls = text.match(urlRegex) || [];
+
+    // Combine parts and URLs
+    const result = [];
+    parts.forEach((part, index) => {
+      result.push(part);
+      if (urls[index]) {
+        result.push(
+          <a
+            key={index}
+            href={urls[index]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="message-link"
+          >
+            {urls[index]}
+          </a>
+        );
+      }
+    });
+
+    return result;
+  };
+
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prev) => !prev);
   };
@@ -765,7 +800,7 @@ const Chat = () => {
                   exit={{ opacity: 0, y: 20 }}
                 >
                   <div className="message-content">
-                    <p>{message.content}</p>
+                    <p>{linkifyText(message.content)}</p>
                     <span className="message-time">
                       {formatMessageTime(message.timestamp)}
                     </span>
