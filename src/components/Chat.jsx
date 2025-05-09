@@ -15,9 +15,11 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const emojiPickerRef = useRef(null);
 
   // Sample data for demonstration
   const currentUser = {
@@ -318,6 +320,316 @@ const Chat = () => {
       <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
         {/* Fixed Top Navigation */}
         <div className="chat-top-nav">
+          <div className="msg-cont">
+            <button
+              onClick={() => navigate(-1)}
+              className="back-button"
+              aria-label="Go back"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              <span>Back</span>
+            </button>
+
+            <h1>Chat</h1>
+
+            <button
+              onClick={toggleDarkMode}
+              className="theme-toggle"
+              aria-label={
+                darkMode ? "Switch to light mode" : "Switch to dark mode"
+              }
+            >
+              {darkMode ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* User Info Header - Fixed below top nav */}
+        <div className="chat-user-header">
+          <div className="msg-cont">
+            <div className="chat-user-info">
+              <div className="chat-user-avatar">
+                <DefaultAvatar />
+              </div>
+              <div>
+                <h2 className="chat-user-name">Loading...</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Chat Container */}
+        <div className="chat-main-container">
+          <div className="messages-container">
+            <div className="messages-wrapper msg-cont">
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p className="loading-text">Loading chat...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fixed Input Area at Bottom */}
+        <div className="chat-input-area">
+          <form className="message-input-container msg-cont">
+            <div className="emoji-input-container">
+              <span className="emoji-button-disabled">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                  <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                  <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+              </span>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                className="message-input"
+                disabled
+              />
+            </div>
+            <button className="send-button" disabled>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // We don't need error handling since we're using sample data
+  // But keeping this commented out for future reference when real API is implemented
+  // if (error) {
+  //   return (
+  //     <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
+  //       {/* Fixed Top Navigation */}
+  //       <div className="chat-top-nav">
+  //         <div className="msg-cont">
+  //           <button
+  //             onClick={() => navigate(-1)}
+  //             className="back-button"
+  //             aria-label="Go back"
+  //           >
+  //             <svg
+  //               xmlns="http://www.w3.org/2000/svg"
+  //               width="24"
+  //               height="24"
+  //               viewBox="0 0 24 24"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               strokeWidth="2"
+  //               strokeLinecap="round"
+  //               strokeLinejoin="round"
+  //             >
+  //               <path d="M19 12H5M12 19l-7-7 7-7" />
+  //             </svg>
+  //             <span>Back</span>
+  //           </button>
+  //           <h1>Chat</h1>
+  //           <button
+  //             onClick={toggleDarkMode}
+  //             className="theme-toggle"
+  //             aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+  //           >
+  //             {darkMode ? (
+  //               <svg
+  //                 xmlns="http://www.w3.org/2000/svg"
+  //                 width="20"
+  //                 height="20"
+  //                 viewBox="0 0 24 24"
+  //                 fill="none"
+  //                 stroke="currentColor"
+  //                 strokeWidth="2"
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //               >
+  //                 <circle cx="12" cy="12" r="5"></circle>
+  //                 <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+  //               </svg>
+  //             ) : (
+  //               <svg
+  //                 xmlns="http://www.w3.org/2000/svg"
+  //                 width="20"
+  //                 height="20"
+  //                 viewBox="0 0 24 24"
+  //                 fill="none"
+  //                 stroke="currentColor"
+  //                 strokeWidth="2"
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //               >
+  //                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  //               </svg>
+  //             )}
+  //           </button>
+  //         </div>
+  //       </div>
+  //
+  //       {/* User Info Header */}
+  //       <div className="chat-user-header">
+  //         <div className="msg-cont">
+  //           <div className="chat-user-info">
+  //             <div className="chat-user-avatar">
+  //               <DefaultAvatar />
+  //             </div>
+  //             <div>
+  //               <h2 className="chat-user-name">Error</h2>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //
+  //       {/* Main Chat Container */}
+  //       <div className="chat-main-container">
+  //         <div className="messages-container">
+  //           <div className="messages-wrapper msg-cont">
+  //             <div className="error-container">
+  //               <svg
+  //                 xmlns="http://www.w3.org/2000/svg"
+  //                 width="64"
+  //                 height="64"
+  //                 viewBox="0 0 24 24"
+  //                 fill="none"
+  //                 stroke="currentColor"
+  //                 strokeWidth="1"
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //               >
+  //                 <circle cx="12" cy="12" r="10"></circle>
+  //                 <line x1="12" y1="8" x2="12" y2="12"></line>
+  //                 <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  //               </svg>
+  //               <h2 className="error-title">Error Loading Chat</h2>
+  //               <p className="error-message">{error}</p>
+  //               <button className="error-button" onClick={() => navigate(-1)}>
+  //                 Go Back
+  //               </button>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //
+  //       {/* Fixed Input Area */}
+  //       <div className="chat-input-area">
+  //         <form className="message-input-container msg-cont">
+  //           <div className="emoji-input-container">
+  //             <span className="emoji-button-disabled">
+  //               <svg
+  //                 xmlns="http://www.w3.org/2000/svg"
+  //                 width="20"
+  //                 height="20"
+  //                 viewBox="0 0 24 24"
+  //                 fill="none"
+  //                 stroke="currentColor"
+  //                 strokeWidth="2"
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //               >
+  //                 <circle cx="12" cy="12" r="10"></circle>
+  //                 <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+  //                 <line x1="9" y1="9" x2="9.01" y2="9"></line>
+  //                 <line x1="15" y1="9" x2="15.01" y2="9"></line>
+  //               </svg>
+  //             </span>
+  //             <input
+  //               type="text"
+  //               placeholder="Type a message..."
+  //               className="message-input"
+  //               disabled
+  //             />
+  //           </div>
+  //           <button className="send-button" disabled>
+  //             <svg
+  //               xmlns="http://www.w3.org/2000/svg"
+  //               width="20"
+  //               height="20"
+  //               viewBox="0 0 24 24"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               strokeWidth="2"
+  //               strokeLinecap="round"
+  //               strokeLinejoin="round"
+  //             >
+  //               <line x1="22" y1="2" x2="11" y2="13"></line>
+  //               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+  //             </svg>
+  //           </button>
+  //         </form>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  return (
+    <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
+      {/* Fixed Top Navigation */}
+      <div className="chat-top-nav">
+        <div className="msg-cont">
           <button
             onClick={() => navigate(-1)}
             className="back-button"
@@ -380,227 +692,29 @@ const Chat = () => {
             )}
           </button>
         </div>
-
-        <div className="chat-main-container">
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p className="loading-text">Loading chat...</p>
-          </div>
-        </div>
-
-        <form className="chat-input-area message-input-container">
-          <input
-            type="text"
-            placeholder="Type a message..."
-            className="message-input"
-            disabled
-          />
-          <button className="send-button" disabled>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </form>
       </div>
-    );
-  }
-
-  // We don't need error handling since we're using sample data
-  // But keeping this commented out for future reference when real API is implemented
-  /*
-  if (error) {
-    return (
-      <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-        <div className="chat-top-nav">
-          <button
-            onClick={() => navigate(-1)}
-            className="back-button"
-            aria-label="Go back"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span>Back</span>
-          </button>
-          <button
-            onClick={toggleDarkMode}
-            className="theme-toggle"
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="5"></circle>
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
-            )}
-          </button>
-        </div>
-        <div className="chat-container">
-          <div className="error-container">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <h2 className="error-title">Error Loading Chat</h2>
-            <p className="error-message">{error}</p>
-            <button className="error-button" onClick={() => navigate(-1)}>
-              Go Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  */
-
-  return (
-    <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-      {/* Fixed Top Navigation */}
-      <div className="chat-top-nav">
-        <button
-          onClick={() => navigate(-1)}
-          className="back-button"
-          aria-label="Go back"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          <span>Back</span>
-        </button>
-
-        <h1>Chat</h1>
-
-        <button
-          onClick={toggleDarkMode}
-          className="theme-toggle"
-          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {darkMode ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="5"></circle>
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          )}
-        </button>
-      </div>
-
       {/* User Info Header - Fixed below top nav */}
-      #<div className="msg-cont">
-              <div className="chat-user-header">
-        <div className="chat-user-info">
-          {user?.photoUrl ? (
-            <img
-              src={user.photoUrl}
-              alt={`${user?.firstName || "Unknown"} ${
-                user?.lastName || "User"
-              }`}
-              className="chat-user-avatar"
-            />
-          ) : (
-            <div className="chat-user-avatar">
-              <DefaultAvatar />
+      <div className="chat-user-header">
+        <div className="msg-cont">
+          <div className="chat-user-info">
+            {user?.photoUrl ? (
+              <img
+                src={user.photoUrl}
+                alt={`${user?.firstName || "Unknown"} ${
+                  user?.lastName || "User"
+                }`}
+                className="chat-user-avatar"
+              />
+            ) : (
+              <div className="chat-user-avatar">
+                <DefaultAvatar />
+              </div>
+            )}
+            <div>
+              <h2 className="chat-user-name">
+                {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
+              </h2>
             </div>
-          )}
-          <div>
-            <h2 className="chat-user-name">
-              {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
-            </h2>
-            <p className="chat-user-skills">
-              {user?.skills?.slice(0, 2).join(", ")}
-              {user?.skills?.length > 2 && ` +${user.skills.length - 2} more`}
-            </p>
           </div>
         </div>
       </div>
@@ -615,7 +729,7 @@ const Chat = () => {
           animate="visible"
           ref={messagesContainerRef}
         >
-          <div className="messages-wrapper">
+          <div className="messages-wrapper msg-cont">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -669,44 +783,79 @@ const Chat = () => {
       </div>
 
       {/* Fixed Input Area at Bottom */}
-      <form
-        className="chat-input-area message-input-container"
-        onSubmit={handleSendMessage}
-      >
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          className="message-input"
-          ref={messageInputRef}
-        />
-        <motion.button
-          type="submit"
-          className="send-button"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          disabled={!newMessage.trim()}
+      <div className="chat-input-area">
+        <form
+          className="message-input-container msg-cont"
+          onSubmit={handleSendMessage}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <div className="emoji-input-container">
+            <button
+              type="button"
+              className="emoji-button"
+              onClick={toggleEmojiPicker}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+            </button>
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              className="message-input"
+              ref={messageInputRef}
+            />
+          </div>
+
+          {showEmojiPicker && (
+            <div className="emoji-picker-container" ref={emojiPickerRef}>
+              <EmojiPicker
+                onEmojiClick={handleEmojiClick}
+                width="100%"
+                height="350px"
+                theme={darkMode ? "dark" : "light"}
+              />
+            </div>
+          )}
+
+          <motion.button
+            type="submit"
+            className="send-button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            disabled={!newMessage.trim()}
           >
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </motion.button>
-      </form>
-
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </motion.button>
+        </form>
       </div>
-
     </div>
   );
 };
