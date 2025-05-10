@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
@@ -38,13 +38,13 @@ const Chat = () => {
   }, [isAuthenticated, isAuthLoading, navigate]);
 
   useEffect(() => {
-    // Only attempt to connect if user is authenticated and we have both IDs
     if (!isAuthenticated || !loggedInUserId || !userId) return;
 
     try {
       const socket = createSocketConnection();
+      const firstName = loggedInUser ? loggedInUser?.firstName : null;
       socket.emit("joinChat", {
-        firstName: loggedInUser.firstName,
+        firstName,
         loggedInUserId,
         userId,
       });
@@ -176,6 +176,7 @@ const Chat = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
+    const firstName = loggedInUser ? loggedInUser?.firstName : null;
 
     const message = {
       id: `msg-${Date.now()}`,
@@ -185,32 +186,25 @@ const Chat = () => {
       timestamp: new Date().toISOString(),
     };
 
-    // Add message to local state
     setMessages([...messages, message]);
 
-    // Send message to server via socket
     try {
-      // Only send message if user is authenticated
       if (!isAuthenticated) {
         console.error("Cannot send message: User not authenticated");
         return;
       }
 
-      // Get the logged in user ID
       const loggedInUserId = loggedInUser?._id;
 
-      // Only proceed if we have a valid user ID
       if (!loggedInUserId) {
         console.error("Cannot send message: No valid user ID");
         return;
       }
 
       const socket = createSocketConnection();
-
-      // Wait for connection before sending
       socket.on("connect", () => {
-        // Send the message
         socket.emit("sendMessage", {
+          senderFirstName : firstName,
           senderId: loggedInUserId,
           receiverId: userId,
           content: newMessage,
@@ -706,156 +700,6 @@ const Chat = () => {
     );
   }
 
-  // We don't need error handling since we're using sample data
-  // But keeping this commented out for future reference when real API is implemented
-  // if (error) {
-  //   return (
-  //     <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-  //       {/* Fixed Top Navigation */}
-  //       <div className="chat-top-nav">
-  //         <div className="msg-cont">
-  //           <div className="chat-top-left">
-  //             <button
-  //               onClick={() => navigate(-1)}
-  //               className="back-button"
-  //               aria-label="Go back"
-  //             >
-  //               <svg
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="24"
-  //                 height="24"
-  //                 viewBox="0 0 24 24"
-  //                 fill="none"
-  //                 stroke="currentColor"
-  //                 strokeWidth="2"
-  //                 strokeLinecap="round"
-  //                 strokeLinejoin="round"
-  //               >
-  //                 <path d="M19 12H5M12 19l-7-7 7-7" />
-  //               </svg>
-  //               <span>Back</span>
-  //             </button>
-  //           </div>
-  //
-  //           <div className="chat-top-center">
-  //             <div className="chat-user-info">
-  //               <div className="chat-user-avatar">
-  //                 <DefaultAvatar />
-  //               </div>
-  //               <h2 className="chat-user-name">Error</h2>
-  //             </div>
-  //           </div>
-  //
-  //           <div className="chat-top-right">
-  //             <button
-  //               onClick={toggleDarkMode}
-  //               className="theme-toggle"
-  //               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-  //             >
-  //               {darkMode ? (
-  //                 <svg
-  //                   xmlns="http://www.w3.org/2000/svg"
-  //                   width="20"
-  //                   height="20"
-  //                   viewBox="0 0 24 24"
-  //                   fill="none"
-  //                   stroke="currentColor"
-  //                   strokeWidth="2"
-  //                   strokeLinecap="round"
-  //                   strokeLinejoin="round"
-  //                 >
-  //                   <circle cx="12" cy="12" r="5"></circle>
-  //                   <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-  //                 </svg>
-  //               ) : (
-  //                 <svg
-  //                   xmlns="http://www.w3.org/2000/svg"
-  //                   width="20"
-  //                   height="20"
-  //                   viewBox="0 0 24 24"
-  //                   fill="none"
-  //                   stroke="currentColor"
-  //                   strokeWidth="2"
-  //                   strokeLinecap="round"
-  //                   strokeLinejoin="round"
-  //                 >
-  //                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  //                 </svg>
-  //               )}
-  //             </button>
-  //           </div>
-  //         </div>
-  //       </div>
-  //
-  //       {/* Main Chat Container */}
-  //       <div className="chat-main-container">
-  //         <div className="messages-container">
-  //           <div className="messages-wrapper msg-cont">
-  //             <div className="error-container">
-  //               <svg
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="64"
-  //                 height="64"
-  //                 viewBox="0 0 24 24"
-  //                 fill="none"
-  //                 stroke="currentColor"
-  //                 strokeWidth="1"
-  //                 strokeLinecap="round"
-  //                 strokeLinejoin="round"
-  //               >
-  //                 <circle cx="12" cy="12" r="10"></circle>
-  //                 <line x1="12" y1="8" x2="12" y2="12"></line>
-  //                 <line x1="12" y1="16" x2="12.01" y2="16"></line>
-  //               </svg>
-  //               <h2 className="error-title">Error Loading Chat</h2>
-  //               <p className="error-message">{error}</p>
-  //               <button className="error-button" onClick={() => navigate(-1)}>
-  //                 Go Back
-  //               </button>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //
-  //       {/* Fixed Input Area */}
-  //       <div className="chat-input-area">
-  //         <form className="message-input-container msg-cont">
-  //           <div className="emoji-input-container">
-  //             <span className="emoji-button-disabled">
-  //               <svg
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //                 width="20"
-  //                 height="20"
-  //                 viewBox="0 0 24 24"
-  //                 fill="none"
-  //                 stroke="currentColor"
-  //                 strokeWidth="2"
-  //                 strokeLinecap="round"
-  //                 strokeLinejoin="round"
-  //               >
-  //                 <circle cx="12" cy="12" r="10"></circle>
-  //                 <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-  //                 <line x1="9" y1="9" x2="9.01" y2="9"></line>
-  //                 <line x1="15" y1="9" x2="15.01" y2="9"></line>
-  //               </svg>
-  //             </span>
-  //             <input
-  //               type="text"
-  //               placeholder="Type a message..."
-  //               className="message-input"
-  //               value=""
-  //               onChange={() => {}}
-  //               disabled
-  //             />
-  //           </div>
-  //           {/* Send button hidden when disabled */}
-  //         </form>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // Final authentication check before rendering
   if (!isAuthenticated || !loggedInUser) {
     return (
       <div className="flex items-center justify-center h-screen">
