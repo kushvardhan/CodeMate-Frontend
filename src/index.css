@@ -4189,6 +4189,44 @@ pre,
   color: inherit;
 }
 
+/* Fix vertical alignment for connection card buttons */
+.connection-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.connection-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.connection-action-button svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connection-action-button span {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.connection-action-button.message a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
 .footer-logo-svg {
   filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.3));
 }
@@ -6632,7 +6670,7 @@ pre,
 .dark-mode .chat-main-container::after {
   background-color: transparent;
   background-image:
-    /* Doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e67e22' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
+    /* Doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e67e22' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
     /* Coding symbols - first layer */
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='10' y='30' font-family='monospace' font-size='15' opacity='0.15' fill='%23f39c12'%3E%3C/%3E%3C/text%3E%3Ctext x='70' y='40' font-family='monospace' font-size='12' opacity='0.12' fill='%23f39c12'%3E{%3C/text%3E%3Ctext x='30' y='60' font-family='monospace' font-size='14' opacity='0.15' fill='%23f39c12'%3E}%3C/text%3E%3Ctext x='50' y='80' font-family='monospace' font-size='13' opacity='0.12' fill='%23f39c12'%3E()%3C/text%3E%3Ctext x='20' y='50' font-family='monospace' font-size='16' opacity='0.1' fill='%23f39c12'%3E$%3C/text%3E%3Ctext x='80' y='20' font-family='monospace' font-size='15' opacity='0.15' fill='%23f39c12'%3E==%3C/text%3E%3Ctext x='40' y='70' font-family='monospace' font-size='12' opacity='0.12' fill='%23f39c12'%3E&&%3C/text%3E%3Ctext x='60' y='90' font-family='monospace' font-size='14' opacity='0.1' fill='%23f39c12'%3E*%3C/text%3E%3Ctext x='25' y='15' font-family='monospace' font-size='13' opacity='0.15' fill='%23f39c12'%3E++%3C/text%3E%3Ctext x='85' y='55' font-family='monospace' font-size='15' opacity='0.12' fill='%23f39c12'%3E--%3C/text%3E%3C/svg%3E");
   background-repeat: repeat;
@@ -7147,3 +7185,48 @@ pre,
     height: 32px;
   }
 }
+
+/* Add these styles for purplish background symbols */
+.whatsapp-bg-icon {
+  position: absolute;
+  opacity: 0.25; /* Reduced opacity */
+  transform-origin: center;
+  animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.dark .whatsapp-bg-icon {
+  opacity: 0.35; /* Slightly more visible in dark mode but still subtle */
+}
+
+.whatsapp-bg-icon.code {
+  color: #8b5cf6; /* More purple tint */
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.4));
+}
+
+.whatsapp-bg-icon.people {
+  color: #a78bfa; /* Lighter purple */
+  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.4));
+}
+
+.whatsapp-bg-icon.connection {
+  color: #7c3aed; /* Deeper purple */
+  filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.4));
+}
+
+.dark .whatsapp-bg-icon.code {
+  color: #a78bfa; /* Lighter purple for dark mode */
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.5));
+}
+
+.dark .whatsapp-bg-icon.people {
+  color: #c4b5fd; /* Very light purple for dark mode */
+  filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.5));
+}
+
+.dark .whatsapp-bg-icon.connection {
+  color: #8b5cf6; /* Medium purple for dark mode */
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+}
+
+
+
