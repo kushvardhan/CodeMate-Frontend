@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
@@ -362,6 +362,17 @@ const Connection = () => {
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
               }}
+              onClick={() => {
+                // Only navigate on mobile devices
+                if (window.innerWidth <= 480) {
+                  navigate(`/user/info/${connection._id}`, {
+                    state: {
+                      fromConnection: true,
+                      userData: connection,
+                    },
+                  });
+                }
+              }}
             >
               <div className="connection-card-header">
                 <div className="connection-card-image-container">
@@ -433,42 +444,47 @@ const Connection = () => {
               </div>
 
               <div className="connection-card-footer">
-                <Link to={`/chat/${connection._id}`}>
-                <motion.button
-                  className="connection-action-button message"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => alert("Messaging feature coming soon!")}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <Link to={`/chat/${connection._id}`} style={{ flex: 1 }}>
+                  <motion.button
+                    className="connection-action-button message"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click event
+                      alert("Messaging feature coming soon!");
+                    }}
                   >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
                     <span>Message</span>
-                </motion.button>
+                  </motion.button>
                 </Link>
 
                 <motion.button
                   className="connection-action-button profile"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() =>
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click event
                     navigate(`/user/info/${connection._id}`, {
                       state: {
                         fromConnection: true,
                         userData: connection,
                       },
-                    })
-                  }
+                    });
+                  }}
+                  style={{ flex: 1 }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

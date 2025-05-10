@@ -2,15 +2,14 @@ import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import DefaultAvatar from "./ui/DefaultAvatar";
-import {useSelector} from "react-redux";
 import { createSocketConnection } from "../utils/socket";
-
+import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = () => {
-  const loggedInUser = useSelector(state => state.user);
+  const loggedInUser = useSelector((state) => state.user);
   const { userId } = useParams();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
@@ -110,7 +109,21 @@ const Chat = () => {
       timestamp: new Date().toISOString(),
     };
 
+    // Add message to local state
     setMessages([...messages, message]);
+
+    // Send message to server via socket
+    try {
+      const socket = createSocketConnection();
+      socket.emit("sendMessage", {
+        senderId: loggedInUser._id,
+        receiverId: userId,
+        content: newMessage,
+      });
+    } catch (err) {
+      console.log("Error sending message:", err);
+    }
+
     setNewMessage("");
     messageInputRef.current.focus();
   };
@@ -200,16 +213,25 @@ const Chat = () => {
     };
   }, []);
 
-  useEffect(()=>{
-    try{
+  useEffect(() => {
+    try {
       const loggedInUserId = loggedInUser._id;
       const socket = createSocketConnection();
-      socket.emit('joinChat', {loggedInUserId,userId});
 
-    }catch(err){
+      socket.emit("joinChat", { loggedInUserId, userId });
+
+      socket.on("receiveMessage", (data) => {
+        console.log("Received message:", data);
+
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    } catch (err) {
       console.log(err);
     }
-  },[]);
+  }, [userId]);
 
   // Generate sample messages for demonstration
   const generateSampleMessages = (partnerId) => {

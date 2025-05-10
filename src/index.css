@@ -2222,17 +2222,17 @@ pre,
   z-index: -2;
   pointer-events: none;
   background-image: radial-gradient(
-    circle at 25% 25%,
-    rgba(139, 92, 246, 0.03) 0%,
-    transparent 50%
-  ), radial-gradient(
-    circle at 75% 75%,
-    rgba(167, 139, 250, 0.03) 0%,
-    transparent 50%
-  );
+      circle at 25% 25%,
+      rgba(139, 92, 246, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(167, 139, 250, 0.03) 0%,
+      transparent 50%
+    );
 }
-  /* Ensure the card is always centered */
-
+/* Ensure the card is always centered */
 
 /* Deep stack card (third card) */
 .deep-stack-card {
@@ -5400,9 +5400,11 @@ pre,
   display: flex;
   gap: 0.75rem;
   justify-content: center;
+  align-items: center; /* Ensure vertical alignment */
   margin-top: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   background-color: rgba(0, 0, 0, 0.02);
+  height: 80px; /* Fixed height for consistent alignment */
 }
 
 .dark-mode .connection-card-footer {
@@ -5422,6 +5424,7 @@ pre,
   transition: all 0.2s ease;
   white-space: nowrap;
   flex: 1;
+  height: 42px; /* Fixed height for consistent button sizing */
   background-color: var(--color-input);
   color: var(--color-foreground);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -5480,22 +5483,77 @@ pre,
     font-size: var(--text-base);
   }
 
+  /* Compact card layout for mobile */
+  .connection-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .connection-card:active {
+    transform: scale(0.98);
+  }
+
+  .connection-card-header {
+    padding: 1rem 1rem 0;
+  }
+
+  .connection-card-image-container {
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .connection-card-image {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .connection-card-content {
+    padding: 0.75rem 1rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
   .connection-card-name {
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
+    text-align: left;
+    margin: 0;
   }
 
-  .connection-card-about {
-    font-size: var(--text-xs);
+  .connection-card-meta,
+  .connection-card-about,
+  .connection-card-skills {
+    display: none; /* Hide these elements on mobile */
   }
 
-  .connection-action-button {
+  .connection-card-footer {
+    padding: 0.75rem;
+    height: auto;
+    border-top: none;
+    background-color: transparent;
+  }
+
+  .connection-action-button.profile {
+    display: none; /* Hide the profile button on mobile */
+  }
+
+  .connection-action-button.message {
     padding: 0.4rem 0.75rem;
     font-size: var(--text-xs);
+    height: 36px;
+  }
+
+  /* Add a hint that the card is clickable */
+  .connection-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--color-primary);
+    opacity: 0.5;
   }
 }
 
