@@ -5,8 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import DefaultAvatar from "./ui/DefaultAvatar";
+import {useSelector} from "react-redux";
+import { createSocketConnection } from "../utils/socket";
+
 
 const Chat = () => {
+  const loggedInUser = useSelector(state => state.user);
   const { userId } = useParams();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
@@ -195,6 +199,17 @@ const Chat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(()=>{
+    try{
+      const loggedInUserId = loggedInUser._id;
+      const socket = createSocketConnection();
+      socket.emit('joinChat', {loggedInUserId,userId});
+
+    }catch(err){
+      console.log(err);
+    }
+  },[]);
 
   // Generate sample messages for demonstration
   const generateSampleMessages = (partnerId) => {
