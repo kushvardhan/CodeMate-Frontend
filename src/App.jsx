@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import axios from "./api/axios";
+import Chat from "./components/Chat";
 import Connection from "./components/Connection";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
@@ -18,18 +19,63 @@ import NotFoundPage from "./components/NotFoundPage";
 import ProfilePage from "./components/ProfilePage";
 import Request from "./components/Request";
 import SignupPage from "./components/SignupPage";
-import Chat from "./components/Chat";
 import UserInfo from "./components/UserInfo";
 import { clearUser, setUser } from "./slice/UserSlice.js";
 
-// Protected Route
+// Protected Route with enhanced authentication check
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthLoading, user } = useSelector(
+    (state) => state.user
+  );
   const location = useLocation();
+  const dispatch = useDispatch();
+  const [isVerifying, setIsVerifying] = useState(true);
 
-  if (isAuthLoading) return <div>Loading...</div>;
+  // Force verification of authentication on every protected route access
+  useEffect(() => {
+    const verifyAuth = async () => {
+      try {
+        // Only verify if we think we're authenticated or still loading
+        if (isAuthLoading || isAuthenticated) {
+          const response = await axios.get("/user/me", {
+            withCredentials: true,
+          });
 
-  return isAuthenticated ? (
+          if (response.data?.user) {
+            // Update user data in Redux store
+            dispatch(setUser(response.data.user));
+          } else {
+            // Clear user if backend says not authenticated
+            dispatch(clearUser());
+            // Set flag to prevent auto-login attempts
+            localStorage.setItem("wasLoggedOut", "true");
+          }
+        }
+      } catch (error) {
+        console.error("Auth verification failed:", error);
+        // Clear user on error
+        dispatch(clearUser());
+        // Set flag to prevent auto-login attempts
+        localStorage.setItem("wasLoggedOut", "true");
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    verifyAuth();
+  }, [dispatch, isAuthenticated, isAuthLoading, location.pathname]);
+
+  // Show loading while verifying or while auth is still loading
+  if (isVerifying || isAuthLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // After verification, check if authenticated
+  return isAuthenticated && user ? (
     children
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
@@ -112,25 +158,26 @@ const AppRoutes = () => {
           }
         />
 
-<Route
-        path="/chat/:userId"
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-      />
-        
+        <Route
+          path="/chat/:userId"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </AnimatePresence>
   );
 };
 
-// Auth persistence
+// Enhanced Auth persistence with better error handling
 const PersistAuth = ({ children }) => {
   const dispatch = useDispatch();
   const { isAuthLoading } = useSelector((state) => state.user);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   useEffect(() => {
     // Check if user explicitly logged out (we'll set this flag in localStorage)
@@ -140,31 +187,61 @@ const PersistAuth = ({ children }) => {
     if (wasLoggedOut) {
       dispatch(clearUser());
       localStorage.removeItem("wasLoggedOut"); // Clear the flag
+      setInitialCheckDone(true);
       return;
     }
 
     const checkAuth = async () => {
       try {
-        const response = await axios.get("/user/me", {
-          withCredentials: true,
-        });
+        // Set a timeout to prevent hanging if the server doesn't respond
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Auth request timeout")), 5000)
+        );
+
+        // Race the actual request against the timeout
+        const response = await Promise.race([
+          axios.get("/user/me", { withCredentials: true }),
+          timeoutPromise,
+        ]);
 
         if (response.data?.user) {
-          dispatch(setUser(response.data.user)); // Restore user session
+          // Ensure we have a valid user object with _id
+          if (response.data.user && response.data.user._id) {
+            dispatch(setUser(response.data.user)); // Restore user session
+          } else {
+            console.error("Invalid user data received:", response.data.user);
+            dispatch(clearUser());
+          }
         } else {
           dispatch(clearUser());
         }
       } catch (error) {
         console.error("Session verification failed:", error);
         dispatch(clearUser());
+      } finally {
+        setInitialCheckDone(true);
       }
     };
 
     checkAuth(); // Run this once when app loads if user didn't explicitly log out
+
+    // Set up a periodic check to ensure session is still valid
+    const intervalId = setInterval(() => {
+      // Only check if we're not on login/signup pages
+      if (!["/login", "/signup"].includes(window.location.pathname)) {
+        checkAuth();
+      }
+    }, 5 * 60 * 1000); // Check every 5 minutes
+
+    return () => clearInterval(intervalId);
   }, [dispatch]);
 
-  if (isAuthLoading) {
-    return <div>Loading...</div>;
+  if (isAuthLoading && !initialCheckDone) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   return children;

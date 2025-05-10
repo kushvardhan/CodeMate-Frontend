@@ -9,39 +9,49 @@ import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = () => {
-  // Get user from Redux store with proper authentication check
+  // Get user from Redux store with strict authentication check
   const userState = useSelector((state) => state.user);
-  const { isAuthenticated, isAuthLoading } = userState;
-  const loggedInUser = userState?.user || {
-    _id: "demo-user-id",
-  };
+  const { isAuthenticated, isAuthLoading, user: currentAuthUser } = userState;
+  const loggedInUser = currentAuthUser; // Don't provide fallback to ensure we only use real user data
   const { userId } = useParams();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
-  const [user, setUser] = useState(null);
+  const [chatPartner, setChatPartner] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
-  const loggedInUserId = loggedInUser?._id;
+  // Only get ID if we have a valid user object
+  const loggedInUserId = loggedInUser ? loggedInUser._id : null;
+
+  // Check authentication and redirect if not authenticated
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      // Redirect to login page if not authenticated
+      navigate("/login");
+    }
+  }, [isAuthenticated, isAuthLoading, navigate]);
 
   useEffect(() => {
-    if (!loggedInUserId || !userId) return;
+    // Only attempt to connect if user is authenticated and we have both IDs
+    if (!isAuthenticated || !loggedInUserId || !userId) return;
 
     try {
       const socket = createSocketConnection();
-
-      socket.emit("joinChat", { loggedInUserId, userId });
+      socket.emit("joinChat", {
+        firstName: loggedInUser.firstName,
+        loggedInUserId,
+        userId,
+      });
     } catch (err) {
-      console.log(err);
+      console.error("Socket connection error:", err);
     }
-  }, [userId, loggedInUserId]);
+  }, [userId, loggedInUserId, isAuthenticated]);
 
   const currentUser = {
     id: "current-user-id",
@@ -67,11 +77,13 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    // Just load sample data without any API calls
+    // Only load data if authenticated and we have a userId
+    if (!isAuthenticated || !userId) return;
+
     setIsLoading(true);
 
-    // Sample user data
-    setUser({
+    // Sample chat partner data
+    setChatPartner({
       id: userId,
       firstName: "John",
       lastName: "Developer",
@@ -86,7 +98,7 @@ const Chat = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
-  }, [userId]);
+  }, [userId, isAuthenticated]);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -178,8 +190,20 @@ const Chat = () => {
 
     // Send message to server via socket
     try {
-      // Always use a valid user ID for socket connection
-      const loggedInUserId = loggedInUser?._id || "demo-user-id";
+      // Only send message if user is authenticated
+      if (!isAuthenticated) {
+        console.error("Cannot send message: User not authenticated");
+        return;
+      }
+
+      // Get the logged in user ID
+      const loggedInUserId = loggedInUser?._id;
+
+      // Only proceed if we have a valid user ID
+      if (!loggedInUserId) {
+        console.error("Cannot send message: No valid user ID");
+        return;
+      }
 
       const socket = createSocketConnection();
 
@@ -295,12 +319,20 @@ const Chat = () => {
 
   // Socket connection effect
   useEffect(() => {
+    // Only create socket connection if authenticated
+    if (!isAuthenticated || !userId) return;
+
     let socket;
 
     try {
-      // Always use a valid user ID for socket connection
-      // If user isn't logged in, use a demo ID for development
-      const loggedInUserId = loggedInUser?._id || "demo-user-id";
+      // Get the logged in user ID
+      const loggedInUserId = loggedInUser?._id;
+
+      // Only proceed if we have a valid user ID
+      if (!loggedInUserId) {
+        console.error("No valid user ID available for socket connection");
+        return;
+      }
 
       // Create socket connection
       socket = createSocketConnection();
@@ -340,7 +372,7 @@ const Chat = () => {
     } catch (err) {
       console.error("Error in socket connection:", err);
     }
-  }, [userId]);
+  }, [userId, isAuthenticated, loggedInUser]);
 
   // Generate sample messages for demonstration
   const generateSampleMessages = (partnerId) => {
@@ -823,6 +855,18 @@ const Chat = () => {
   //   );
   // }
 
+  // Final authentication check before rendering
+  if (!isAuthenticated || !loggedInUser) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-lg">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
       {/* Fixed Top Navigation */}
@@ -853,11 +897,11 @@ const Chat = () => {
 
           <div className="chat-top-center">
             <div className="chat-user-info">
-              {user?.photoUrl ? (
+              {chatPartner?.photoUrl ? (
                 <img
-                  src={user.photoUrl}
-                  alt={`${user?.firstName || "Unknown"} ${
-                    user?.lastName || "User"
+                  src={chatPartner.photoUrl}
+                  alt={`${chatPartner?.firstName || "Unknown"} ${
+                    chatPartner?.lastName || "User"
                   }`}
                   className="chat-user-avatar"
                 />
@@ -867,7 +911,9 @@ const Chat = () => {
                 </div>
               )}
               <h2 className="chat-user-name">
-                {`${user?.firstName || "Unknown"} ${user?.lastName || "User"}`}
+                {`${chatPartner?.firstName || "Unknown"} ${
+                  chatPartner?.lastName || "User"
+                }`}
               </h2>
             </div>
           </div>
