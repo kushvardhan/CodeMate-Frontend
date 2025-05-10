@@ -374,77 +374,80 @@ const Connection = () => {
                 }
               }}
             >
-              <div className="connection-card-header">
-                <div className="connection-card-image-container">
-                  <img
-                    src={connection.photoUrl || "/default-avatar.png"}
-                    alt={`${connection.firstName || "Unknown"} ${
-                      connection.lastName || "User"
-                    }`}
-                    className="connection-card-image"
-                  />
-                  <div className="connection-card-badge">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20 6L9 17l-5-5"></path>
-                    </svg>
-                    <span>Connected</span>
+              {/* Mobile layout wrapper - will be restructured in CSS for mobile */}
+              <div className="mobile-user-info">
+                <div className="connection-card-header">
+                  <div className="connection-card-image-container">
+                    <img
+                      src={connection.photoUrl || "/default-avatar.png"}
+                      alt={`${connection.firstName || "Unknown"} ${
+                        connection.lastName || "User"
+                      }`}
+                      className="connection-card-image"
+                    />
+                    <div className="connection-card-badge">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M20 6L9 17l-5-5"></path>
+                      </svg>
+                      <span>Connected</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="connection-card-content">
-                <h2 className="connection-card-name">{`${
-                  connection.firstName || "Unknown"
-                } ${connection.lastName || "User"}`}</h2>
+                <div className="connection-card-content">
+                  <h2 className="connection-card-name">{`${
+                    connection.firstName || "Unknown"
+                  } ${connection.lastName || "User"}`}</h2>
 
-                <div className="connection-card-meta">
-                  {connection.age && (
-                    <span className="connection-card-age">
-                      {connection.age} years
-                    </span>
-                  )}
-                  {connection.gender && (
-                    <span className="connection-card-gender">
-                      {getGenderSymbol(connection.gender)}
-                      {connection.gender}
-                    </span>
-                  )}
-                </div>
-
-                {connection.about && (
-                  <p className="connection-card-about">
-                    {truncateText(connection.about, 10)}
-                  </p>
-                )}
-
-                {connection.skills && connection.skills.length > 0 && (
-                  <div className="connection-card-skills">
-                    {connection.skills.slice(0, 2).map((skill, index) => (
-                      <span className="connection-skill-tag" key={index}>
-                        {skill}
+                  <div className="connection-card-meta">
+                    {connection.age && (
+                      <span className="connection-card-age">
+                        {connection.age} years
                       </span>
-                    ))}
-                    {connection.skills.length > 2 && (
-                      <span className="connection-skill-more">
-                        +{connection.skills.length - 2}
+                    )}
+                    {connection.gender && (
+                      <span className="connection-card-gender">
+                        {getGenderSymbol(connection.gender)}
+                        {connection.gender}
                       </span>
                     )}
                   </div>
-                )}
+
+                  {connection.about && (
+                    <p className="connection-card-about">
+                      {truncateText(connection.about, 10)}
+                    </p>
+                  )}
+
+                  {connection.skills && connection.skills.length > 0 && (
+                    <div className="connection-card-skills">
+                      {connection.skills.slice(0, 2).map((skill, index) => (
+                        <span className="connection-skill-tag" key={index}>
+                          {skill}
+                        </span>
+                      ))}
+                      {connection.skills.length > 2 && (
+                        <span className="connection-skill-more">
+                          +{connection.skills.length - 2}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="connection-card-footer">
-                <Link to={`/chat/${connection._id}`} style={{ flex: 1 }}>
+                <Link to={`/chat/${connection._id}`} style={{ width: "48%" }}>
                   <motion.button
                     className="connection-action-button message"
                     whileHover={{ scale: 1.05 }}
@@ -453,6 +456,7 @@ const Connection = () => {
                       e.stopPropagation(); // Prevent card click event
                       alert("Messaging feature coming soon!");
                     }}
+                    style={{ width: "100%" }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -484,7 +488,7 @@ const Connection = () => {
                       },
                     });
                   }}
-                  style={{ flex: 1 }}
+                  style={{ width: "48%" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

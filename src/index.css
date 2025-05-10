@@ -5399,7 +5399,7 @@ pre,
   padding: 1.25rem;
   display: flex;
   gap: 0.75rem;
-  justify-content: center;
+  justify-content: space-between; /* Changed to space-between for better horizontal alignment */
   align-items: center; /* Ensure vertical alignment */
   margin-top: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
@@ -5428,6 +5428,8 @@ pre,
   background-color: var(--color-input);
   color: var(--color-foreground);
   border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 48%; /* Set width to ensure equal sizing */
+  max-width: 48%; /* Limit width to ensure proper spacing */
 }
 
 .dark-mode .connection-action-button {
@@ -5493,26 +5495,54 @@ pre,
     transform: scale(0.98);
   }
 
-  .connection-card-header {
-    padding: 1rem 1rem 0;
+  /* Hide the connected badge on small screens */
+  .connection-card-badge {
+    display: none;
   }
 
-  .connection-card-image-container {
+  /* Restructure the card for mobile */
+  .connection-card {
     display: flex;
-    justify-content: flex-start;
-  }
-
-  .connection-card-image {
-    width: 60px;
-    height: 60px;
-  }
-
-  .connection-card-content {
-    padding: 0.75rem 1rem;
     flex-direction: row;
+    padding: 0.75rem;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
+    height: auto;
+    min-height: 80px;
+  }
+
+  .connection-card-header {
+    padding: 0;
+    margin: 0;
+    order: 1;
+  }
+
+  .connection-card-content {
+    padding: 0;
+    flex: 1;
+    order: 2;
+  }
+
+  .connection-card-footer {
+    padding: 0;
+    height: auto;
+    border-top: none;
+    background-color: transparent;
+    order: 3;
+    width: auto;
+    margin: 0;
+  }
+
+  /* Image and name in one div */
+  .connection-card-image-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .connection-card-image {
+    width: 50px;
+    height: 50px;
   }
 
   .connection-card-name {
@@ -5521,27 +5551,30 @@ pre,
     margin: 0;
   }
 
+  /* Hide unnecessary elements */
   .connection-card-meta,
   .connection-card-about,
   .connection-card-skills {
-    display: none; /* Hide these elements on mobile */
+    display: none;
   }
 
-  .connection-card-footer {
-    padding: 0.75rem;
-    height: auto;
-    border-top: none;
-    background-color: transparent;
-  }
-
+  /* Message button styling */
   .connection-action-button.profile {
     display: none; /* Hide the profile button on mobile */
   }
 
   .connection-action-button.message {
-    padding: 0.4rem 0.75rem;
+    padding: 0.5rem;
     font-size: var(--text-xs);
-    height: 36px;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+  }
+
+  /* Hide the text "Message" and only show the icon */
+  .connection-action-button.message span {
+    display: none;
   }
 
   /* Add a hint that the card is clickable */
@@ -5554,6 +5587,14 @@ pre,
     width: 3px;
     background-color: var(--color-primary);
     opacity: 0.5;
+  }
+
+  /* Fix the mobile layout structure */
+  .mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
   }
 }
 

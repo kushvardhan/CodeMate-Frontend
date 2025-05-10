@@ -531,10 +531,12 @@
   padding: 1.5rem 2rem 2rem;
   display: flex;
   gap: 1rem;
+  justify-content: center; /* Center the buttons horizontally */
 }
 
 .user-info-action-button {
   flex: 1;
+  max-width: 200px; /* Limit width for better appearance */
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius-md);
   font-weight: 500;
@@ -546,6 +548,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid;
+  margin: 0 auto; /* Center single buttons */
 }
 
 .light-mode .user-info-action-button {
@@ -799,12 +802,19 @@
   .user-info-actions {
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .user-info-action-button {
-    flex: 1;
+    flex: 0 1 auto;
     min-width: 80px;
     padding: 0.6rem 0.8rem;
+    margin: 0 auto;
+  }
+
+  /* Single message button should be centered */
+  .user-info-action-button.message {
+    margin: 0 auto;
   }
 
   .user-info-name {

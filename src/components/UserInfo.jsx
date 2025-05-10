@@ -1,8 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
@@ -872,30 +871,42 @@ const UserInfo = () => {
 
           <motion.div className="user-info-actions" variants={itemVariants}>
             {fromConnection && (
-            <Link to={`/chat/${user._id}`}>
-              <motion.button
-                className="user-info-action-button message"
-                onClick={handleMessage}
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                title="Message this user"
+              <div
+                className="message-button-container"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <Link
+                  to={`/chat/${user._id}`}
+                  style={{ display: "block", width: "100%", maxWidth: "200px" }}
                 >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span className="button-text">Message</span>
-              </motion.button>
-              </Link>
+                  <motion.button
+                    className="user-info-action-button message"
+                    onClick={handleMessage}
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.95 }}
+                    title="Message this user"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span className="button-text">Message</span>
+                  </motion.button>
+                </Link>
+              </div>
             )}
 
             {fromRequest && (
