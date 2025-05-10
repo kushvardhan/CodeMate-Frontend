@@ -2145,11 +2145,94 @@ pre,
   z-index: 5 !important; /* Lower z-index to appear behind the current card */
   /* Ensure proper stacking context */
   transform-style: preserve-3d !important;
-  /* Ensure the card is always centered */
-  transform: translateX(0) !important;
-  /* Ensure the card is always in the center */
-  pointer-events: none !important;
 }
+
+/* Updated chat background with CodeMate text */
+.chat-main-container::before {
+  content: "CodeMate";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  font-size: clamp(10vw, 15vw, 20rem);
+  font-weight: 900;
+  z-index: -1;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(167, 139, 250, 0.12),
+    rgba(196, 181, 253, 0.08)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulse-subtle 10s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
+}
+
+/* Remove bubble symbols */
+.whatsapp-bg-icon {
+  display: none;
+}
+
+/* Subtle animation for the CodeMate text */
+@keyframes pulse-subtle {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(-5deg) scale(0.98);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(1.02);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(-5deg) scale(0.98);
+  }
+}
+
+/* Responsive adjustments for the background text */
+@media (max-width: 768px) {
+  .chat-main-container::before {
+    font-size: clamp(8vw, 12vw, 15rem);
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-main-container::before {
+    font-size: clamp(7vw, 10vw, 12rem);
+    transform: translate(-50%, -50%) rotate(-2deg);
+    letter-spacing: 0.03em;
+  }
+}
+
+/* Enhanced background for chat */
+.chat-main-container::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 25% 25%,
+    rgba(139, 92, 246, 0.03) 0%,
+    transparent 50%
+  ), radial-gradient(
+    circle at 75% 75%,
+    rgba(167, 139, 250, 0.03) 0%,
+    transparent 50%
+  );
+}
+  /* Ensure the card is always centered */
+
 
 /* Deep stack card (third card) */
 .deep-stack-card {
@@ -6616,29 +6699,29 @@ pre,
 }
 
 .chat-main-container::before {
-  content: "CHAT";
+  content: "CodeMate";
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-10deg);
-  font-size: 15vw;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  font-size: clamp(10vw, 15vw, 20rem);
   font-weight: 900;
   z-index: -1;
   white-space: nowrap;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.05em;
   pointer-events: none;
   font-family: var(--font-heading);
-  text-shadow: 0 0 15px rgba(103, 58, 183, 0.1);
   background: linear-gradient(
-    45deg,
-    rgba(103, 58, 183, var(--chat-bg-opacity)),
-    rgba(156, 39, 176, calc(var(--chat-bg-opacity) * 1.5))
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(167, 139, 250, 0.12),
+    rgba(196, 181, 253, 0.08)
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: pulse-subtle 8s ease-in-out infinite;
+  animation: pulse-subtle 10s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
 }
 
 /* WhatsApp-style background for the chat */
@@ -6657,7 +6740,7 @@ pre,
 .light-mode .chat-main-container::after {
   background-color: transparent;
   background-image:
-    /* WhatsApp-style doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f39c12' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
+    /* WhatsApp-style doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.343-3-3-3-3-3 1.343-3 3 1.343 3 3 3zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f39c12' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
     /* Coding symbols - first layer */
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='10' y='30' font-family='monospace' font-size='15' opacity='0.1' fill='%23e67e22'%3E%3C/%3E%3C/text%3E%3Ctext x='70' y='40' font-family='monospace' font-size='12' opacity='0.08' fill='%23e67e22'%3E{%3C/text%3E%3Ctext x='30' y='60' font-family='monospace' font-size='14' opacity='0.1' fill='%23e67e22'%3E}%3C/text%3E%3Ctext x='50' y='80' font-family='monospace' font-size='13' opacity='0.08' fill='%23e67e22'%3E()%3C/text%3E%3Ctext x='20' y='50' font-family='monospace' font-size='16' opacity='0.07' fill='%23e67e22'%3E$%3C/text%3E%3Ctext x='80' y='20' font-family='monospace' font-size='15' opacity='0.1' fill='%23e67e22'%3E==%3C/text%3E%3Ctext x='40' y='70' font-family='monospace' font-size='12' opacity='0.08' fill='%23e67e22'%3E&&%3C/text%3E%3Ctext x='60' y='90' font-family='monospace' font-size='14' opacity='0.07' fill='%23e67e22'%3E*%3C/text%3E%3Ctext x='25' y='15' font-family='monospace' font-size='13' opacity='0.1' fill='%23e67e22'%3E++%3C/text%3E%3Ctext x='85' y='55' font-family='monospace' font-size='15' opacity='0.08' fill='%23e67e22'%3E--%3C/text%3E%3C/svg%3E");
   background-repeat: repeat;
@@ -6670,7 +6753,7 @@ pre,
 .dark-mode .chat-main-container::after {
   background-color: transparent;
   background-image:
-    /* Doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e67e22' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
+    /* Doodle pattern */ url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.343-3-3-3-3-3 1.343-3 3 1.343 3 3 3zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e67e22' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"),
     /* Coding symbols - first layer */
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='10' y='30' font-family='monospace' font-size='15' opacity='0.15' fill='%23f39c12'%3E%3C/%3E%3C/text%3E%3Ctext x='70' y='40' font-family='monospace' font-size='12' opacity='0.12' fill='%23f39c12'%3E{%3C/text%3E%3Ctext x='30' y='60' font-family='monospace' font-size='14' opacity='0.15' fill='%23f39c12'%3E}%3C/text%3E%3Ctext x='50' y='80' font-family='monospace' font-size='13' opacity='0.12' fill='%23f39c12'%3E()%3C/text%3E%3Ctext x='20' y='50' font-family='monospace' font-size='16' opacity='0.1' fill='%23f39c12'%3E$%3C/text%3E%3Ctext x='80' y='20' font-family='monospace' font-size='15' opacity='0.15' fill='%23f39c12'%3E==%3C/text%3E%3Ctext x='40' y='70' font-family='monospace' font-size='12' opacity='0.12' fill='%23f39c12'%3E&&%3C/text%3E%3Ctext x='60' y='90' font-family='monospace' font-size='14' opacity='0.1' fill='%23f39c12'%3E*%3C/text%3E%3Ctext x='25' y='15' font-family='monospace' font-size='13' opacity='0.15' fill='%23f39c12'%3E++%3C/text%3E%3Ctext x='85' y='55' font-family='monospace' font-size='15' opacity='0.12' fill='%23f39c12'%3E--%3C/text%3E%3C/svg%3E");
   background-repeat: repeat;
@@ -7227,6 +7310,145 @@ pre,
   color: #8b5cf6; /* Medium purple for dark mode */
   filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
 }
-
-
-
+/* Fix the unexpected closing bracket */
+.static-card-position {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  inset: 0 !important;
+  z-index: 5 !important; /* Lower z-index to appear behind the current card */
+  /* Ensure proper stacking context */
+  transform-style: preserve-3d !important;
+  /* Ensure the card is always centered */
+  transform: translateX(0) !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
+}
+/* Updated chat background with CodeMate text */
+.chat-main-container::before {
+  content: "CodeMate";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  font-size: clamp(10vw, 15vw, 20rem);
+  font-weight: 900;
+  z-index: -1;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(167, 139, 250, 0.12),
+    rgba(196, 181, 253, 0.08)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulse-subtle 10s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
+}
+/* Fix the unexpected closing bracket */
+.static-card-position {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  inset: 0 !important;
+  z-index: 5 !important; /* Lower z-index to appear behind the current card */
+  /* Ensure proper stacking context */
+  transform-style: preserve-3d !important;
+  /* Ensure the card is always centered */
+  transform: translateX(0) !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
+}
+/* Updated chat background with CodeMate text */
+.chat-main-container::before {
+  content: "CodeMate";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  font-size: clamp(10vw, 15vw, 20rem);
+  font-weight: 900;
+  z-index: -1;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(167, 139, 250, 0.12),
+    rgba(196, 181, 253, 0.08)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulse-subtle 10s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
+}
+/* Fix the unexpected closing bracket */
+.static-card-position {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  inset: 0 !important;
+  z-index: 5 !important; /* Lower z-index to appear behind the current card */
+  /* Ensure proper stacking context */
+  transform-style: preserve-3d !important;
+  /* Ensure the card is always centered */
+  transform: translateX(0) !important;
+  /* Ensure the card is always in the center */
+  pointer-events: none !important;
+}
+/* Updated chat background with CodeMate text */
+.chat-main-container::before {
+  content: "CodeMate";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  font-size: clamp(10vw, 15vw, 20rem);
+}
