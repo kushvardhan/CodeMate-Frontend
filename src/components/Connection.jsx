@@ -454,7 +454,7 @@ const Connection = () => {
                     whileTap={{ scale: 0.95 }}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent card click event
-                      alert("Messaging feature coming soon!");
+                      // Message functionality is handled by the Link component
                     }}
                     style={{ width: "100%" }}
                   >

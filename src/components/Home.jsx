@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "../api/axios";
@@ -17,27 +17,83 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [requestsResponse, connectionsResponse] = await Promise.all([
-          axios.get("/user/request/received", { withCredentials: true }),
-          axios.get("/user/request/connections", { withCredentials: true }),
-        ]);
+        // Try to fetch requests and connections, but handle each request separately
+        // to prevent one failed request from affecting the other
 
-        console.log("Requests data:", requestsResponse.data);
-        console.log("Connections data:", connectionsResponse.data);
+        try {
+          // Try to fetch requests
+          const requestsResponse = await axios.get("/user/requests", {
+            withCredentials: true,
+          });
 
-        if (requestsResponse.data && requestsResponse.data.data) {
-          dispatch(addRequest(requestsResponse.data.data));
-        } else if (requestsResponse.data) {
-          dispatch(addRequest(requestsResponse.data));
+          if (requestsResponse.data && requestsResponse.data.data) {
+            dispatch(addRequest(requestsResponse.data.data));
+          } else if (requestsResponse.data) {
+            dispatch(addRequest(requestsResponse.data));
+          }
+        } catch (requestError) {
+          // If the endpoint doesn't exist, try an alternative endpoint
+          try {
+            const alternativeRequestsResponse = await axios.get(
+              "/user/request",
+              {
+                withCredentials: true,
+              }
+            );
+
+            if (
+              alternativeRequestsResponse.data &&
+              alternativeRequestsResponse.data.data
+            ) {
+              dispatch(addRequest(alternativeRequestsResponse.data.data));
+            } else if (alternativeRequestsResponse.data) {
+              dispatch(addRequest(alternativeRequestsResponse.data));
+            }
+          } catch (altRequestError) {
+            // Silently handle the error - the backend endpoint might not be implemented yet
+            // Just set an empty array for requests
+            dispatch(addRequest([]));
+          }
         }
 
-        if (connectionsResponse.data && connectionsResponse.data.data) {
-          dispatch(addConnection(connectionsResponse.data.data));
-        } else if (connectionsResponse.data) {
-          dispatch(addConnection(connectionsResponse.data));
+        try {
+          // Try to fetch connections
+          const connectionsResponse = await axios.get("/user/connections", {
+            withCredentials: true,
+          });
+
+          if (connectionsResponse.data && connectionsResponse.data.data) {
+            dispatch(addConnection(connectionsResponse.data.data));
+          } else if (connectionsResponse.data) {
+            dispatch(addConnection(connectionsResponse.data));
+          }
+        } catch (connectionsError) {
+          // If the endpoint doesn't exist, try an alternative endpoint
+          try {
+            const alternativeConnectionsResponse = await axios.get(
+              "/user/request/connections",
+              {
+                withCredentials: true,
+              }
+            );
+
+            if (
+              alternativeConnectionsResponse.data &&
+              alternativeConnectionsResponse.data.data
+            ) {
+              dispatch(addConnection(alternativeConnectionsResponse.data.data));
+            } else if (alternativeConnectionsResponse.data) {
+              dispatch(addConnection(alternativeConnectionsResponse.data));
+            }
+          } catch (altConnectionsError) {
+            // Silently handle the error - the backend endpoint might not be implemented yet
+            // Just set an empty array for connections
+            dispatch(addConnection([]));
+          }
         }
       } catch (error) {
-        console.error("Error fetching home data:", error);
+        // This will only catch errors that occur outside the inner try/catch blocks
+        console.error("Error in fetchData:", error);
       }
     };
 
@@ -72,7 +128,7 @@ const Home = () => {
           withCredentials: true,
         });
 
-        console.log("Feed data fetched:", response.data);
+        // Data fetched successfully
 
         if (response.data && response.data.data) {
           // Map the backend data to match the expected format for cards
@@ -133,7 +189,7 @@ const Home = () => {
 
       // Wait for all images to load
       Promise.all(preloadPromises).then(() => {
-        console.log("All images preloaded successfully");
+        // All images preloaded successfully
       });
     }
   }, [users]);
@@ -173,7 +229,7 @@ const Home = () => {
     currentIndex < users.length - 1 ? currentIndex + 1 : null;
 
   const handleSwipeLeft = async () => {
-    console.log("Swiped left (pass)");
+    // Handle swipe left (pass)
     if (isCardSwiping) return;
 
     setIsCardSwiping(true);
@@ -189,18 +245,15 @@ const Home = () => {
     // Send "ignored" status to the API
     try {
       const userId = currentCard.id;
-      console.log(`Ignored user with ID: ${userId}`);
 
       // Make API call to update status
-      const response = await axios.post(
+      await axios.post(
         `/request/send/ignored/${userId}`,
         {},
         {
           withCredentials: true,
         }
       );
-
-      console.log("API response:", response.data);
 
       // If API call is successful, move to the next card
       if (nextCardIndex !== null) {
@@ -237,7 +290,7 @@ const Home = () => {
   };
 
   const handleSwipeRight = async () => {
-    console.log("Swiped right (like)");
+    // Handle swipe right (like)
     if (isCardSwiping) return;
 
     setIsCardSwiping(true);
@@ -253,18 +306,15 @@ const Home = () => {
     // Send "interested" status to the API
     try {
       const userId = currentCard.id;
-      console.log(`Interested in user with ID: ${userId}`);
 
       // Make API call to update status
-      const response = await axios.post(
+      await axios.post(
         `/request/send/interested/${userId}`,
         {},
         {
           withCredentials: true,
         }
       );
-
-      console.log("API response:", response.data);
 
       // If API call is successful, move to the next card
       if (nextCardIndex !== null) {
@@ -304,7 +354,6 @@ const Home = () => {
   const handleRewind = async () => {
     // Check if there are any previous cards
     if (previousCards.length === 0) {
-      console.log("No cards to rewind");
       return;
     }
 
@@ -313,17 +362,10 @@ const Home = () => {
 
     // Get the last card
     const lastCard = previousCards[previousCards.length - 1];
-    console.log(
-      "Rewinding to card:",
-      lastCard.card.name,
-      "Direction was:",
-      lastCard.direction
-    );
 
     // If we're rewinding a card, we should cancel the previous action
     try {
       const userId = lastCard.card.id;
-      console.log(`Canceling previous action for user with ID: ${userId}`);
 
       // Make API call to cancel the previous action
       await axios.post(

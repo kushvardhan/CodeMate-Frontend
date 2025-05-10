@@ -224,12 +224,9 @@ const UserInfo = () => {
     }
   };
 
+  // This function is no longer needed as the Link component handles navigation
   const handleMessage = () => {
-    setPopup({
-      isVisible: true,
-      message: "Messaging feature coming soon!",
-      color: "blue",
-    });
+    // Navigation to chat is handled by the Link component
   };
 
   // Loading state

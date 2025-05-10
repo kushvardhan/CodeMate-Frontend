@@ -9,8 +9,9 @@ import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = () => {
-  // Get user from Redux store with proper fallback
+  // Get user from Redux store with proper authentication check
   const userState = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthLoading } = userState;
   const loggedInUser = userState?.user || {
     _id: "demo-user-id",
   };
@@ -28,8 +29,20 @@ const Chat = () => {
   const messageInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
+  const loggedInUserId = loggedInUser?._id;
 
-  // Sample data for demonstration
+  useEffect(() => {
+    if (!loggedInUserId || !userId) return;
+
+    try {
+      const socket = createSocketConnection();
+
+      socket.emit("joinChat", { loggedInUserId, userId });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [userId, loggedInUserId]);
+
   const currentUser = {
     id: "current-user-id",
     firstName: "You",
@@ -172,16 +185,8 @@ const Chat = () => {
 
       // Wait for connection before sending
       socket.on("connect", () => {
-        console.log("Socket connected for sending message");
-
         // Send the message
         socket.emit("sendMessage", {
-          senderId: loggedInUserId,
-          receiverId: userId,
-          content: newMessage,
-        });
-
-        console.log("Emitted sendMessage event with data:", {
           senderId: loggedInUserId,
           receiverId: userId,
           content: newMessage,
@@ -313,7 +318,6 @@ const Chat = () => {
 
       // Listen for incoming messages
       socket.on("receiveMessage", (data) => {
-        console.log("Received message:", data);
         // Add received message to state
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -330,7 +334,6 @@ const Chat = () => {
       // Clean up socket connection on component unmount
       return () => {
         if (socket) {
-          console.log("Disconnecting socket");
           socket.disconnect();
         }
       };
