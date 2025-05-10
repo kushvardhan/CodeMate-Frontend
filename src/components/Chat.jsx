@@ -98,23 +98,67 @@ const Chat = () => {
     setIsLoading(true);
     console.log(`Loading chat data for userId: ${userId}`);
 
-    // Sample chat partner data
-    setChatPartner({
-      id: userId,
-      firstName: "John",
-      lastName: "Developer",
-      photoUrl: null, // Will use DefaultAvatar
-      skills: ["React", "Node.js", "MongoDB"],
-    });
+    // In a real app, we would fetch the user data from the API
+    // For now, let's simulate fetching user data
+    const fetchUserData = async () => {
+      try {
+        // Simulate API call delay
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // Sample messages
-    setMessages(generateSampleMessages(userId));
+        // This would be replaced with actual API call in production
+        // const response = await axios.get(`/api/users/${userId}`);
+        // const userData = response.data;
 
-    // Simulate loading delay
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log(`Chat data loaded for userId: ${userId}`);
-    }, 500);
+        // For demo, we'll use sample data with different possibilities
+        const sampleUsers = [
+          {
+            id: userId,
+            firstName: "Alex",
+            lastName: "Chen",
+            photoUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+            skills: ["React", "Node.js", "MongoDB"],
+          },
+          {
+            id: userId,
+            firstName: "Sarah",
+            lastName: "Johnson",
+            photoUrl: "https://randomuser.me/api/portraits/women/44.jpg",
+            skills: ["Python", "Django", "PostgreSQL"],
+          },
+          {
+            id: userId,
+            firstName: "Michael",
+            lastName: "Rodriguez",
+            photoUrl: null, // Will use DefaultAvatar
+            skills: ["Vue.js", "Express", "MySQL"],
+          },
+        ];
+
+        // Select a random user or use the first one
+        const randomUser =
+          sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+        setChatPartner(randomUser);
+
+        // Sample messages
+        setMessages(generateSampleMessages(userId));
+
+        setIsLoading(false);
+        console.log(`Chat data loaded for userId: ${userId}`);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Fallback to default data if fetch fails
+        setChatPartner({
+          id: userId,
+          firstName: "User",
+          lastName: userId.substring(0, 5),
+          photoUrl: null,
+          skills: ["Coding"],
+        });
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, [userId]);
 
   // Scroll to bottom whenever messages change
@@ -418,20 +462,9 @@ const Chat = () => {
     }
   }, [userId, loggedInUserId, loggedInUser]);
 
-  // Generate sample messages for demonstration
-  const generateSampleMessages = (receiverId) => {
-    // Use the current time for timestamps
-    const now = new Date();
-    // Return a simple welcome message using the parameters
-    return [
-      {
-        id: "msg1",
-        senderId: receiverId,
-        receiverId: loggedInUserId || "current-user-id",
-        content: "Welcome to the chat! This is a sample message.",
-        timestamp: now.toISOString(),
-      },
-    ];
+  // No sample messages needed as we show the welcome message separately
+  const generateSampleMessages = () => {
+    return [];
   };
 
   // Loading state
@@ -684,6 +717,24 @@ const Chat = () => {
           ref={messagesContainerRef}
         >
           <div className="messages-wrapper msg-cont">
+            {/* Responsive Welcome Message */}
+            <motion.div
+              className="welcome-message-container"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              <div className="welcome-message">
+                
+                <h3>
+                  Welcome to your conversation with {chatPartner?.firstName}
+                </h3>
+                <p className="welcome-description">
+                  Start chatting to collaborate on projects!
+                </p>
+              </div>
+            </motion.div>
+
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
