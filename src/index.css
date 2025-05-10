@@ -6795,6 +6795,9 @@ pre,
   height: calc(100vh - 160px); /* Adjust for top nav and input */
   max-height: calc(100vh - 160px);
   position: relative;
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+  /* Ensure scrolling works properly on all browsers */
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-main-container::before {

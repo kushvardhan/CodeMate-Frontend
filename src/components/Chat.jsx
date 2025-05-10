@@ -9,7 +9,11 @@ import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = () => {
-  const loggedInUser = useSelector((state) => state.user);
+  // Get user from Redux store with proper fallback
+  const userState = useSelector((state) => state.user);
+  const loggedInUser = userState?.user || {
+    _id: "demo-user-id",
+  };
   const { userId } = useParams();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
@@ -71,10 +75,34 @@ const Chat = () => {
     }, 500);
   }, [userId]);
 
+  // Scroll to bottom whenever messages change
   useEffect(() => {
-    // Scroll to bottom whenever messages change
-    scrollToBottom();
+    // Immediate scroll
+    scrollToBottom("auto");
+
+    // Also scroll after a short delay to ensure all content is rendered
+    const timer = setTimeout(() => {
+      scrollToBottom("auto");
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [messages]);
+
+  // Also scroll to bottom when the component first loads and when loading completes
+  useEffect(() => {
+    // Initial scroll to bottom
+    scrollToBottom("auto");
+
+    // Set up multiple scroll attempts to ensure it works
+    const timers = [
+      setTimeout(() => scrollToBottom("auto"), 100),
+      setTimeout(() => scrollToBottom("auto"), 300),
+      setTimeout(() => scrollToBottom("auto"), 500),
+      setTimeout(() => scrollToBottom("auto"), 1000),
+    ];
+
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, [isLoading]);
 
   // Add scroll event listener to show/hide scroll button
   useEffect(() => {
@@ -93,8 +121,31 @@ const Chat = () => {
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Enhanced scrollToBottom function with fallbacks
   const scrollToBottom = (behavior = "smooth") => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
+    try {
+      // First try using the end ref
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior });
+        return;
+      }
+
+      // If end ref isn't available, try using the container ref
+      if (messagesContainerRef.current) {
+        const container = messagesContainerRef.current;
+        container.scrollTop = container.scrollHeight;
+        return;
+      }
+
+      // Last resort: try to find the messages container by class name
+      const messagesContainer = document.querySelector(".messages-container");
+      if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return;
+      }
+    } catch (err) {
+      console.error("Error scrolling to bottom:", err);
+    }
   };
 
   const handleSendMessage = (e) => {
@@ -114,14 +165,38 @@ const Chat = () => {
 
     // Send message to server via socket
     try {
+      // Always use a valid user ID for socket connection
+      const loggedInUserId = loggedInUser?._id || "demo-user-id";
+
       const socket = createSocketConnection();
-      socket.emit("sendMessage", {
-        senderId: loggedInUser._id,
-        receiverId: userId,
-        content: newMessage,
+
+      // Wait for connection before sending
+      socket.on("connect", () => {
+        console.log("Socket connected for sending message");
+
+        // Send the message
+        socket.emit("sendMessage", {
+          senderId: loggedInUserId,
+          receiverId: userId,
+          content: newMessage,
+        });
+
+        console.log("Emitted sendMessage event with data:", {
+          senderId: loggedInUserId,
+          receiverId: userId,
+          content: newMessage,
+        });
+
+        // Disconnect after sending
+        socket.disconnect();
+      });
+
+      // Handle connection errors
+      socket.on("connect_error", (error) => {
+        console.error("Socket connection error when sending message:", error);
       });
     } catch (err) {
-      console.log("Error sending message:", err);
+      console.error("Error sending message:", err);
     }
 
     setNewMessage("");
@@ -213,23 +288,54 @@ const Chat = () => {
     };
   }, []);
 
+  // Socket connection effect
   useEffect(() => {
+    let socket;
+
     try {
-      const loggedInUserId = loggedInUser._id;
-      const socket = createSocketConnection();
+      // Always use a valid user ID for socket connection
+      // If user isn't logged in, use a demo ID for development
+      const loggedInUserId = loggedInUser?._id || "demo-user-id";
 
-      socket.emit("joinChat", { loggedInUserId, userId });
+      // Create socket connection
+      socket = createSocketConnection();
 
-      socket.on("receiveMessage", (data) => {
-        console.log("Received message:", data);
-
+      // Connect and join chat room
+      socket.on("connect", () => {
+        // Emit joinChat after successful connection
+        socket.emit("joinChat", { loggedInUserId, userId });
       });
 
+      // Listen for connection errors
+      socket.on("connect_error", (error) => {
+        console.error("Socket connection error:", error);
+      });
+
+      // Listen for incoming messages
+      socket.on("receiveMessage", (data) => {
+        console.log("Received message:", data);
+        // Add received message to state
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            id: `msg-${Date.now()}`,
+            senderId: data.senderId,
+            receiverId: loggedInUserId,
+            content: data.content,
+            timestamp: data.timestamp || new Date().toISOString(),
+          },
+        ]);
+      });
+
+      // Clean up socket connection on component unmount
       return () => {
-        socket.disconnect();
+        if (socket) {
+          console.log("Disconnecting socket");
+          socket.disconnect();
+        }
       };
     } catch (err) {
-      console.log(err);
+      console.error("Error in socket connection:", err);
     }
   }, [userId]);
 
@@ -553,6 +659,8 @@ const Chat = () => {
                 type="text"
                 placeholder="Type a message..."
                 className="message-input"
+                value=""
+                onChange={() => {}}
                 disabled
               />
             </div>
@@ -700,6 +808,8 @@ const Chat = () => {
   //               type="text"
   //               placeholder="Type a message..."
   //               className="message-input"
+  //               value=""
+  //               onChange={() => {}}
   //               disabled
   //             />
   //           </div>
