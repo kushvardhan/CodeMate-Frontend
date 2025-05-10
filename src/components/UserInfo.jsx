@@ -872,6 +872,7 @@ const UserInfo = () => {
 
           <motion.div className="user-info-actions" variants={itemVariants}>
             {fromConnection && (
+            <Link to={`/chat/${user._id}`}>
               <motion.button
                 className="user-info-action-button message"
                 onClick={handleMessage}
@@ -892,9 +893,9 @@ const UserInfo = () => {
                 >
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
-                <Link to={`/chat/${user._id}`}>
-                <span className="button-text">Message</span></Link>
+                <span className="button-text">Message</span>
               </motion.button>
+              </Link>
             )}
 
             {fromRequest && (

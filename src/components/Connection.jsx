@@ -433,6 +433,7 @@ const Connection = () => {
               </div>
 
               <div className="connection-card-footer">
+                <Link to={`/chat/${connection._id}`}>
                 <motion.button
                   className="connection-action-button message"
                   whileHover={{ scale: 1.05 }}
@@ -452,10 +453,10 @@ const Connection = () => {
                   >
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg>
-                  <Link to={`/chat/${connection._id}`}>
                     <span>Message</span>
-                  </Link>
                 </motion.button>
+                </Link>
+
                 <motion.button
                   className="connection-action-button profile"
                   whileHover={{ scale: 1.05 }}
