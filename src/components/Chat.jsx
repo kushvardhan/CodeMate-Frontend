@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
@@ -11,7 +11,7 @@ import DefaultAvatar from "./ui/DefaultAvatar";
 const Chat = () => {
   // Get user from Redux store with strict authentication check
   const userState = useSelector((state) => state.user);
-  const { isAuthenticated, isAuthLoading, user: currentAuthUser } = userState;
+  const { isAuthenticated, user: currentAuthUser } = userState;
   const loggedInUser = currentAuthUser; // Don't provide fallback to ensure we only use real user data
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -29,35 +29,49 @@ const Chat = () => {
   // Only get ID if we have a valid user object
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
 
-  // Check authentication and redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthLoading && !isAuthenticated) {
-      // Redirect to login page if not authenticated
-      navigate("/login");
-    }
-  }, [isAuthenticated, isAuthLoading, navigate]);
+  // We'll let the ProtectedRoute handle the authentication check and redirection
+  // This prevents double redirects that can cause the chat page to redirect to home
 
   useEffect(() => {
-    if (!isAuthenticated || !loggedInUserId || !userId) return;
+    // Only attempt to connect if we have both user IDs
+    // Don't depend on authentication state to prevent unnecessary reconnections
+    if (!userId) return;
+
+    // Use the ID if available, otherwise use a placeholder
+    const currentUserId = loggedInUserId || "temp-user-id";
 
     try {
+      console.log(
+        `Attempting socket connection for chat between ${currentUserId} and ${userId}`
+      );
       const socket = createSocketConnection();
-      const firstName = loggedInUser ? loggedInUser?.firstName : null;
+      const firstName = loggedInUser ? loggedInUser?.firstName : "User";
+
       socket.emit("joinChat", {
         firstName,
-        loggedInUserId,
+        loggedInUserId: currentUserId,
         userId,
       });
+
+      socket.on("receiveMessage", ({ senderFirstName, content }) => {
+        console.log(senderFirstName + " has send this message: " + content);
+      });
+
+      return () => {
+        socket.disconnect();
+        console.log(`Socket disconnected for chat`);
+      };
     } catch (err) {
       console.error("Socket connection error:", err);
     }
-  }, [userId, loggedInUserId, isAuthenticated]);
+  }, [userId, loggedInUserId]);
 
+  // Use the actual logged-in user data for the current user
   const currentUser = {
-    id: "current-user-id",
-    firstName: "You",
-    lastName: "",
-    photoUrl: null,
+    id: loggedInUser?._id || "current-user-id", // Use actual user ID if available
+    firstName: loggedInUser?.firstName || "You",
+    lastName: loggedInUser?.lastName || "",
+    photoUrl: loggedInUser?.photoUrl || null,
   };
 
   // Animation variants
@@ -77,10 +91,12 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    // Only load data if authenticated and we have a userId
-    if (!isAuthenticated || !userId) return;
+    // Load data even if we're still checking authentication
+    // This prevents unnecessary redirects while auth is being verified
+    if (!userId) return;
 
     setIsLoading(true);
+    console.log(`Loading chat data for userId: ${userId}`);
 
     // Sample chat partner data
     setChatPartner({
@@ -97,8 +113,9 @@ const Chat = () => {
     // Simulate loading delay
     setTimeout(() => {
       setIsLoading(false);
+      console.log(`Chat data loaded for userId: ${userId}`);
     }, 500);
-  }, [userId, isAuthenticated]);
+  }, [userId]);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -178,6 +195,7 @@ const Chat = () => {
     if (!newMessage.trim()) return;
     const firstName = loggedInUser ? loggedInUser?.firstName : null;
 
+    // Create a local message object for immediate display
     const message = {
       id: `msg-${Date.now()}`,
       senderId: currentUser.id,
@@ -186,6 +204,7 @@ const Chat = () => {
       timestamp: new Date().toISOString(),
     };
 
+    // Add message to local state for immediate display
     setMessages([...messages, message]);
 
     try {
@@ -201,27 +220,52 @@ const Chat = () => {
         return;
       }
 
-      const socket = createSocketConnection();
-      socket.on("connect", () => {
-        socket.emit("sendMessage", {
-          senderFirstName : firstName,
+      // Use the existing socket connection from the ref
+      if (socketRef.current && socketRef.current.connected) {
+        console.log(
+          "Sending message using existing socket:",
+          socketRef.current.id
+        );
+
+        // Emit the message through the existing socket
+        socketRef.current.emit("sendMessage", {
+          senderFirstName: firstName,
           senderId: loggedInUserId,
           receiverId: userId,
           content: newMessage,
         });
+      } else {
+        console.error("Socket not connected, cannot send message");
 
-        // Disconnect after sending
-        socket.disconnect();
-      });
+        // If socket is not connected, try to reconnect
+        const socket = createSocketConnection();
+        socketRef.current = socket;
 
-      // Handle connection errors
-      socket.on("connect_error", (error) => {
-        console.error("Socket connection error when sending message:", error);
-      });
+        socket.on("connect", () => {
+          console.log("New socket connected for sending message:", socket.id);
+
+          // First join the chat room
+          socket.emit("joinChat", { loggedInUserId, userId });
+
+          // Then send the message
+          socket.emit("sendMessage", {
+            senderFirstName: firstName,
+            senderId: loggedInUserId,
+            receiverId: userId,
+            content: newMessage,
+          });
+        });
+
+        // Handle connection errors
+        socket.on("connect_error", (error) => {
+          console.error("Socket connection error when sending message:", error);
+        });
+      }
     } catch (err) {
       console.error("Error sending message:", err);
     }
 
+    // Clear the input field and focus it for the next message
     setNewMessage("");
     messageInputRef.current.focus();
   };
@@ -311,12 +355,13 @@ const Chat = () => {
     };
   }, []);
 
+  // Create a ref to store the socket instance
+  const socketRef = useRef(null);
+
   // Socket connection effect
   useEffect(() => {
     // Only create socket connection if authenticated
     if (!isAuthenticated || !userId) return;
-
-    let socket;
 
     try {
       // Get the logged in user ID
@@ -329,10 +374,12 @@ const Chat = () => {
       }
 
       // Create socket connection
-      socket = createSocketConnection();
+      const socket = createSocketConnection();
+      socketRef.current = socket;
 
       // Connect and join chat room
       socket.on("connect", () => {
+        console.log("Socket connected with ID:", socket.id);
         // Emit joinChat after successful connection
         socket.emit("joinChat", { loggedInUserId, userId });
       });
@@ -344,6 +391,7 @@ const Chat = () => {
 
       // Listen for incoming messages
       socket.on("receiveMessage", (data) => {
+        console.log("Received message:", data);
         // Add received message to state
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -360,210 +408,28 @@ const Chat = () => {
       // Clean up socket connection on component unmount
       return () => {
         if (socket) {
+          console.log("Disconnecting socket:", socket.id);
           socket.disconnect();
+          socketRef.current = null;
         }
       };
     } catch (err) {
       console.error("Error in socket connection:", err);
     }
-  }, [userId, isAuthenticated, loggedInUser]);
+  }, [userId, loggedInUserId, loggedInUser]);
 
   // Generate sample messages for demonstration
-  const generateSampleMessages = (partnerId) => {
+  const generateSampleMessages = (receiverId) => {
+    // Use the current time for timestamps
     const now = new Date();
+    // Return a simple welcome message using the parameters
     return [
       {
         id: "msg1",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content: "Hey there! How's your coding project going?",
-        timestamp: new Date(now.getTime() - 120 * 60000).toISOString(), // 2 hours ago
-      },
-      {
-        id: "msg2",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content: "It's going well! I'm working on a React component right now.",
-        timestamp: new Date(now.getTime() - 118 * 60000).toISOString(),
-      },
-      {
-        id: "msg3",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content: "Nice! Are you using any specific libraries?",
-        timestamp: new Date(now.getTime() - 115 * 60000).toISOString(),
-      },
-      {
-        id: "msg4",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "Yes, I'm using Framer Motion for animations and Tailwind for styling. The combination is really powerful!",
-        timestamp: new Date(now.getTime() - 110 * 60000).toISOString(),
-      },
-      {
-        id: "msg5",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "That sounds great! I've been meaning to try Tailwind. Would you recommend it for someone just starting with CSS frameworks?",
-        timestamp: new Date(now.getTime() - 105 * 60000).toISOString(),
-      },
-      {
-        id: "msg6",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "Absolutely! It has a bit of a learning curve but once you get used to the utility-first approach, it's super productive.",
-        timestamp: new Date(now.getTime() - 100 * 60000).toISOString(),
-      },
-      {
-        id: "msg7",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "Do you have any resources you'd recommend for learning Tailwind?",
-        timestamp: new Date(now.getTime() - 95 * 60000).toISOString(),
-      },
-      {
-        id: "msg8",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "The official documentation is really good, but I also found some great tutorials on YouTube. I'll send you the links.",
-        timestamp: new Date(now.getTime() - 90 * 60000).toISOString(),
-      },
-      {
-        id: "msg9",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "https://tailwindcss.com/docs and https://www.youtube.com/watch?v=UBOj6rqRUME",
-        timestamp: new Date(now.getTime() - 89 * 60000).toISOString(),
-      },
-      {
-        id: "msg10",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "Thanks! I'll check them out. What kind of project are you working on?",
-        timestamp: new Date(now.getTime() - 80 * 60000).toISOString(),
-      },
-      {
-        id: "msg11",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "I'm building a portfolio website with a blog section. I want to showcase my projects and share my learning journey.",
-        timestamp: new Date(now.getTime() - 75 * 60000).toISOString(),
-      },
-      {
-        id: "msg12",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "That sounds awesome! Are you using any backend technology for the blog?",
-        timestamp: new Date(now.getTime() - 70 * 60000).toISOString(),
-      },
-      {
-        id: "msg13",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "I'm using Node.js with Express for the API and MongoDB for the database. It's a MERN stack application.",
-        timestamp: new Date(now.getTime() - 65 * 60000).toISOString(),
-      },
-      {
-        id: "msg14",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "Nice choice! I've been working with the MERN stack too. Have you deployed it yet?",
-        timestamp: new Date(now.getTime() - 60 * 60000).toISOString(),
-      },
-      {
-        id: "msg15",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "Not yet, I'm still working on the frontend. I'm planning to deploy it on Vercel for the frontend and Render for the backend.",
-        timestamp: new Date(now.getTime() - 55 * 60000).toISOString(),
-      },
-      {
-        id: "msg16",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content: "That's a good combination. Vercel is great for React apps.",
-        timestamp: new Date(now.getTime() - 50 * 60000).toISOString(),
-      },
-      {
-        id: "msg17",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "Yeah, I love their CI/CD pipeline. It makes deployment so easy.",
-        timestamp: new Date(now.getTime() - 45 * 60000).toISOString(),
-      },
-      {
-        id: "msg18",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content: "Absolutely! Are you using any state management library?",
-        timestamp: new Date(now.getTime() - 40 * 60000).toISOString(),
-      },
-      {
-        id: "msg19",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "I'm using Redux Toolkit. It simplifies a lot of the Redux boilerplate.",
-        timestamp: new Date(now.getTime() - 35 * 60000).toISOString(),
-      },
-      {
-        id: "msg20",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "Good choice! Redux Toolkit is much more developer-friendly than plain Redux.",
-        timestamp: new Date(now.getTime() - 30 * 60000).toISOString(),
-      },
-      {
-        id: "msg21",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "Definitely! What about you? What are you working on these days?",
-        timestamp: new Date(now.getTime() - 25 * 60000).toISOString(),
-      },
-      {
-        id: "msg22",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content:
-          "I'm building a  Nice choice! I've been working with the MERN stack too. Have you deployed it yet? Nice choice! I've been working with the MERN stack too. Have you deployed it yet? Nice choice! I've been working with the MERN stack too. Have you deployed it yet? media platform for developers, kind of like this one! It's a place where developers can connect and collaborate.",
-        timestamp: new Date(now.getTime() - 20 * 60000).toISOString(),
-      },
-      {
-        id: "msg23",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content:
-          "That sounds really interesting! I'd love to check it out when it's ready.",
-        timestamp: new Date(now.getTime() - 15 * 60000).toISOString(),
-      },
-      {
-        id: "msg24",
-        senderId: "current-user-id",
-        receiverId: partnerId,
-        content: "Sure thing! I'll send you an invite when it's in beta.",
-        timestamp: new Date(now.getTime() - 10 * 60000).toISOString(),
-      },
-      {
-        id: "msg25",
-        senderId: partnerId,
-        receiverId: "current-user-id",
-        content: "Maybe we could collaborate on a project sometime?",
-        timestamp: new Date(now.getTime() - 5 * 60000).toISOString(),
+        senderId: receiverId,
+        receiverId: loggedInUserId || "current-user-id",
+        content: "Welcome to the chat! This is a sample message.",
+        timestamp: now.toISOString(),
       },
     ];
   };
@@ -700,12 +566,14 @@ const Chat = () => {
     );
   }
 
-  if (!isAuthenticated || !loggedInUser) {
+  // We'll only show a loading indicator if we're still loading
+  // but we won't redirect - let the ProtectedRoute handle that
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-lg">Redirecting to login...</p>
+          <p className="text-lg">Loading chat...</p>
         </div>
       </div>
     );
@@ -821,7 +689,10 @@ const Chat = () => {
                 <motion.div
                   key={message.id}
                   className={`message ${
-                    message.senderId === currentUser.id ? "sent" : "received"
+                    message.senderId === currentUser.id ||
+                    message.senderId === loggedInUser?._id
+                      ? "sent"
+                      : "received"
                   }`}
                   variants={itemVariants}
                   initial="hidden"

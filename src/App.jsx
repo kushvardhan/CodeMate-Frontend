@@ -37,6 +37,7 @@ const ProtectedRoute = ({ children }) => {
       try {
         // Only verify if we think we're authenticated or still loading
         if (isAuthLoading || isAuthenticated) {
+          console.log(`Verifying auth for route: ${location.pathname}`);
           const response = await axios.get("/user/me", {
             withCredentials: true,
           });
@@ -44,7 +45,11 @@ const ProtectedRoute = ({ children }) => {
           if (response.data?.user) {
             // Update user data in Redux store
             dispatch(setUser(response.data.user));
+            console.log(`Auth verified successfully for ${location.pathname}`);
           } else {
+            console.warn(
+              `Auth failed - no user data returned for ${location.pathname}`
+            );
             // Clear user if backend says not authenticated
             dispatch(clearUser());
             // Set flag to prevent auto-login attempts
@@ -52,7 +57,10 @@ const ProtectedRoute = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error("Auth verification failed:", error);
+        console.error(
+          `Auth verification failed for ${location.pathname}:`,
+          error
+        );
         // Clear user on error
         dispatch(clearUser());
         // Set flag to prevent auto-login attempts
@@ -63,7 +71,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     verifyAuth();
-  }, [dispatch, isAuthenticated, isAuthLoading, location.pathname]);
+  }, [dispatch, isAuthenticated, isAuthLoading]);
 
   // Show loading while verifying or while auth is still loading
   if (isVerifying || isAuthLoading) {
