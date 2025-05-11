@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import axios from "../api/axios";
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -26,11 +27,26 @@ const Chat = () => {
   const messageInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
-  // Only get ID if we have a valid user object
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
 
-  // We'll let the ProtectedRoute handle the authentication check and redirection
-  // This prevents double redirects that can cause the chat page to redirect to home
+ const fetchChat = async () => {
+    try {
+      const response = await axios.get(`/chat/getChat/${userId}`, {
+        withCredentials: true,
+      });
+      console.log("User data fetched: "+ JSON.stringify(response.data.messages));
+
+      setMessages(JSON.stringify(response.data.messages));
+    } catch (err) {
+      console.error("Error fetching chat: " + err);
+    }
+  };
+
+useEffect(()=>{
+
+  fetchChat();
+},[])
+
 
   useEffect(() => {
     // Only attempt to connect if we have both user IDs
@@ -66,9 +82,8 @@ const Chat = () => {
     }
   }, [userId, loggedInUserId]);
 
-  // Use the actual logged-in user data for the current user
   const currentUser = {
-    id: loggedInUser?._id || "current-user-id", // Use actual user ID if available
+    id: loggedInUser?._id || "current-user-id", 
     firstName: loggedInUser?.firstName || "You",
     lastName: loggedInUser?.lastName || "",
     photoUrl: loggedInUser?.photoUrl || null,
@@ -644,9 +659,9 @@ const Chat = () => {
             <div className="chat-user-info">
               {chatPartner?.photoUrl ? (
                 <img
-                  src={chatPartner.photoUrl}
-                  alt={`${chatPartner?.firstName || "Unknown"} ${
-                    chatPartner?.lastName || "User"
+                  src={messages[0]?.senderId?.photoUrl}
+                  alt={`${messages[0]?.senderId?.firstName || "Unknown"} ${
+                    messages[0]?.senderId?.lastName || "User"
                   }`}
                   className="chat-user-avatar"
                 />
@@ -656,8 +671,8 @@ const Chat = () => {
                 </div>
               )}
               <h2 className="chat-user-name">
-                {`${chatPartner?.firstName || "Unknown"} ${
-                  chatPartner?.lastName || "User"
+                {`${messages[0]?.senderId?.firstName || "Unknown"} ${
+                  messages[0]?.senderId?.lastName || "User"
                 }`}
               </h2>
             </div>
