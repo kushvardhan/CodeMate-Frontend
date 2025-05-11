@@ -66,7 +66,6 @@ const fetchChat = async () => {
   }
 };
 
-
 useEffect(()=>{
       setIsLoading(true);
 
@@ -285,9 +284,41 @@ useEffect(()=>{
     messageInputRef.current.focus();
   };
 
-  const formatMessageTime = (timestamp) => {
-    return format(new Date(timestamp), "h:mm a");
-  };
+const formatMessageTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  const isYesterday =
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear();
+
+  const timeString = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  if (isToday) {
+    return `${timeString} `; // temp for debugging
+  } else if (isYesterday) {
+    return `${timeString} (yesterday)`;
+  } else {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear().toString().slice(-2);
+    return `${timeString} (${day} ${month} ${year})`;
+  }
+};
+
 
   // Convert URLs in text to clickable links
   const linkifyText = (text) => {
@@ -616,7 +647,7 @@ useEffect(()=>{
               {chatPartner?.photoUrl ? (
                 <img
                   src={chatPartner?.photoUrl}
-                  alt={`${chatPartner?.firstName || "Unknown"} ${
+                  alt={`${chatPartner?.firstName || ""} ${
                     chatPartner?.lastName || ""
                   }`}
                   className="chat-user-avatar"
@@ -628,7 +659,7 @@ useEffect(()=>{
               )}
               <h2 className="chat-user-name">
                 {`${chatPartner?.firstName || "Unknown"} ${
-                  chatPartner?.firstName || ""
+                  chatPartner?.lastName || ""
                 }`}
               </h2>
             </div>
@@ -707,29 +738,33 @@ useEffect(()=>{
             </motion.div>
 
             <AnimatePresence>
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  className={`message ${
-                    message.senderId === currentUser.id ||
-                    message.senderId === loggedInUser?._id
-                      ? "sent"
-                      : "received"
-                  }`}
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit={{ opacity: 0, y: 20 }}
-                >
-                  <div className="message-content">
-                    <p>{linkifyText(message.content)}</p>
-                    <span className="message-time">
-                      {formatMessageTime(message.timestamp)}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+  {messages.map((message) => (
+    <motion.div
+      key={message.id}
+      className={`message ${
+        message.senderId === currentUser.id || message.senderId === loggedInUser?._id
+          ? "sent"
+          : "received"
+      }`}
+      variants={itemVariants}
+      initial="hidden"
+      animate="visible"
+      exit={{ opacity: 0, y: 20 }}
+    >
+      <div className="message-content">
+        <p>{message.text}</p>
+        {formatMessageTime(message.timestamp) && (
+          <span className="message-time">
+            {formatMessageTime(message.timestamp)}
+          </span>
+        )}
+      </div>
+    </motion.div>
+  ))}
+</AnimatePresence>
+
+<div ref={messagesEndRef} />
+
             <div ref={messagesEndRef} />
           </div>
         </motion.div>

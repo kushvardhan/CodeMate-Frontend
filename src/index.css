@@ -6772,6 +6772,14 @@ pre,
   margin: 0;
 }
 
+.message-time {
+  display: block;
+  color: #555; /* or any visible color */
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+
 .chat-main-container {
   flex: 1;
   display: flex;
