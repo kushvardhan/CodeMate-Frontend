@@ -29,18 +29,40 @@ const Chat = () => {
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
 
- const fetchChat = async () => {
-    try {
-      const response = await axios.get(`/chat/getChat/${userId}`, {
-        withCredentials: true,
-      });
-      console.log("User data fetched: "+ JSON.stringify(response.data.messages));
+const fetchChat = async () => {
+  try {
+    const response = await axios.get(`/chat/getChat/${userId}`, {
+      withCredentials: true,
+    });
 
-      setMessages(JSON.stringify(response.data.messages));
-    } catch (err) {
-      console.error("Error fetching chat: " + err);
+    console.log("User data fetched: ", response.data);
+
+    const chatMessages = response.data?.messages?.map((message) => ({
+      id: message._id,
+      senderId: message.senderId._id,
+      firstName: message?.senderId?.firstName,
+      lastName: message?.senderId?.lastName,
+      photoUrl: message?.senderId?.photoUrl,
+      text: message?.text,
+      timestamp: message?.createdAt,
+    }));
+
+    setMessages(chatMessages);
+
+    // Assume chatPartner is the other user in the first message
+    const firstMessage = chatMessages?.[0];
+    if (firstMessage?.senderId !== loggedInUserId) {
+      setChatPartner({
+        firstName: firstMessage.firstName,
+        lastName: firstMessage.lastName,
+        photoUrl: firstMessage.photoUrl,
+      });
     }
-  };
+
+  } catch (err) {
+    console.error("Error fetching chat: ", err);
+  }
+};
 
 useEffect(()=>{
 
@@ -659,9 +681,9 @@ useEffect(()=>{
             <div className="chat-user-info">
               {chatPartner?.photoUrl ? (
                 <img
-                  src={messages[0]?.senderId?.photoUrl}
-                  alt={`${messages[0]?.senderId?.firstName || "Unknown"} ${
-                    messages[0]?.senderId?.lastName || "User"
+                  src={chatPartner?.photoUrl}
+                  alt={`${chatPartner?.firstName || "Unknown"} ${
+                    chatPartner?.lastName || ""
                   }`}
                   className="chat-user-avatar"
                 />
@@ -671,8 +693,8 @@ useEffect(()=>{
                 </div>
               )}
               <h2 className="chat-user-name">
-                {`${messages[0]?.senderId?.firstName || "Unknown"} ${
-                  messages[0]?.senderId?.lastName || "User"
+                {`${chatPartner?.firstName || "Unknown"} ${
+                  chatPartner?.firstName || ""
                 }`}
               </h2>
             </div>
@@ -742,7 +764,7 @@ useEffect(()=>{
               <div className="welcome-message">
                 
                 <h3>
-                  Welcome to your conversation with {chatPartner?.firstName}
+                Welcome to your conversation with {chatPartner?.firstName || "Unknown"}
                 </h3>
                 <p className="welcome-description">
                   Start chatting to collaborate on projects!
