@@ -37,7 +37,7 @@ const fetchChat = async () => {
 
     console.log("User data fetched: ", response.data);
 
-    const chatMessages = response.data?.messages?.map((message) => ({
+    const chatMessages = response.data?.map((message) => ({
       id: message._id,
       senderId: message.senderId._id,
       firstName: message?.senderId?.firstName,
@@ -49,7 +49,6 @@ const fetchChat = async () => {
 
     setMessages(chatMessages);
 
-    // Assume chatPartner is the other user in the first message
     const firstMessage = chatMessages?.[0];
     if (firstMessage?.senderId !== loggedInUserId) {
       setChatPartner({
@@ -58,13 +57,18 @@ const fetchChat = async () => {
         photoUrl: firstMessage.photoUrl,
       });
     }
+            setIsLoading(false);
 
   } catch (err) {
     console.error("Error fetching chat: ", err);
+            setIsLoading(false);
+
   }
 };
 
+
 useEffect(()=>{
+      setIsLoading(true);
 
   fetchChat();
 },[])
@@ -127,76 +131,6 @@ useEffect(()=>{
     visible: { opacity: 1, y: 0 },
   };
 
-  useEffect(() => {
-    // Load data even if we're still checking authentication
-    // This prevents unnecessary redirects while auth is being verified
-    if (!userId) return;
-
-    setIsLoading(true);
-    console.log(`Loading chat data for userId: ${userId}`);
-
-    // In a real app, we would fetch the user data from the API
-    // For now, let's simulate fetching user data
-    const fetchUserData = async () => {
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 300));
-
-        // This would be replaced with actual API call in production
-        // const response = await axios.get(`/api/users/${userId}`);
-        // const userData = response.data;
-
-        // For demo, we'll use sample data with different possibilities
-        const sampleUsers = [
-          {
-            id: userId,
-            firstName: "Alex",
-            lastName: "Chen",
-            photoUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-            skills: ["React", "Node.js", "MongoDB"],
-          },
-          {
-            id: userId,
-            firstName: "Sarah",
-            lastName: "Johnson",
-            photoUrl: "https://randomuser.me/api/portraits/women/44.jpg",
-            skills: ["Python", "Django", "PostgreSQL"],
-          },
-          {
-            id: userId,
-            firstName: "Michael",
-            lastName: "Rodriguez",
-            photoUrl: null, // Will use DefaultAvatar
-            skills: ["Vue.js", "Express", "MySQL"],
-          },
-        ];
-
-        // Select a random user or use the first one
-        const randomUser =
-          sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
-        setChatPartner(randomUser);
-
-        // Sample messages
-        setMessages(generateSampleMessages(userId));
-
-        setIsLoading(false);
-        console.log(`Chat data loaded for userId: ${userId}`);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        // Fallback to default data if fetch fails
-        setChatPartner({
-          id: userId,
-          firstName: "User",
-          lastName: userId.substring(0, 5),
-          photoUrl: null,
-          skills: ["Coding"],
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [userId]);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
