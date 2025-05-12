@@ -6771,12 +6771,62 @@ pre,
   cursor:pointer;
 
 }
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #22c55e; /* Tailwind green-500 */
+  border-radius: 9999px;
+  border: 2px solid white;
+}
 
 .chat-user-name {
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
 }
+
+.chat-user-avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 12px;
+  height: 12px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  border: 1px solid white;
+  box-shadow:
+    0 0 6px #22c55e,
+    0 0 12px #22c55e,
+    0 0 20px #22c55e,
+    0 0 28px #22c55e;
+  animation: pulse-glow 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e, 0 0 28px #22c55e;
+  }
+  50% {
+    box-shadow: 0 0 10px #22c55e, 0 0 18px #22c55e, 0 0 28px #22c55e, 0 0 40px #22c55e;
+  }
+  100% {
+    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e, 0 0 28px #22c55e;
+  }
+}
+
 
 .message-time {
   display: block;

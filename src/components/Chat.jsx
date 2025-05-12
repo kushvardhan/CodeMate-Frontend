@@ -18,6 +18,7 @@ const Chat = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const [chatPartner, setChatPartner] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isOnline, setIsOnline] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -183,26 +184,59 @@ useEffect(()=>{
 
 const handleSendMessage = (e) => {
   e.preventDefault();
-  
-  if (!newMessage.trim()) return; // Prevent sending empty messages
 
-  try {
-    if (!isAuthenticated || !loggedInUser?._id) return;
-
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit("sendMessage", {
-        senderFirstName: currentUser.firstName,
-        senderId: loggedInUser._id,
-        receiverId: userId,
-        content: newMessage,
-      });
-    }
-  } catch (err) {
-    console.error("Error sending message:", err);
+  const trimmedMessage = newMessage.trim();
+  if (!trimmedMessage) {
+    return; // Prevent sending empty messages
   }
 
-  setNewMessage(""); // Clear input field after sending
-  messageInputRef.current?.focus(); // Keep focus on input
+  // Ensure user is authenticated and essential data (ID and firstName) is available
+  if (!isAuthenticated || !loggedInUser?._id || !loggedInUser?.firstName) {
+    console.error(
+      "Cannot send message: User not authenticated, or user ID/firstName is missing.",
+      { isAuthenticated, loggedInUser }
+    );
+    // Optionally, provide user feedback here (e.g., a toast notification)
+    return;
+  }
+
+  // 1. Construct the message object for optimistic UI update
+  const optimisticMessage = {
+    id: `client-${Date.now()}`, // Temporary client-side ID
+    senderId: loggedInUser._id,
+    firstName: loggedInUser.firstName, // Use the actual first name from loggedInUser
+    // lastName: loggedInUser.lastName, // Include if your message display uses it
+    // photoUrl: loggedInUser.photoUrl, // Include if your message display uses it
+    text: trimmedMessage,
+    timestamp: new Date().toISOString(), // Current timestamp
+    // isOptimistic: true, // Optional flag for styling or later reconciliation
+  };
+
+  // 2. Optimistically update the local messages state
+  setMessages((prevMessages) => [...prevMessages, optimisticMessage]);
+
+  // 3. Prepare payload for the server
+  const serverPayload = {
+    senderFirstName: loggedInUser.firstName,
+    senderId: loggedInUser._id,
+    receiverId: userId, // This is the ID of the chat partner (used for room targeting)
+    content: trimmedMessage,
+    // tempClientId: optimisticMessage.id, // Optional: send temp ID for server reconciliation
+  };
+
+  // 4. Emit the message via socket
+  if (socketRef.current && socketRef.current.connected) {
+    socketRef.current.emit("sendMessage", serverPayload);
+  } else {
+    console.warn("Socket not connected. Message displayed optimistically but not sent to server.");
+    // You could update the message status here to 'failed to send' if needed
+    // For example:
+    // setMessages(prev => prev.map(m => m.id === optimisticMessage.id ? { ...m, status: 'failed' } : m));
+  }
+
+  // 5. Clear input field and refocus
+  setNewMessage("");
+  messageInputRef.current?.focus();
 };
 
 
@@ -574,25 +608,26 @@ const formatMessageTime = (timestamp) => {
 
           <div className="chat-top-center">
             <div className="chat-user-info">
-              {chatPartner?.photoUrl ? (
-                <img
-                  src={chatPartner?.photoUrl}
-                  alt={`${chatPartner?.firstName || ""} ${
-                    chatPartner?.lastName || ""
-                  }`}
-                  className="chat-user-avatar"
-                />
-              ) : (
-                <div className="chat-user-avatar">
-                  <DefaultAvatar />
-                </div>
-              )}
-              <h2 className="chat-user-name">
-                {`${chatPartner?.firstName || "Unknown"} ${
-                  chatPartner?.lastName || ""
-                }`}
-              </h2>
-            </div>
+  <div className="chat-user-avatar-container">
+    {chatPartner?.photoUrl ? (
+      <img
+        src={chatPartner?.photoUrl}
+        alt={`${chatPartner?.firstName || ""} ${chatPartner?.lastName || ""}`}
+        className="chat-user-avatar"
+      />
+    ) : (
+      <div className="chat-user-avatar">
+        <DefaultAvatar />
+      </div>
+    )}
+    {isOnline && <span className="online-indicator"></span>}
+  </div>
+  
+  <h2 className="chat-user-name">
+    {`${chatPartner?.firstName || "Unknown"} ${chatPartner?.lastName || ""}`}
+  </h2>
+</div>
+
           </div>
 
           <div className="chat-top-right">
