@@ -55,7 +55,7 @@ const Request = () => {
         const response = await axios.get("/user/request/received", {
           withCredentials: true,
         });
-        console.log(response.data.data);
+      console.log("Request:", response.data.data);
         dispatch(addRequest(response.data.data));
       } catch (error) {
         console.error("Error fetching requests:", error);
@@ -424,9 +424,9 @@ const Request = () => {
               <div className="request-card-left">
                 <div className="request-card-image-container">
                   <img
-                    src={req.fromUserId.photoUrl || "/default-avatar.png"} // Fallback for missing photo
-                    alt={`${req.fromUserId.firstName || "Unknown"} ${
-                      req.fromUserId.lastName || "User"
+                    src={req.fromUserId?.photoUrl || "/default-avatar.png"} 
+                    alt={`${req.fromUserId?.firstName || "Unknown"} ${
+                      req.fromUserId?.lastName || ""
                     }`}
                     className="request-card-image"
                   />
@@ -440,33 +440,33 @@ const Request = () => {
               <div className="request-card-content">
                 <div className="request-card-header">
                   <h2 className="request-card-name">{`${
-                    req.fromUserId.firstName || "Unknown"
-                  } ${req.fromUserId.lastName || "User"}`}</h2>
+                    req.fromUserId?.firstName || "Unknown"
+                  } ${req.fromUserId?.lastName || "User"}`}</h2>
 
                   <div className="request-card-meta">
-                    {req.fromUserId.age && (
+                    {req.fromUserId?.age && (
                       <span className="request-card-age">
-                        {req.fromUserId.age} years
+                        {req.fromUserId?.age} years
                       </span>
                     )}
-                    {req.fromUserId.gender && (
+                    {req.fromUserId?.gender && (
                       <span className="request-card-gender">
-                        {getGenderSymbol(req.fromUserId.gender)}
-                        {req.fromUserId.gender}
+                        {getGenderSymbol(req.fromUserId?.gender)}
+                        {req.fromUserId?.gender}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {req.fromUserId.about && (
+                {req.fromUserId?.about && (
                   <p className="request-card-about">
-                    {truncateText(req.fromUserId.about, 10)}
+                    {truncateText(req.fromUserId?.about, 10)}
                   </p>
                 )}
 
                 {req.fromUserId.skills && req.fromUserId.skills.length > 0 && (
                   <div className="request-card-skills">
-                    {req.fromUserId.skills.slice(0, 2).map((skill, index) => (
+                    {req.fromUserId?.skills?.slice(0, 2).map((skill, index) => (
                       <span className="request-skill-tag" key={index}>
                         {skill}
                       </span>

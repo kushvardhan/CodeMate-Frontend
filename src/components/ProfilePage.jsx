@@ -21,10 +21,10 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5173/profile/", {
+        const res = await axios.get("/profile/", {
           withCredentials: true,
         });
-        console.log(res.data.data);
+        console.log(res);
         dispatch(setUser(res.data.data));
       } catch (err) {
         if (err.response?.status === 401) {
@@ -84,7 +84,7 @@ const ProfilePage = () => {
         skills: user.skills || [],
         image: user.photoUrl || "https://static.vecteezy.com/system/resources/thumbnails/051/294/291/large/neon-frame-effect-teddy-bear-on-black-background-free-video.jpg", // Clean, geometric profile avatar without text
         location: user.location || "", // Use actual location or fallback to an empty string
-        age: user.age || 25,
+        age: user.age || 0,
         gender: user.gender || "other",
       });
     }
@@ -98,7 +98,7 @@ const ProfilePage = () => {
       skills: formData.skills || [],
       image: formData.photoUrl || "https://static.vecteezy.com/system/resources/thumbnails/051/294/291/large/neon-frame-effect-teddy-bear-on-black-background-free-video.jpg", // Clean, geometric profile avatar without text
       location: formData.location || "", // Use actual location or fallback to an empty string
-      age: formData.age || 25,
+      age: formData.age || 0,
       gender: formData.gender || "other",
     });
   }, [formData]);
