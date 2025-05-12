@@ -55,11 +55,11 @@ const Request = () => {
         const response = await axios.get("/user/request/received", {
           withCredentials: true,
         });
-      console.log("Request:", response.data.data);
-        dispatch(addRequest(response.data.data));
+        console.log("Request:", response.data.data);
+        dispatch(addRequest(response.data.data)); // ✅ This fixes the error
       } catch (error) {
         console.error("Error fetching requests:", error);
-        dispatch(addRequest([])); // Handle gracefully by showing "No requests found"
+        dispatch(addRequest([])); // ✅ This fixes the error
       } finally {
         setIsLoading(false);
       }
@@ -84,13 +84,13 @@ const Request = () => {
           dispatch(addConnection([request.fromUserId])); // Ensure it's an array
           setPopup({
             isVisible: true,
-            message: `You accepted ${request.fromUserId.firstName}'s request.`,
+            message: `You accepted ${request.fromUserId?.firstName}'s request.`,
             color: "green",
           });
         } else if (status === "rejected") {
           setPopup({
             isVisible: true,
-            message: `You rejected ${request.fromUserId.firstName}'s request.`,
+            message: `You rejected ${request.fromUserId?.firstName}'s request.`,
             color: "red",
           });
         }
@@ -424,8 +424,8 @@ const Request = () => {
               <div className="request-card-left">
                 <div className="request-card-image-container">
                   <img
-                    src={req.fromUserId?.photoUrl || "/default-avatar.png"} 
-                    alt={`${req.fromUserId?.firstName || "Unknown"} ${
+                    src={req?.fromUserId?.photoUrl || "/default-avatar.png"} 
+                    alt={`${req?.fromUserId?.firstName || "Unknown"} ${
                       req.fromUserId?.lastName || ""
                     }`}
                     className="request-card-image"
@@ -464,16 +464,16 @@ const Request = () => {
                   </p>
                 )}
 
-                {req.fromUserId.skills && req.fromUserId.skills.length > 0 && (
+                {req.fromUserId?.skills && req.fromUserId?.skills.length > 0 && (
                   <div className="request-card-skills">
                     {req.fromUserId?.skills?.slice(0, 2).map((skill, index) => (
                       <span className="request-skill-tag" key={index}>
                         {skill}
                       </span>
                     ))}
-                    {req.fromUserId.skills.length > 2 && (
+                    {req.fromUserId?.skills?.length > 2 && (
                       <span className="request-skill-more">
-                        +{req.fromUserId.skills.length - 2}
+                        +{req.fromUserId?.skills?.length - 2}
                       </span>
                     )}
                   </div>
