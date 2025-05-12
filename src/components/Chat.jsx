@@ -43,9 +43,9 @@ const fetchChat = async () => {
       firstName: message?.senderId?.firstName,
       lastName: message?.senderId?.lastName,
       photoUrl: message?.senderId?.photoUrl,
-      text: message?.text,
+      text: message?.text?.trim(),  // Trim text here
       timestamp: message?.createdAt,
-    }));
+    })).filter(message => message.text); // Filter out empty messages
 
     setMessages(chatMessages);
 
@@ -57,12 +57,11 @@ const fetchChat = async () => {
         photoUrl: firstMessage.photoUrl,
       });
     }
-            setIsLoading(false);
+    setIsLoading(false);
 
   } catch (err) {
     console.error("Error fetching chat: ", err);
-            setIsLoading(false);
-
+    setIsLoading(false);
   }
 };
 
@@ -99,6 +98,8 @@ useEffect(() => {
   });
 
   socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
+    if (!content.trim()) return; // Don't process empty messages
+
     const newMessage = {
       id: `msg-${Date.now()}`,
       senderId,
@@ -213,28 +214,30 @@ useEffect(() => {
     }
   };
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
 
-    try {
-      if (!isAuthenticated || !loggedInUser?._id) return;
+const handleSendMessage = (e) => {
+  e.preventDefault();
+  
+  if (!newMessage.trim()) return; // Prevent sending empty messages
 
-      if (socketRef.current && socketRef.current.connected) {
-        socketRef.current.emit("sendMessage", {
-          senderFirstName: currentUser.firstName,
-          senderId: loggedInUser._id,
-          receiverId: userId,
-          content: newMessage,
-        });
-      }
-    } catch (err) {
-      console.error("Error sending message:", err);
+  try {
+    if (!isAuthenticated || !loggedInUser?._id) return;
+
+    if (socketRef.current && socketRef.current.connected) {
+      socketRef.current.emit("sendMessage", {
+        senderFirstName: currentUser.firstName,
+        senderId: loggedInUser._id,
+        receiverId: userId,
+        content: newMessage,
+      });
     }
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
 
-    setNewMessage("");
-    messageInputRef.current?.focus();
-  };
+  setNewMessage(""); // Clear input field after sending
+  messageInputRef.current?.focus(); // Keep focus on input
+};
 
 
 const formatMessageTime = (timestamp) => {
