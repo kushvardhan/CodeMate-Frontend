@@ -68,10 +68,10 @@ const fetchChat = async () => {
 
 const fetchUserData = async()=>{
   try{
-    const res = await axios.get("/user/chatUser", {userId}, {
+    const res = await axios.post(`http://localhost:4000/user/chatUser/${userId}`, {userId}, {
       withCredentials: true,
     });
-    console.log(res);
+    console.log("USER DATA ",res.data.data);
     setChatPartner(res.data.data);
   }catch(err){
     console.error("Error fetching user data: ", err);
@@ -79,8 +79,8 @@ const fetchUserData = async()=>{
 }
 
 useEffect(()=>{
-      setIsLoading(true);
-
+  setIsLoading(true);
+  fetchUserData();
   fetchChat();
 },[])
 
