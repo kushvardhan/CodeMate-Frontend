@@ -10,7 +10,6 @@ import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = () => {
-  // Get user from Redux store with strict authentication check
   const userState = useSelector((state) => state.user);
   const { isAuthenticated, user: currentAuthUser } = userState;
   const loggedInUser = currentAuthUser; // Don't provide fallback to ensure we only use real user data
@@ -25,6 +24,7 @@ const Chat = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
+  const sockdfef = useRef();   
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
@@ -86,38 +86,37 @@ useEffect(()=>{
 
 
   useEffect(() => {
-    // Only attempt to connect if we have both user IDs
-    // Don't depend on authentication state to prevent unnecessary reconnections
-    if (!userId) return;
+    if (!userId || !loggedInUserId) return;
 
-    // Use the ID if available, otherwise use a placeholder
-    const currentUserId = loggedInUserId || "temp-user-id";
+    const socket = createSocketConnection();
+    socketRef.current = socket;
 
-    try {
-      console.log(
-        `Attempting socket connection for chat between ${currentUserId} and ${userId}`
-      );
-      const socket = createSocketConnection();
-      const firstName = loggedInUser ? loggedInUser?.firstName : "User";
+    const firstName = loggedInUser?.firstName || "User";
 
-      socket.emit("joinChat", {
-        firstName,
-        loggedInUserId: currentUserId,
-        userId,
-      });
+    socket.emit("joinChat", {
+      firstName,
+      loggedInUserId,
+      userId,
+    });
 
-      socket.on("receiveMessage", ({ senderFirstName, content }) => {
-        console.log(senderFirstName + " has send this message: " + content);
-      });
-
-      return () => {
-        socket.disconnect();
-        console.log(`Socket disconnected for chat`);
+    socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
+      if (!content || content.trim() === "") return;
+      const newMessage = {
+        id: `msg-${Date.now()}`,
+        senderId,
+        firstName: senderFirstName,
+        text: content,
+        timestamp: timestamp || new Date().toISOString(),
       };
-    } catch (err) {
-      console.error("Socket connection error:", err);
-    }
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
   }, [userId, loggedInUserId]);
+
 
   const currentUser = {
     id: loggedInUser?._id || "current-user-id", 
@@ -216,82 +215,28 @@ useEffect(()=>{
     }
   };
 
-const handleSendMessage = (e) => {
-  e.preventDefault();
-  if (!newMessage.trim()) return;
-  const firstName = loggedInUser ? loggedInUser?.firstName : null;
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
 
-  // Create a local message object for immediate display
-  const message = {
-    id: `msg-${Date.now()}`,
-    senderId: currentUser.id,
-    receiverId: userId,
-    content: newMessage,
-    timestamp: new Date().toISOString(),
-  };
+    try {
+      if (!isAuthenticated || !loggedInUser?._id) return;
 
-  // Add message to local state for immediate display
-  setMessages((prevMessages) => [...prevMessages, message]);
-
-  try {
-    if (!isAuthenticated) {
-      console.error("Cannot send message: User not authenticated");
-      return;
-    }
-
-    const loggedInUserId = loggedInUser?._id;
-
-    if (!loggedInUserId) {
-      console.error("Cannot send message: No valid user ID");
-      return;
-    }
-
-    // Use the existing socket connection from the ref
-    if (socketRef.current && socketRef.current.connected) {
-      console.log("Sending message using existing socket:", socketRef.current.id);
-
-      // Emit the message through the existing socket
-      socketRef.current.emit("sendMessage", {
-        senderFirstName: firstName,
-        senderId: loggedInUserId,
-        receiverId: userId,
-        content: newMessage,
-      });
-    } else {
-      console.error("Socket not connected, cannot send message");
-
-      // If socket is not connected, try to reconnect
-      const socket = createSocketConnection();
-      socketRef.current = socket;
-
-      socket.on("connect", () => {
-        console.log("New socket connected for sending message:", socket.id);
-
-        // First join the chat room
-        socket.emit("joinChat", { loggedInUserId, userId });
-
-        // Then send the message
-        socket.emit("sendMessage", {
-          senderFirstName: firstName,
-          senderId: loggedInUserId,
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("sendMessage", {
+          senderFirstName: currentUser.firstName,
+          senderId: loggedInUser._id,
           receiverId: userId,
           content: newMessage,
         });
-      });
-
-      // Handle connection errors
-      socket.on("connect_error", (error) => {
-        console.error("Socket connection error when sending message:", error);
-      });
+      }
+    } catch (err) {
+      console.error("Error sending message:", err);
     }
-  } catch (err) {
-    console.error("Error sending message:", err);
-  }
 
-  // Clear the input field and focus it for the next message
-  setNewMessage("");
-  messageInputRef.current.focus();
-};
+    setNewMessage("");
+    messageInputRef.current?.focus();
+  };
 
 
 const formatMessageTime = (timestamp) => {
