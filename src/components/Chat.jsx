@@ -66,6 +66,18 @@ const fetchChat = async () => {
   }
 };
 
+const fetchUserData = async()=>{
+  try{
+    const res = await axios.get("/user/chatUser", {userId}, {
+      withCredentials: true,
+    });
+    console.log(res);
+    setChatPartner(res.data.data);
+  }catch(err){
+    console.error("Error fetching user data: ", err);
+  }
+}
+
 useEffect(()=>{
       setIsLoading(true);
 
@@ -204,85 +216,83 @@ useEffect(()=>{
     }
   };
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    const firstName = loggedInUser ? loggedInUser?.firstName : null;
+const handleSendMessage = (e) => {
+  e.preventDefault();
+  if (!newMessage.trim()) return;
+  const firstName = loggedInUser ? loggedInUser?.firstName : null;
 
-    // Create a local message object for immediate display
-    const message = {
-      id: `msg-${Date.now()}`,
-      senderId: currentUser.id,
-      receiverId: userId,
-      content: newMessage,
-      timestamp: new Date().toISOString(),
-    };
+  // Create a local message object for immediate display
+  const message = {
+    id: `msg-${Date.now()}`,
+    senderId: currentUser.id,
+    receiverId: userId,
+    content: newMessage,
+    timestamp: new Date().toISOString(),
+  };
 
-    // Add message to local state for immediate display
-    setMessages([...messages, message]);
+  // Add message to local state for immediate display
+  setMessages((prevMessages) => [...prevMessages, message]);
 
-    try {
-      if (!isAuthenticated) {
-        console.error("Cannot send message: User not authenticated");
-        return;
-      }
+  try {
+    if (!isAuthenticated) {
+      console.error("Cannot send message: User not authenticated");
+      return;
+    }
 
-      const loggedInUserId = loggedInUser?._id;
+    const loggedInUserId = loggedInUser?._id;
 
-      if (!loggedInUserId) {
-        console.error("Cannot send message: No valid user ID");
-        return;
-      }
+    if (!loggedInUserId) {
+      console.error("Cannot send message: No valid user ID");
+      return;
+    }
 
-      // Use the existing socket connection from the ref
-      if (socketRef.current && socketRef.current.connected) {
-        console.log(
-          "Sending message using existing socket:",
-          socketRef.current.id
-        );
+    // Use the existing socket connection from the ref
+    if (socketRef.current && socketRef.current.connected) {
+      console.log("Sending message using existing socket:", socketRef.current.id);
 
-        // Emit the message through the existing socket
-        socketRef.current.emit("sendMessage", {
+      // Emit the message through the existing socket
+      socketRef.current.emit("sendMessage", {
+        senderFirstName: firstName,
+        senderId: loggedInUserId,
+        receiverId: userId,
+        content: newMessage,
+      });
+    } else {
+      console.error("Socket not connected, cannot send message");
+
+      // If socket is not connected, try to reconnect
+      const socket = createSocketConnection();
+      socketRef.current = socket;
+
+      socket.on("connect", () => {
+        console.log("New socket connected for sending message:", socket.id);
+
+        // First join the chat room
+        socket.emit("joinChat", { loggedInUserId, userId });
+
+        // Then send the message
+        socket.emit("sendMessage", {
           senderFirstName: firstName,
           senderId: loggedInUserId,
           receiverId: userId,
           content: newMessage,
         });
-      } else {
-        console.error("Socket not connected, cannot send message");
+      });
 
-        // If socket is not connected, try to reconnect
-        const socket = createSocketConnection();
-        socketRef.current = socket;
-
-        socket.on("connect", () => {
-          console.log("New socket connected for sending message:", socket.id);
-
-          // First join the chat room
-          socket.emit("joinChat", { loggedInUserId, userId });
-
-          // Then send the message
-          socket.emit("sendMessage", {
-            senderFirstName: firstName,
-            senderId: loggedInUserId,
-            receiverId: userId,
-            content: newMessage,
-          });
-        });
-
-        // Handle connection errors
-        socket.on("connect_error", (error) => {
-          console.error("Socket connection error when sending message:", error);
-        });
-      }
-    } catch (err) {
-      console.error("Error sending message:", err);
+      // Handle connection errors
+      socket.on("connect_error", (error) => {
+        console.error("Socket connection error when sending message:", error);
+      });
     }
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
 
-    // Clear the input field and focus it for the next message
-    setNewMessage("");
-    messageInputRef.current.focus();
-  };
+  // Clear the input field and focus it for the next message
+  setNewMessage("");
+  messageInputRef.current.focus();
+};
+
 
 const formatMessageTime = (timestamp) => {
   const date = new Date(timestamp);
