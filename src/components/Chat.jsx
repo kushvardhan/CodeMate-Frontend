@@ -84,7 +84,6 @@ useEffect(()=>{
   fetchChat();
 },[])
 
-
 useEffect(() => {
   if (!userId || !loggedInUserId) return;
 
@@ -99,9 +98,7 @@ useEffect(() => {
     userId,
   });
 
-  const handleReceiveMessage = ({ senderFirstName, content, senderId, timestamp }) => {
-    if (!content || content.trim() === "") return; // Validate message content
-
+  socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
     const newMessage = {
       id: `msg-${Date.now()}`,
       senderId,
@@ -109,19 +106,14 @@ useEffect(() => {
       text: content,
       timestamp: timestamp || new Date().toISOString(),
     };
-
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
-
-  socket.on("receiveMessage", handleReceiveMessage);
+  });
 
   return () => {
-    socket.off("receiveMessage", handleReceiveMessage); // Clean up the listener
     socket.disconnect();
     sockdfef.current = null;
   };
 }, [userId, loggedInUserId]);
-
 
 
   const currentUser = {
