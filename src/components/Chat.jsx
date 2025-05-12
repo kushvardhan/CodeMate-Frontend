@@ -85,37 +85,43 @@ useEffect(()=>{
 },[])
 
 
-  useEffect(() => {
-    if (!userId || !loggedInUserId) return;
+useEffect(() => {
+  if (!userId || !loggedInUserId) return;
 
-    const socket = createSocketConnection();
-    socketRef.current = socket;
+  const socket = createSocketConnection();
+  sockdfef.current = socket;
 
-    const firstName = loggedInUser?.firstName || "User";
+  const firstName = loggedInUser?.firstName || "User";
 
-    socket.emit("joinChat", {
-      firstName,
-      loggedInUserId,
-      userId,
-    });
+  socket.emit("joinChat", {
+    firstName,
+    loggedInUserId,
+    userId,
+  });
 
-    socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
-      if (!content || content.trim() === "") return;
-      const newMessage = {
-        id: `msg-${Date.now()}`,
-        senderId,
-        firstName: senderFirstName,
-        text: content,
-        timestamp: timestamp || new Date().toISOString(),
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+  const handleReceiveMessage = ({ senderFirstName, content, senderId, timestamp }) => {
+    if (!content || content.trim() === "") return; // Validate message content
 
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
+    const newMessage = {
+      id: `msg-${Date.now()}`,
+      senderId,
+      firstName: senderFirstName,
+      text: content,
+      timestamp: timestamp || new Date().toISOString(),
     };
-  }, [userId, loggedInUserId]);
+
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  socket.on("receiveMessage", handleReceiveMessage);
+
+  return () => {
+    socket.off("receiveMessage", handleReceiveMessage); // Clean up the listener
+    socket.disconnect();
+    sockdfef.current = null;
+  };
+}, [userId, loggedInUserId]);
+
 
 
   const currentUser = {
