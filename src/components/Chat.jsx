@@ -23,8 +23,7 @@ const Chat = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
-  const messageInputRef = useRef(null);
-  const sockdfef = useRef();   
+  const messageInputRef = useRef(null);  
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
@@ -82,39 +81,6 @@ useEffect(()=>{
   fetchUserData();
   fetchChat();
 },[])
-
-useEffect(() => {
-  if (!userId || !loggedInUserId) return;
-
-  const socket = createSocketConnection();
-  sockdfef.current = socket;
-
-  const firstName = loggedInUser?.firstName || "User";
-
-  socket.emit("joinChat", {
-    firstName,
-    loggedInUserId,
-    userId,
-  });
-
-  socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
-    if (!content.trim()) return; // Don't process empty messages
-
-    const newMessage = {
-      id: `msg-${Date.now()}`,
-      senderId,
-      firstName: senderFirstName,
-      text: content,
-      timestamp: timestamp || new Date().toISOString(),
-    };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  });
-
-  return () => {
-    socket.disconnect();
-    sockdfef.current = null;
-  };
-}, [userId, loggedInUserId]);
 
 
   const currentUser = {
@@ -394,15 +360,23 @@ const formatMessageTime = (timestamp) => {
       // Listen for incoming messages
       socket.on("receiveMessage", (data) => {
         console.log("Received message:", data);
+
+        // Ensure content exists and is not just whitespace
+        if (!data.content || !data.content.trim()) {
+          console.warn("Received message with empty content, skipping.");
+          return;
+        }
+
         // Add received message to state
         setMessages((prevMessages) => [
           ...prevMessages,
           {
-            id: `msg-${Date.now()}`,
+            id: data.id || `msg-${Date.now()}`, // Use server ID if available
             senderId: data.senderId,
-            receiverId: loggedInUserId,
-            content: data.content,
+            firstName: data.senderFirstName, // Assuming server sends this
+            text: data.content, // Corrected to use 'text' property
             timestamp: data.timestamp || new Date().toISOString(),
+            // photoUrl: data.senderPhotoUrl, // If server sends this, include for consistency
           },
         ]);
       });
