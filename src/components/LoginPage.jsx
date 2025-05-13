@@ -5,28 +5,28 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { clearUser, setUser } from "../slice/UserSlice";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Clear any existing user data when the login page loads
+
   useEffect(() => {
-    // Clear Redux state
     dispatch(clearUser());
 
-    // Clear localStorage except for theme preference
     const theme = localStorage.getItem("theme");
     localStorage.clear();
     if (theme) {
       localStorage.setItem("theme", theme);
     }
 
-    // Set wasLoggedOut flag to prevent auto-login
     localStorage.setItem("wasLoggedOut", "true");
 
-    // Clear all cookies by setting them to expire
     document.cookie.split(";").forEach((cookie) => {
       const [name] = cookie.split("=");
       if (name && !name.includes("theme")) {
@@ -37,7 +37,6 @@ const LoginPage = () => {
     });
   }, [dispatch]);
 
-  // Always redirect to profile page after login
   const from = "/profile";
 
   const [formData, setFormData] = useState({
@@ -55,7 +54,6 @@ const LoginPage = () => {
       [name]: value,
     });
 
-    // Clear error when user types
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -67,12 +65,10 @@ const LoginPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate email
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     }
 
-    // Validate password
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
@@ -94,7 +90,7 @@ const LoginPage = () => {
       const res = await axios.post(
         "http://localhost:4000/login",
         formData,
-        { withCredentials: true } // Ensure cookies are sent
+        { withCredentials: true } 
       );
 
       dispatch(setUser(res.data.user));
@@ -116,7 +112,6 @@ const LoginPage = () => {
     }
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -140,7 +135,6 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* Dark mode toggle button - positioned at the top right */}
       <div
         style={{
           position: "fixed",
@@ -419,16 +413,28 @@ const LoginPage = () => {
             <div className="form-group">
 
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
-                className={`form-input ${errors.password ? "error" : ""} ${
+                className={`form-input relative ${errors.password ? "error" : ""} ${
                   darkMode ? "bg-gray-700 border-gray-600 text-white" : ""
                 }`}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
               />
+              {
+                !showPassword ? (
+                  <FaEyeSlash
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                ) : (< FaEye
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  />)
+              }
+
               {errors.password && (
                 <p className="error-message">{errors.password}</p>
               )}
