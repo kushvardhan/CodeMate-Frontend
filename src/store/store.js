@@ -10,13 +10,11 @@ const appReducer = combineReducers({
   connection: connectionReducer,
 });
 
-// This root reducer will reset all state when logout action is dispatched
 const rootReducer = (state, action) => {
-  // When logout action is detected, reset all state to initial values
   if (action.type === "user/logoutUser") {
-    // Reset state to undefined so each reducer returns its initial state
     state = undefined;
   }
+  
 
   return appReducer(state, action);
 };
