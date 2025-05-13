@@ -88,41 +88,6 @@ const Chat = () => {
 
 
 
-  useEffect(() => {
-    if (!userId || !loggedInUserId) return;
-
-    const socket = createSocketConnection();
-    socketRef.current = socket;
-
-    const firstName = loggedInUser?.firstName || "User";
-
-    socket.emit("joinChat", {
-      firstName,
-      loggedInUserId,
-      userId,
-    });
-
-    socket.on(
-      "receiveMessage",
-      ({ senderFirstName, content, senderId, timestamp }) => {
-        if (!content || content.trim() === "") return;
-        const newMessage = {
-          id: `msg-${Date.now()}`,
-          senderId,
-          firstName: senderFirstName,
-          text: content,
-          timestamp: timestamp || new Date().toISOString(),
-        };
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      }
-    );
-
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-  }, [userId, loggedInUserId]);
-
   const currentUser = {
     id: loggedInUser?._id || "current-user-id",
     firstName: loggedInUser?.firstName || "You",
@@ -372,67 +337,48 @@ const Chat = () => {
   // Create a ref to store the socket instance
   const socketRef = useRef(null);
 
-  // Socket connection effect
-  useEffect(() => {
-    // Only create socket connection if authenticated
-    if (!isAuthenticated || !userId) return;
+useEffect(() => {
+  if (!isAuthenticated || !userId || !loggedInUser?._id) return;
 
-    try {
-      // Get the logged in user ID
-      const loggedInUserId = loggedInUser?._id;
+  const socket = createSocketConnection();
+  socketRef.current = socket;
 
-      // Only proceed if we have a valid user ID
-      if (!loggedInUserId) {
-        console.error("No valid user ID available for socket connection");
-        return;
-      }
+  socket.on("connect", () => {
+    console.log("Socket connected with ID:", socket.id);
+    socket.emit("joinChat", {
+      firstName: loggedInUser.firstName || "User",
+      loggedInUserId: loggedInUser._id,
+      userId,
+    });
+  });
 
-      // Create socket connection
-      const socket = createSocketConnection();
-      socketRef.current = socket;
+  socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
+    if (!content || content.trim() === "") return;
 
-      // Connect and join chat room
-      socket.on("connect", () => {
-        console.log("Socket connected with ID:", socket.id);
-        // Emit joinChat after successful connection
-        socket.emit("joinChat", { loggedInUserId, userId });
-      });
-
-      // Listen for connection errors
-      socket.on("connect_error", (error) => {
-        console.error("Socket connection error:", error);
-      });
-
-      socket.on("receiveMessage", (data) => {
-  if (!data.content || data.content.trim() === "") return;
-
-  setMessages((prevMessages) => [
-    ...prevMessages,
-    {
+    const newMessage = {
       id: `msg-${Date.now()}`,
-      senderId: data.senderId,
-      receiverId: loggedInUserId,
-      text: data.content,
-      timestamp: data.timestamp || new Date().toISOString(),
-    },
-  ]);
-  
-});
+      senderId,
+      firstName: senderFirstName,
+      text: content,
+      timestamp: timestamp || new Date().toISOString(),
+    };
 
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  });
 
+  socket.on("connect_error", (error) => {
+    console.error("Socket connection error:", error);
+  });
 
-      // Clean up socket connection on component unmount
-      return () => {
-        if (socket) {
-          console.log("Disconnecting socket:", socket.id);
-          socket.disconnect();
-          socketRef.current = null;
-        }
-      };
-    } catch (err) {
-      console.error("Error in socket connection:", err);
+  return () => {
+    if (socket) {
+      console.log("Disconnecting socket:", socket.id);
+      socket.disconnect();
+      socketRef.current = null;
     }
-  }, [userId, loggedInUserId, loggedInUser]);
+  };
+}, [isAuthenticated, userId, loggedInUser]);
+
 
   // No sample messages needed as we show the welcome message separately
   const generateSampleMessages = () => {
