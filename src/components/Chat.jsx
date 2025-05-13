@@ -85,6 +85,9 @@ const Chat = () => {
     fetchChat();
   }, []);
 
+
+
+
   useEffect(() => {
     if (!userId || !loggedInUserId) return;
 
@@ -219,6 +222,7 @@ const Chat = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
+    
 
     const message = {
       id: `msg-${Date.now()}`,
