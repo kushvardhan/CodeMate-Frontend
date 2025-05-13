@@ -423,8 +423,10 @@ const LoginPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your password"
               />
-              {
-                !showPassword ? (
+              
+                <div className="eye-icon">
+                  {
+                    !showPassword ? (
                   <FaEyeSlash
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
@@ -433,7 +435,9 @@ const LoginPage = () => {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   />)
-              }
+                  }
+                </div>
+              
 
               {errors.password && (
                 <p className="error-message">{errors.password}</p>
