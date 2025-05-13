@@ -1,10 +1,9 @@
-import { format } from "date-fns";
-import axios from "../api/axios";
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
@@ -24,66 +23,67 @@ const Chat = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
-  const sockdfef = useRef();   
+  const sockdfef = useRef();
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
 
-const fetchChat = async () => {
-  try {
-    const response = await axios.get(`/chat/getChat/${userId}`, {
-      withCredentials: true,
-    });
-
-    console.log("User data fetched: ", response.data);
-
-    const chatMessages = response.data?.map((message) => ({
-      id: message._id,
-      senderId: message.senderId._id,
-      firstName: message?.senderId?.firstName,
-      lastName: message?.senderId?.lastName,
-      photoUrl: message?.senderId?.photoUrl,
-      text: message?.text,
-      timestamp: message?.createdAt,
-    }));
-
-    setMessages(chatMessages);
-
-    const firstMessage = chatMessages?.[0];
-    if (firstMessage?.senderId !== loggedInUserId) {
-      setChatPartner({
-        firstName: firstMessage.firstName,
-        lastName: firstMessage.lastName,
-        photoUrl: firstMessage.photoUrl,
+  const fetchChat = async () => {
+    try {
+      const response = await axios.get(`/chat/getChat/${userId}`, {
+        withCredentials: true,
       });
+
+      console.log("User data fetched: ", response.data);
+
+      const chatMessages = response.data?.map((message) => ({
+        id: message._id,
+        senderId: message.senderId._id,
+        firstName: message?.senderId?.firstName,
+        lastName: message?.senderId?.lastName,
+        photoUrl: message?.senderId?.photoUrl,
+        text: message?.text,
+        timestamp: message?.createdAt,
+      }));
+
+      setMessages(chatMessages);
+
+      const firstMessage = chatMessages?.[0];
+      if (firstMessage?.senderId !== loggedInUserId) {
+        setChatPartner({
+          firstName: firstMessage.firstName,
+          lastName: firstMessage.lastName,
+          photoUrl: firstMessage.photoUrl,
+        });
+      }
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Error fetching chat: ", err);
+      setIsLoading(false);
     }
-            setIsLoading(false);
+  };
 
-  } catch (err) {
-    console.error("Error fetching chat: ", err);
-            setIsLoading(false);
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:4000/user/chatUser/${userId}`,
+        { userId },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("USER DATA ", res.data.data);
+      setChatPartner(res.data.data);
+    } catch (err) {
+      console.error("Error fetching user data: ", err);
+    }
+  };
 
-  }
-};
-
-const fetchUserData = async()=>{
-  try{
-    const res = await axios.post(`http://localhost:4000/user/chatUser/${userId}`, {userId}, {
-      withCredentials: true,
-    });
-    console.log("USER DATA ",res.data.data);
-    setChatPartner(res.data.data);
-  }catch(err){
-    console.error("Error fetching user data: ", err);
-  }
-}
-
-useEffect(()=>{
-  setIsLoading(true);
-  fetchUserData();
-  fetchChat();
-},[])
-
+  useEffect(() => {
+    setIsLoading(true);
+    fetchUserData();
+    fetchChat();
+  }, []);
 
   useEffect(() => {
     if (!userId || !loggedInUserId) return;
@@ -99,17 +99,20 @@ useEffect(()=>{
       userId,
     });
 
-    socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
-      if (!content || content.trim() === "") return;
-      const newMessage = {
-        id: `msg-${Date.now()}`,
-        senderId,
-        firstName: senderFirstName,
-        text: content,
-        timestamp: timestamp || new Date().toISOString(),
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+    socket.on(
+      "receiveMessage",
+      ({ senderFirstName, content, senderId, timestamp }) => {
+        if (!content || content.trim() === "") return;
+        const newMessage = {
+          id: `msg-${Date.now()}`,
+          senderId,
+          firstName: senderFirstName,
+          text: content,
+          timestamp: timestamp || new Date().toISOString(),
+        };
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    );
 
     return () => {
       socket.disconnect();
@@ -117,9 +120,8 @@ useEffect(()=>{
     };
   }, [userId, loggedInUserId]);
 
-
   const currentUser = {
-    id: loggedInUser?._id || "current-user-id", 
+    id: loggedInUser?._id || "current-user-id",
     firstName: loggedInUser?.firstName || "You",
     lastName: loggedInUser?.lastName || "",
     photoUrl: loggedInUser?.photoUrl || null,
@@ -140,7 +142,6 @@ useEffect(()=>{
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
-
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -215,75 +216,73 @@ useEffect(()=>{
     }
   };
 
-const handleSendMessage = (e) => {
-  e.preventDefault();
-  if (!newMessage.trim()) return;
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
 
-  const message = {
-    id: `msg-${Date.now()}`,
-    senderId: currentUser.id,
-    firstName: currentUser.firstName,
-    text: newMessage,
-    timestamp: new Date().toISOString(),
+    const message = {
+      id: `msg-${Date.now()}`,
+      senderId: currentUser.id,
+      firstName: currentUser.firstName,
+      text: newMessage,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      if (!isAuthenticated || !loggedInUser?._id) return;
+
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("sendMessage", {
+          senderFirstName: currentUser.firstName,
+          senderId: loggedInUser._id,
+          receiverId: userId,
+          content: newMessage,
+          timestamp: message.timestamp,
+        });
+      }
+
+      // Clear input and scroll to bottom
+      setNewMessage("");
+      messageInputRef.current?.focus();
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   };
 
+  const formatMessageTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
 
-  try {
-    if (!isAuthenticated || !loggedInUser?._id) return;
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
 
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit("sendMessage", {
-        senderFirstName: currentUser.firstName,
-        senderId: loggedInUser._id,
-        receiverId: userId,
-        content: newMessage,
-      });
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+
+    const isYesterday =
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear();
+
+    const timeString = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (isToday) {
+      return `${timeString} `; // temp for debugging
+    } else if (isYesterday) {
+      return `${timeString} (yesterday)`;
+    } else {
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = date.toLocaleString("default", { month: "short" });
+      const year = date.getFullYear().toString().slice(-2);
+      return `${timeString} (${day} ${month} ${year})`;
     }
-  } catch (err) {
-    console.error("Error sending message:", err);
-  }
-
-  setNewMessage("");
-  messageInputRef.current?.focus();
-};
-
-
-
-const formatMessageTime = (timestamp) => {
-  const date = new Date(timestamp);
-  const now = new Date();
-
-  const isToday =
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear();
-
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-
-  const isYesterday =
-    date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear();
-
-  const timeString = date.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
-
-  if (isToday) {
-    return `${timeString} `; // temp for debugging
-  } else if (isYesterday) {
-    return `${timeString} (yesterday)`;
-  } else {
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'short' });
-    const year = date.getFullYear().toString().slice(-2);
-    return `${timeString} (${day} ${month} ${year})`;
-  }
-};
-
+  };
 
   // Convert URLs in text to clickable links
   const linkifyText = (text) => {
@@ -692,9 +691,9 @@ const formatMessageTime = (timestamp) => {
               transition={{ delay: 0.5, duration: 0.8 }}
             >
               <div className="welcome-message">
-                
                 <h3>
-                Welcome to your conversation with {chatPartner?.firstName || "Unknown"}
+                  Welcome to your conversation with{" "}
+                  {chatPartner?.firstName || "Unknown"}
                 </h3>
                 <p className="welcome-description">
                   Start chatting to collaborate on projects!
@@ -703,32 +702,31 @@ const formatMessageTime = (timestamp) => {
             </motion.div>
 
             <AnimatePresence>
-  {messages.map((message) => (
-    <motion.div
-      key={message.id}
-      className={`message ${
-        message.senderId === currentUser.id || message.senderId === loggedInUser?._id
-          ? "sent"
-          : "received"
-      }`}
-      variants={itemVariants}
-      initial="hidden"
-      animate="visible"
-      exit={{ opacity: 0, y: 20 }}
-    >
-      <div className="message-content">
-        <p>{message.text}</p>
-        {formatMessageTime(message.timestamp) && (
-          <span className="message-time">
-            {formatMessageTime(message.timestamp)}
-          </span>
-        )}
-      </div>
-    </motion.div>
-  ))}
-</AnimatePresence>
-
-<div ref={messagesEndRef} />
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  className={`message ${
+                    message.senderId === currentUser.id ||
+                    message.senderId === loggedInUser?._id
+                      ? "sent"
+                      : "received"
+                  }`}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <div className="message-content">
+                    <p>{message.text}</p>
+                    {formatMessageTime(message.timestamp) && (
+                      <span className="message-time">
+                        {formatMessageTime(message.timestamp)}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
             <div ref={messagesEndRef} />
           </div>
