@@ -184,39 +184,45 @@ const Chat = () => {
     }
   };
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    
+const handleSendMessage = (e) => {
+  e.preventDefault();
 
-    const message = {
-      id: `msg-${Date.now()}`,
-      senderId: currentUser.id,
-      firstName: currentUser.firstName,
-      text: newMessage,
-      timestamp: new Date().toISOString(),
-    };
+  const trimmedMessage = newMessage.trim();
+  if (!trimmedMessage) return;
 
-    try {
-      if (!isAuthenticated || !loggedInUser?._id) return;
-
-      if (socketRef.current && socketRef.current.connected) {
-        socketRef.current.emit("sendMessage", {
-          senderFirstName: currentUser.firstName,
-          senderId: loggedInUser._id,
-          receiverId: userId,
-          content: newMessage,
-          timestamp: message.timestamp,
-        });
-      }
-
-      // Clear input and scroll to bottom
-      setNewMessage("");
-      messageInputRef.current?.focus();
-    } catch (err) {
-      console.error("Error sending message:", err);
-    }
+  const message = {
+    id: `msg-${Date.now()}`,
+    senderId: currentUser.id,
+    firstName: currentUser.firstName,
+    text: trimmedMessage,
+    timestamp: new Date().toISOString(),
   };
+
+  try {
+    if (!isAuthenticated || !loggedInUser?._id) return;
+
+    // Emit message through socket
+    if (socketRef.current && socketRef.current.connected) {
+      socketRef.current.emit("sendMessage", {
+        senderFirstName: currentUser.firstName,
+        senderId: loggedInUser._id,
+        receiverId: userId,
+        content: trimmedMessage,
+        timestamp: message.timestamp,
+      });
+    }
+
+    // Add sent message to local UI immediately
+    setMessages((prevMessages) => [...prevMessages, message]);
+
+    // Clear input
+    setNewMessage("");
+    messageInputRef.current?.focus();
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
+};
+
 
   const formatMessageTime = (timestamp) => {
     const date = new Date(timestamp);
