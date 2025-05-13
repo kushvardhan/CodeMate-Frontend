@@ -45,7 +45,7 @@ const Chat = () => {
         text: message?.text,
         timestamp: message?.createdAt,
       }));
-
+      console.log('Chat Messages: ', chatMessages);
       setMessages(chatMessages);
 
       const firstMessage = chatMessages?.[0];
@@ -403,21 +403,23 @@ const Chat = () => {
         console.error("Socket connection error:", error);
       });
 
-      // Listen for incoming messages
       socket.on("receiveMessage", (data) => {
-        console.log("Received message:", data);
-        // Add received message to state
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            id: `msg-${Date.now()}`,
-            senderId: data.senderId,
-            receiverId: loggedInUserId,
-            content: data.content,
-            timestamp: data.timestamp || new Date().toISOString(),
-          },
-        ]);
-      });
+  if (!data.content || data.content.trim() === "") return;
+
+  setMessages((prevMessages) => [
+    ...prevMessages,
+    {
+      id: `msg-${Date.now()}`,
+      senderId: data.senderId,
+      receiverId: loggedInUserId,
+      text: data.content,
+      timestamp: data.timestamp || new Date().toISOString(),
+    },
+  ]);
+  
+});
+
+
 
       // Clean up socket connection on component unmount
       return () => {
@@ -721,7 +723,10 @@ const Chat = () => {
                   exit={{ opacity: 0, y: 20 }}
                 >
                   <div className="message-content">
-                    <p>{message.text}</p>
+                    {message.text && message.text.trim() !== "" && (
+                    <p>{linkifyText(message.text)}</p>
+                        )}
+
                     {formatMessageTime(message.timestamp) && (
                       <span className="message-time">
                         {formatMessageTime(message.timestamp)}
