@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { useTheme } from "../../context/ThemeContext";
+
 
 const Card = ({
   user,
@@ -10,7 +10,6 @@ const Card = ({
   isPreview = false,
 }) => {
   // Get theme context for potential future use
-  const { darkMode } = useTheme();
 
   // Default user data if not provided
   const defaultUser = {

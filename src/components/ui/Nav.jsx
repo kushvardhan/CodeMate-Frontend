@@ -273,7 +273,8 @@ const Nav = () => {
                         delay: 0.4,
                       }}
                     >
-                      <a
+                      <Link
+                        to="/login"
                         onClick={async () => {
                           try {
                             // Set flag to prevent auto-login on page refresh
@@ -330,7 +331,7 @@ const Nav = () => {
                           <line x1="21" y1="12" x2="9" y2="12"></line>
                         </svg>
                         Logout
-                      </a>
+                      </Link>
                     </motion.li>
                   </motion.ul>
                 )}

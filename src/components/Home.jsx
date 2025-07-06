@@ -7,11 +7,24 @@ import { addConnection } from "../slice/ConnectionSlice";
 import { addRequest } from "../slice/RequestSlice";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
+import { useTheme } from "../context/ThemeContext";
 
 const Home = () => {
+const { darkMode } = useTheme();
   const dispatch = useDispatch();
   const requests = useSelector((state) => state.request) || [];
   const connections = useSelector((state) => state.connection) || [];
+
+
+  useEffect(() => {
+  if (darkMode) {
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+  }
+}, [darkMode]);
 
   // Fetch requests and connections data immediately when component mounts
   useEffect(() => {
@@ -40,6 +53,7 @@ const Home = () => {
                 withCredentials: true,
               }
             );
+           console.log(requestError);
 
             if (
               alternativeRequestsResponse.data &&
@@ -52,6 +66,7 @@ const Home = () => {
           } catch (altRequestError) {
             // Silently handle the error - the backend endpoint might not be implemented yet
             // Just set an empty array for requests
+            console.log(altRequestError);
             dispatch(addRequest([]));
           }
         }
@@ -69,6 +84,7 @@ const Home = () => {
           }
         } catch (connectionsError) {
           // If the endpoint doesn't exist, try an alternative endpoint
+          console.log(connectionsError);
           try {
             const alternativeConnectionsResponse = await axios.get(
               "/user/request/connections",
@@ -88,7 +104,9 @@ const Home = () => {
           } catch (altConnectionsError) {
             // Silently handle the error - the backend endpoint might not be implemented yet
             // Just set an empty array for connections
+            console.log(altConnectionsError);
             dispatch(addConnection([]));
+          
           }
         }
       } catch (error) {
@@ -943,7 +961,7 @@ const Home = () => {
               </div>
             ) : (
               <div className="no-more-cards-in-place">
-                <div className="no-more-cards-content">
+                <div className="no-more-cards-content text-white">
                   <div className="no-more-icon">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -958,12 +976,12 @@ const Home = () => {
                       <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">
+                  <h3 className={`text-xl font-semibold mb-2 text-white`}>
                     {users.length === 0
                       ? "No Profiles Available"
                       : "No More Profiles"}
                   </h3>
-                  <p className="text-center opacity-80 text-white">
+                  <p className={`text-center opacity-80 text-white`}>
                     {users.length === 0
                       ? "There are no profiles to show at the moment."
                       : "You've seen all available profiles."}
