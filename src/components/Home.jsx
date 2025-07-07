@@ -621,7 +621,7 @@ const Home = () => {
                   margin: "0 auto", // Center the card stack
                   overflow: "visible", // Allow overflow for swiping
                   maxWidth: "100%", // Ensure it doesn't exceed the screen width
-                  height: "450px", // Fixed height for the container
+                  height: "500px", // Fixed height for the container
                 }}
               >
                 {/* Rewind button */}
@@ -655,7 +655,7 @@ const Home = () => {
                   style={{
                     position: "relative",
                     width: "300px",
-                    height: "450px",
+                    height: "500px", // Increased height
                     margin: "0 auto",
                     overflow: "visible",
                   }}
@@ -676,7 +676,7 @@ const Home = () => {
                           style={{
                             position: "absolute",
                             width: "300px",
-                            height: "450px",
+                            height: "500px",
                             borderRadius: "10px",
                             boxShadow: isTopCard
                               ? "0 8px 25px rgba(0, 0, 0, 0.15)"

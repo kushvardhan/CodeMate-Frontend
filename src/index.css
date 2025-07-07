@@ -3148,7 +3148,7 @@ pre,
   overflow: hidden !important;
 }
 
-/* Ensure card image fits properly */
+/* Ensure card image fits properly and doesn't move during swipe */
 .tinder-card .dev-card-image {
   width: 100% !important;
   height: 100% !important;
@@ -3156,6 +3156,26 @@ pre,
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+/* Prevent all card content from moving during swipe */
+.tinder-card .dev-card-content,
+.tinder-card .dev-card-info,
+.tinder-card .dev-card-overlay {
+  pointer-events: none !important;
+  transform: none !important;
+  position: relative !important;
+}
+
+/* Ensure text content stays in place */
+.tinder-card .dev-card-name,
+.tinder-card .dev-card-bio,
+.tinder-card .dev-card-location,
+.tinder-card .dev-card-skills {
+  pointer-events: none !important;
+  transform: none !important;
 }
 
 .top-card {
@@ -3170,7 +3190,6 @@ pre,
   background: white !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
 }
-
 
 .background-card {
   pointer-events: none !important;
@@ -3192,7 +3211,7 @@ pre,
   overflow: hidden !important;
   background: white !important;
   min-height: 100% !important;
-  max-height: 100% !important;/* Ensure it doesn't exceed container */
+  max-height: 100% !important; /* Ensure it doesn't exceed container */
 }
 
 /* Ensure background cards also fit properly */
@@ -3204,7 +3223,7 @@ pre,
   top: 0 !important;
   transform: none !important;
   margin: 0 !important;
-  border-radius: 10px !important;
+  border-radius: 1px !important;
   overflow: hidden !important;
   background: white !important;
   min-height: 100% !important;
@@ -3502,7 +3521,40 @@ pre,
 .card-preview-container {
   width: 100%;
   max-width: 320px;
+  height: 500px; /* Match the new card height */
   margin: 0 auto;
+  position: relative;
+}
+
+/* Fix preview card sizing and positioning */
+.card-preview-container .dev-card {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 320px !important;
+  max-height: 500px !important;
+  min-height: 500px !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+/* Ensure preview card content fits properly */
+.card-preview-container .dev-card-content {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Fix preview card image */
+.card-preview-container .dev-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
 }
 
 .profile-edit-form {

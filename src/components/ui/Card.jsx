@@ -139,14 +139,16 @@ const Card = ({
         if (swipeDirection === "left") {
           element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
           element.style.opacity = "0";
-          element.style.boxShadow = "0 0 30px 10px rgba(255, 59, 48, 0.8)";
+          element.style.boxShadow =
+            "10px 10px 40px 20px rgba(255, 59, 48, 0.8)";
           element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
           // Set data attribute for CSS targeting
           element.setAttribute("data-drag", "left");
         } else if (swipeDirection === "right") {
           element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
           element.style.opacity = "0";
-          element.style.boxShadow = "0 0 30px 10px rgba(52, 199, 89, 0.8)";
+          element.style.boxShadow =
+            "10px 10px 40px 20px rgba(52, 199, 89, 0.8)";
           element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
           // Set data attribute for CSS targeting
           element.setAttribute("data-drag", "right");
@@ -324,19 +326,20 @@ const Card = ({
           // Also reset the tinder-card-stack container
           const cardStack = document.querySelector(".tinder-card-stack");
           if (cardStack) {
-            cardStack.style.cssText = `
-              position: relative !important;
-              width: 100% !important;
-              max-width: 340px !important;
-              height: 550px !important;
-              display: flex !important;
-              justify-content: center !important;
-              align-items: center !important;
-              perspective: 1000px !important;
-              transform-style: preserve-3d !important;
-              margin: 0 auto !important;
-              transform: translateX(0) !important;
-            `;
+            cardElement.style.cssText = `
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  border: none !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  z-index: 10 !important;
+`;
           }
         });
       }, 50);
@@ -345,8 +348,8 @@ const Card = ({
 
   return (
     <motion.div
-      className={`dev-card ${isNextCard ? "next-card" : ""} ${
-        isPreview ? "preview-card" : ""
+      className={`tinder-card ${
+        !isNextCard && !isPreview ? "top-card" : "background-card"
       }`}
       variants={cardVariants}
       initial="initial"
@@ -410,6 +413,7 @@ const Card = ({
               "brightness(1.05) contrast(1.05)" /* Slightly enhance brightness and contrast */,
             zIndex: 1,
             display: "block" /* Ensure image is displayed as block */,
+            pointerEvents: "none", // Prevent image from interfering with drag
           }}
           onLoad={(e) => {
             // Force browser to render the image at full quality immediately
