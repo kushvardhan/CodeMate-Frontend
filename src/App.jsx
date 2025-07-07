@@ -16,9 +16,9 @@ import Connection from "./components/Connection";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
 import NotFoundPage from "./components/NotFoundPage";
-import SignupPage from "./components/SignupPage";
-import Request from "./components/Request";
 import ProfilePage from "./components/ProfilePage";
+import Request from "./components/Request";
+import SignupPage from "./components/SignupPage";
 import UserInfo from "./components/UserInfo";
 import { clearUser, setUser } from "./slice/UserSlice.js";
 
@@ -44,7 +44,8 @@ const ProtectedRoute = ({ children }) => {
           dispatch(clearUser());
           localStorage.setItem("wasLoggedOut", "true");
         }
-      } catch (error) {
+      } catch (authError) {
+        console.log("Auth verification failed:", authError.message);
         dispatch(clearUser());
         localStorage.setItem("wasLoggedOut", "true");
       } finally {
@@ -52,8 +53,13 @@ const ProtectedRoute = ({ children }) => {
       }
     };
 
-    verifyAuth();
-  }, [dispatch, location.pathname]);
+    // Only verify if we don't have a user or if we're still loading
+    if (!user || isAuthLoading) {
+      verifyAuth();
+    } else {
+      setIsVerifying(false);
+    }
+  }, [dispatch, user, isAuthLoading]);
 
   if (isVerifying || isAuthLoading) {
     return (
@@ -70,11 +76,40 @@ const ProtectedRoute = ({ children }) => {
   );
 };
 
-// Public Route
+// Public Route - Enhanced to check for valid token
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, isAuthLoading } = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthLoading, user } = useSelector(
+    (state) => state.user
+  );
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const dispatch = useDispatch();
 
-  if (isAuthLoading) {
+  useEffect(() => {
+    const checkTokenAndRedirect = async () => {
+      try {
+        // Check if there's a valid token by making an API call
+        const response = await axios.get("/user/me", {
+          withCredentials: true,
+        });
+
+        if (response.data?.user && response.data.user._id) {
+          // Valid token found, update user state and redirect
+          dispatch(setUser(response.data.user));
+          setIsCheckingToken(false);
+          return;
+        }
+      } catch (error) {
+        // No valid token, clear any stale auth state
+        console.log(error);
+        dispatch(clearUser());
+      }
+      setIsCheckingToken(false);
+    };
+
+    checkTokenAndRedirect();
+  }, [dispatch]);
+
+  if (isAuthLoading || isCheckingToken) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -82,7 +117,8 @@ const PublicRoute = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? <Navigate to="/" replace /> : children;
+  // If user is authenticated with valid token, redirect to home
+  return isAuthenticated && user ? <Navigate to="/" replace /> : children;
 };
 
 // Not Found Route
@@ -200,7 +236,8 @@ const PersistAuth = ({ children }) => {
         } else {
           dispatch(clearUser());
         }
-      } catch (error) {
+      } catch (err) {
+        console.log(err);
         dispatch(clearUser());
       } finally {
         setInitialCheckDone(true);
