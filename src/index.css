@@ -3137,6 +3137,7 @@ pre,
   pointer-events: none !important;
   cursor: default !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  opacity: 0.9 !important;
 }
 
 /* Ensure the Card component takes up the full space of its container */

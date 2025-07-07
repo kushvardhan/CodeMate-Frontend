@@ -687,8 +687,10 @@ const Home = () => {
                             top: "0",
                             transformOrigin: "center center",
                             transform: isTopCard
-                              ? "translate(0, 0)"
-                              : `translate(0, 0) scale(${1 - index * 0.02})`,
+                              ? "translate(0, 0) scale(1)"
+                              : `translate(0, ${index * 2}px) scale(${
+                                  1 - index * 0.02
+                                })`,
                             transition: isTopCard
                               ? "none"
                               : "transform 0.3s ease",
@@ -847,7 +849,7 @@ const Home = () => {
                                   card.style.transition =
                                     "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                                   card.style.transform =
-                                    "translate(-50%, -50%) rotate(0deg)";
+                                    "translate(0, 0) rotate(0deg)";
                                   card.style.boxShadow =
                                     "0 8px 25px rgba(0, 0, 0, 0.15)";
                                   card.style.border = "none";
