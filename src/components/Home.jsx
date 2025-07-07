@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,12 +29,9 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Try to fetch requests and connections, but handle each request separately
-        // to prevent one failed request from affecting the other
-
         try {
           // Try to fetch requests
-          const requestsResponse = await axios.get("/user/requests", {
+          const requestsResponse = await axios.get("/user/request/received", {
             withCredentials: true,
           });
 
@@ -45,37 +41,17 @@ const Home = () => {
             dispatch(addRequest(requestsResponse.data));
           }
         } catch (requestError) {
-          // If the endpoint doesn't exist, try an alternative endpoint
-          try {
-            const alternativeRequestsResponse = await axios.get(
-              "/user/request",
-              {
-                withCredentials: true,
-              }
-            );
-            console.log(requestError);
-
-            if (
-              alternativeRequestsResponse.data &&
-              alternativeRequestsResponse.data.data
-            ) {
-              dispatch(addRequest(alternativeRequestsResponse.data.data));
-            } else if (alternativeRequestsResponse.data) {
-              dispatch(addRequest(alternativeRequestsResponse.data));
-            }
-          } catch (altRequestError) {
-            // Silently handle the error - the backend endpoint might not be implemented yet
-            // Just set an empty array for requests
-            console.log(altRequestError);
-            dispatch(addRequest([]));
-          }
+          console.log(requestError);
         }
 
         try {
           // Try to fetch connections
-          const connectionsResponse = await axios.get("/user/connections", {
-            withCredentials: true,
-          });
+          const connectionsResponse = await axios.get(
+            "/user/request/connections",
+            {
+              withCredentials: true,
+            }
+          );
 
           if (connectionsResponse.data && connectionsResponse.data.data) {
             dispatch(addConnection(connectionsResponse.data.data));
@@ -83,30 +59,7 @@ const Home = () => {
             dispatch(addConnection(connectionsResponse.data));
           }
         } catch (connectionsError) {
-          // If the endpoint doesn't exist, try an alternative endpoint
           console.log(connectionsError);
-          try {
-            const alternativeConnectionsResponse = await axios.get(
-              "/user/request/connections",
-              {
-                withCredentials: true,
-              }
-            );
-
-            if (
-              alternativeConnectionsResponse.data &&
-              alternativeConnectionsResponse.data.data
-            ) {
-              dispatch(addConnection(alternativeConnectionsResponse.data.data));
-            } else if (alternativeConnectionsResponse.data) {
-              dispatch(addConnection(alternativeConnectionsResponse.data));
-            }
-          } catch (altConnectionsError) {
-            // Silently handle the error - the backend endpoint might not be implemented yet
-            // Just set an empty array for connections
-            console.log(altConnectionsError);
-            dispatch(addConnection([]));
-          }
         }
       } catch (error) {
         // This will only catch errors that occur outside the inner try/catch blocks
@@ -439,28 +392,10 @@ const Home = () => {
     }, 100); // Delay before showing heading
   }, []);
 
-  // Effect to ensure cards are properly positioned when the component mounts or currentIndex changes
+  // Effect to reset swiping state when currentIndex changes
   useEffect(() => {
-    // Reset any swiping state
     setIsCardSwiping(false);
     setSwipeDirection(null);
-
-    // Ensure all cards are properly positioned in center after any index change
-    setTimeout(() => {
-      const allCards = document.querySelectorAll(".tinder-card");
-      allCards.forEach((card, i) => {
-        card.style.transition = "none";
-        card.style.transform =
-          i === 0
-            ? "translate(0, 0)"
-            : `translate(0, 0) scale(${1 - i * 0.02})`;
-        card.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
-        card.style.border = "none";
-        card.style.left = "0";
-        card.style.top = "0";
-        card.style.position = "absolute";
-      });
-    }, 100);
   }, [currentIndex]);
 
   // Code symbols with small special symbols
@@ -714,239 +649,238 @@ const Home = () => {
                   </motion.button>
                 )}
 
-                {/* Proper Tinder-style card stack with fixed positioning */}
+                {/* Fixed Tinder-style card stack */}
                 <div
-                  className="tinder-cards-container"
+                  className="tinder-cards-wrapper"
                   style={{
-                    position: "relative", // Step 1: Relative container
+                    position: "relative",
                     width: "300px",
                     height: "450px",
                     margin: "0 auto",
                     overflow: "visible",
                   }}
                 >
-                  {/* Stack of cards with absolute positioning */}
+                  {/* Stack of cards with proper positioning */}
                   {users
                     .slice(currentIndex, currentIndex + 3)
                     .map((user, index) => {
                       const cardIndex = currentIndex + index;
+                      const isTopCard = index === 0;
+
                       return (
                         <div
-                          key={`card-${user.id}-${cardIndex}`} // Unique key based on actual card position
+                          key={`card-${user.id}-${cardIndex}`}
                           className={`tinder-card ${
-                            index === 0 ? "top-card" : "background-card"
+                            isTopCard ? "top-card" : "background-card"
                           }`}
                           style={{
-                            // Step 2: Absolute positioning with top: 0, left: 0
                             position: "absolute",
-                            top: "0",
-                            left: "0",
                             width: "300px",
                             height: "450px",
                             borderRadius: "10px",
-                            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                            boxShadow: isTopCard
+                              ? "0 8px 25px rgba(0, 0, 0, 0.15)"
+                              : "0 4px 10px rgba(0, 0, 0, 0.1)",
                             background: "white",
-                            // Step 3: Dynamic z-index (highest for top card)
-                            zIndex: 100 - index,
+                            zIndex: 10 - index,
+                            left: "0",
+                            top: "0",
                             transformOrigin: "center center",
-                            // Always start from center position
-                            transform: index === 0
-                              ? "translate(0, 0) scale(1)"
+                            transform: isTopCard
+                              ? "translate(0, 0)"
                               : `translate(0, 0) scale(${1 - index * 0.02})`,
-                            transition: "transform 0.3s ease-out",
-                            pointerEvents: index === 0 ? "auto" : "none",
+                            transition: isTopCard
+                              ? "none"
+                              : "transform 0.3s ease",
+                            pointerEvents: isTopCard ? "auto" : "none",
                             overflow: "hidden",
                           }}
                         >
-                        {index === 0 ? (
-                          <motion.div
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }} // Constraints don't matter as we're handling manually
-                            dragElastic={1} // Full elasticity for natural feel
-                            onDrag={(_, info) => {
-                              // Get the top card being dragged
-                              const topCard = document.querySelector(".top-card");
-                              if (!topCard) return;
+                          {isTopCard ? (
+                            <motion.div
+                              drag="x"
+                              dragConstraints={{ left: 0, right: 0 }}
+                              dragElastic={1}
+                              whileDrag={{
+                                scale: 1.05,
+                                transition: { duration: 0.1 },
+                              }}
+                              onDrag={(_, info) => {
+                                const card =
+                                  document.querySelector(".top-card");
+                                if (!card) return;
 
-                              // Calculate rotation based on drag distance
-                              const rotate = Math.min(
-                                Math.max(info.offset.x * 0.1, -15),
-                                15
-                              );
+                                // Calculate rotation based on drag distance
+                                const rotate = Math.min(
+                                  Math.max(info.offset.x * 0.1, -15),
+                                  15
+                                );
 
-                              // Apply transform from center position (0, 0)
-                              topCard.style.transform = `translate(${info.offset.x}px, 0) rotate(${rotate}deg) scale(1)`;
+                                // Apply transform from the original position
+                                card.style.transform = `translate(0, 0) translateX(${info.offset.x}px) rotate(${rotate}deg)`;
 
-                              // Apply visual feedback based on swipe direction
-                              if (info.offset.x > 50) {
-                                // Green for right swipe (like)
-                                const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.8);
-                                topCard.style.boxShadow = `0 0 20px 5px rgba(52, 199, 89, ${opacity})`;
-                                topCard.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
-                              } else if (info.offset.x < -50) {
-                                // Red for left swipe (nope)
-                                const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.8);
-                                topCard.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
-                                topCard.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
-                              } else {
-                                // Reset when near center
-                                topCard.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                topCard.style.border = "none";
-                              }
-
-                              // Ensure background cards stay in their fixed center positions
-                              const backgroundCards = document.querySelectorAll(".background-card");
-                              backgroundCards.forEach((bgCard, i) => {
-                                // Keep background cards centered and scaled
-                                bgCard.style.transform = `translate(0, 0) scale(${1 - (i + 1) * 0.02})`;
-                                bgCard.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                bgCard.style.border = "none";
-                              });
-                            }}
-                            onDragEnd={(_, info) => {
-                              // Get the card element
-                              const card = document.querySelector(".top-card");
-                              if (!card) return;
-
-                              // Check if the card was swiped far enough
-                              const swipe = info.offset.x;
-                              const swipeThreshold = 80;
-                              const swipeVelocity = Math.abs(info.velocity.x);
-
-                              // Determine if it's a valid swipe
-                              const isSwipeLeft =
-                                swipe < -swipeThreshold ||
-                                (swipe < -40 && swipeVelocity > 0.8);
-                              const isSwipeRight =
-                                swipe > swipeThreshold ||
-                                (swipe > 40 && swipeVelocity > 0.8);
-
-                              // Get background cards for repositioning
-                              const backgroundCards = document.querySelectorAll(".background-card");
-
-                              if (isSwipeLeft) {
-                                // Animate the card off-screen to the left
-                                // eslint-disable-next-line no-undef
-                                topCard.style.transition = "transform 0.3s ease";
-                                // eslint-disable-next-line no-undef
-                                topCard.style.transform = `translate(-${window.innerWidth}px, 0) rotate(-30deg) scale(1)`;
-
-                                // Ensure background cards stay centered
-                                backgroundCards.forEach((bgCard, i) => {
-                                  bgCard.style.transition = "transform 0.3s ease";
-                                  bgCard.style.transform = `translate(0, 0) scale(${1 - i * 0.02})`;
-                                });
-
-                                // Call handleSwipeLeft after animation completes
-                                setTimeout(() => {
-                                  handleSwipeLeft();
-
-                                  // Reset all cards to center positions after state update
-                                  setTimeout(() => {
-                                    // Reset all visible cards to center position
-                                    const allCards =
-                                      document.querySelectorAll(".tinder-card");
-                                    allCards.forEach((resetCard, i) => {
-                                      resetCard.style.transition = "none";
-                                      resetCard.style.transform =
-                                        i === 0
-                                          ? "translate(0, 0)"
-                                          : `translate(0, 0) scale(${
-                                              1 - i * 0.02
-                                            })`;
-                                      resetCard.style.boxShadow =
-                                        "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                      resetCard.style.border = "none";
-                                    });
-                                  }, 50);
-                                }, 300);
-                              } else if (isSwipeRight) {
-                                // Animate the card off-screen to the right
-                                card.style.transition = "transform 0.3s ease";
-                                card.style.transform = `translateX(${window.innerWidth}px) rotate(30deg)`;
-
-                                // Keep next card in center position
-                                if (nextCard.length > 0) {
-                                  const nextCard = nextCard[0];
-                                  nextCard.style.transition =
-                                    "transform 0.3s ease";
-                                  nextCard.style.transform = "translate(0, 0)";
+                                // Apply color overlay based on direction
+                                if (info.offset.x > 50) {
+                                  const opacity = Math.min(
+                                    Math.abs(info.offset.x) / 300,
+                                    0.8
+                                  );
+                                  card.style.boxShadow = `0 0 20px 5px rgba(52, 199, 89, ${opacity})`;
+                                  card.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
+                                } else if (info.offset.x < -50) {
+                                  const opacity = Math.min(
+                                    Math.abs(info.offset.x) / 300,
+                                    0.8
+                                  );
+                                  card.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
+                                  card.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
+                                } else {
+                                  card.style.boxShadow =
+                                    "0 8px 25px rgba(0, 0, 0, 0.15)";
+                                  card.style.border = "none";
                                 }
+                              }}
+                              onDragEnd={(_, info) => {
+                                // Get the card element
+                                const card =
+                                  document.querySelector(".top-card");
+                                if (!card) return;
 
-                                // Call handleSwipeRight after animation completes
-                                setTimeout(() => {
-                                  handleSwipeRight();
+                                // Check if the card was swiped far enough
+                                const swipe = info.offset.x;
+                                const swipeThreshold = 80;
+                                const swipeVelocity = Math.abs(info.velocity.x);
 
-                                  // Reset all cards to center positions after state update
+                                // Determine if it's a valid swipe
+                                const isSwipeLeft =
+                                  swipe < -swipeThreshold ||
+                                  (swipe < -40 && swipeVelocity > 0.8);
+                                const isSwipeRight =
+                                  swipe > swipeThreshold ||
+                                  (swipe > 40 && swipeVelocity > 0.8);
+
+                                // Reset background cards to center position to center position
+                                const nextCards = document.querySelectorAll(
+                                  ".tinder-card:not(.top-card)"
+                                );
+
+                                if (isSwipeLeft) {
+                                  // Animate the card off-screen to the left
+                                  card.style.transition = "transform 0.3s ease";
+                                  card.style.transform = `translate(0, 0) translateX(-${window.innerWidth}px) rotate(-30deg)`;
+
+                                  // Keep next card in center position
+                                  if (nextCards.length > 0) {
+                                    const nextCard = nextCards[0];
+                                    nextCard.style.transition =
+                                      "transform 0.3s ease";
+                                    nextCard.style.transform =
+                                      "translate(0, 0)";
+                                  }
+
+                                  // Call handleSwipeLeft after animation completes
                                   setTimeout(() => {
-                                    // Reset all visible cards to center position
-                                    const allCards =
-                                      document.querySelectorAll(".tinder-card");
-                                    allCards.forEach((resetCard, i) => {
-                                      resetCard.style.transition = "none";
-                                      resetCard.style.transform =
-                                        i === 0
-                                          ? "translate(0, 0)"
-                                          : `translate(0, 0) scale(${
-                                              1 - i * 0.02
-                                            })`;
-                                      resetCard.style.boxShadow =
-                                        "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                      resetCard.style.border = "none";
-                                    });
-                                  }, 50);
-                                }, 300);
-                              } else {
-                                // Spring back to center if not swiped far enough
-                                card.style.transition =
-                                  "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-                                card.style.transform =
-                                  "translate(0, 0) rotate(0)"; // Always return to center
-                                card.style.boxShadow =
-                                  "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                card.style.border = "none";
+                                    handleSwipeLeft();
 
-                                // Reset background cards to center position
-                                nextCard.forEach((nextCard, i) => {
-                                  nextCard.style.transition =
-                                    "transform 0.3s ease";
-                                  nextCard.style.transform = `translate(0, 0) scale(${
-                                    1 - (i + 1) * 0.02
-                                  })`;
-                                  nextCard.style.boxShadow =
-                                    "0 4px 10px rgba(0, 0, 0, 0.1)";
-                                  nextCard.style.border = "none";
-                                });
-                              }
-                            }}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              position: "relative",
-                              visibility: "visible", // Ensure the card is always visible
-                            }}
-                          >
-                            <Card
-                              user={user}
-                              onSwipeLeft={handleSwipeLeft}
-                              onSwipeRight={handleSwipeRight}
-                              isCardSwiping={isCardSwiping}
-                              swipeDirection={swipeDirection}
-                            />
-                          </motion.div>
-                        ) : (
-                          // Background cards - simplified version
-                          <div
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              position: "relative",
-                            }}
-                          >
-                            <Card user={user} isNextCard={true} />
-                          </div>
-                        )}
-                      </div>
+                                    // Reset all cards to center positions after state update
+                                    setTimeout(() => {
+                                      // Reset all visible cards to center position
+                                      const allCards =
+                                        document.querySelectorAll(
+                                          ".tinder-card"
+                                        );
+                                      allCards.forEach((resetCard, i) => {
+                                        resetCard.style.transition = "none";
+                                        resetCard.style.transform =
+                                          i === 0
+                                            ? "translate(0, 0)"
+                                            : `translate(0, 0) scale(${
+                                                1 - i * 0.02
+                                              })`;
+                                        resetCard.style.boxShadow =
+                                          "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                        resetCard.style.border = "none";
+                                      });
+                                    }, 50);
+                                  }, 300);
+                                } else if (isSwipeRight) {
+                                  // Animate the card off-screen to the right
+                                  card.style.transition = "transform 0.3s ease";
+                                  card.style.transform = `translate(0, 0) translateX(${window.innerWidth}px) rotate(30deg)`;
+
+                                  // Keep next card in center position
+                                  if (nextCards.length > 0) {
+                                    const nextCard = nextCards[0];
+                                    nextCard.style.transition =
+                                      "transform 0.3s ease";
+                                    nextCard.style.transform =
+                                      "translate(0, 0)";
+                                  }
+
+                                  // Call handleSwipeRight after animation completes
+                                  setTimeout(() => {
+                                    handleSwipeRight();
+
+                                    // Reset all cards to center positions after state update
+                                    setTimeout(() => {
+                                      // Reset all visible cards to center position
+                                      const allCards =
+                                        document.querySelectorAll(
+                                          ".tinder-card"
+                                        );
+                                      allCards.forEach((resetCard, i) => {
+                                        resetCard.style.transition = "none";
+                                        resetCard.style.transform =
+                                          i === 0
+                                            ? "translate(0, 0)"
+                                            : `translate(0, 0) scale(${
+                                                1 - i * 0.02
+                                              })`;
+                                        resetCard.style.boxShadow =
+                                          "0 4px 10px rgba(0, 0, 0, 0.1)";
+                                        resetCard.style.border = "none";
+                                      });
+                                    }, 50);
+                                  }, 300);
+                                } else {
+                                  // Spring back to center if not swiped far enough
+                                  card.style.transition =
+                                    "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                                  card.style.transform =
+                                    "translate(-50%, -50%) rotate(0deg)";
+                                  card.style.boxShadow =
+                                    "0 8px 25px rgba(0, 0, 0, 0.15)";
+                                  card.style.border = "none";
+                                }
+                              }}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                position: "relative",
+                                visibility: "visible", // Ensure the card is always visible
+                              }}
+                            >
+                              <Card
+                                user={user}
+                                onSwipeLeft={handleSwipeLeft}
+                                onSwipeRight={handleSwipeRight}
+                                isCardSwiping={isCardSwiping}
+                                swipeDirection={swipeDirection}
+                              />
+                            </motion.div>
+                          ) : (
+                            // Background cards - simplified version
+                            <div
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                position: "relative",
+                              }}
+                            >
+                              <Card user={user} isNextCard={true} />
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                 </div>

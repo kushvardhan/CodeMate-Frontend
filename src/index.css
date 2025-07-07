@@ -3113,24 +3113,30 @@ pre,
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* Ensure top card is always visible and properly positioned */
-.top-card {
-  visibility: visible !important;
-  opacity: 1 !important;
+/* Tinder-style card positioning */
+.tinder-card {
   position: absolute !important;
-  left: 0 !important; /* Position at the left edge of the container */
-  top: 0 !important; /* Position at the top edge of the container */
-  transform: none !important; /* No transform by default */
-  width: 100% !important; /* Take up full width of container */
-  height: 100% !important; /* Take up full height of container */
-  z-index: 10 !important;
-  display: block !important; /* Use block display */
-  overflow: visible !important; /* Allow for swiping outside the container */
   border-radius: 10px !important;
-  background: white !important; /* Make background white to hide cards behind it */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important; /* Add shadow */
-  will-change: transform !important; /* Optimize for animations */
-  transition: transform 0.3s ease !important; /* Smooth transition for transforms */
+  overflow: hidden !important;
+  cursor: grab !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  will-change: transform !important;
+}
+
+.top-card {
+  z-index: 10 !important;
+  pointer-events: auto !important;
+  cursor: grab !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.background-card {
+  pointer-events: none !important;
+  cursor: default !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Ensure the Card component takes up the full space of its container */
@@ -6764,12 +6770,11 @@ pre,
   justify-content: center;
   align-items: center;
   overflow: hidden;
-    transition: width 0.2s ease, height 0.2s ease;
+  transition: width 0.2s ease, height 0.2s ease;
 }
 .chat-user-avatar:hover {
   transform: scale(1.03);
-  cursor:pointer;
-
+  cursor: pointer;
 }
 .avatar-container {
   position: relative;
@@ -6807,26 +6812,25 @@ pre,
   background-color: #22c55e;
   border-radius: 50%;
   border: 1px solid white;
-  box-shadow:
-    0 0 6px #22c55e,
-    0 0 12px #22c55e,
-    0 0 20px #22c55e,
+  box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e,
     0 0 28px #22c55e;
   animation: pulse-glow 1.5s infinite ease-in-out;
 }
 
 @keyframes pulse-glow {
   0% {
-    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e, 0 0 28px #22c55e;
+    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e,
+      0 0 28px #22c55e;
   }
   50% {
-    box-shadow: 0 0 10px #22c55e, 0 0 18px #22c55e, 0 0 28px #22c55e, 0 0 40px #22c55e;
+    box-shadow: 0 0 10px #22c55e, 0 0 18px #22c55e, 0 0 28px #22c55e,
+      0 0 40px #22c55e;
   }
   100% {
-    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e, 0 0 28px #22c55e;
+    box-shadow: 0 0 6px #22c55e, 0 0 12px #22c55e, 0 0 20px #22c55e,
+      0 0 28px #22c55e;
   }
 }
-
 
 .message-time {
   display: block;
@@ -6834,7 +6838,6 @@ pre,
   font-size: 0.75rem;
   margin-top: 4px;
 }
-
 
 .chat-main-container {
   flex: 1;
