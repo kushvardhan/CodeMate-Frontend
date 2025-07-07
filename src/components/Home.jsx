@@ -97,7 +97,7 @@ const Home = () => {
         const response = await axios.get("/user/feed", {
           withCredentials: true,
         });
-
+        console.log(response);
         // Data fetched successfully
 
         if (response.data && response.data.data) {

@@ -428,15 +428,17 @@ const Card = ({
           style={{
             zIndex: 2,
             position: "absolute",
+            top:"50%",
             bottom: 0,
             left: 0,
             right: 0,
-            top: 0, // Cover the entire card
+            height: "50%", // Only cover bottom 40% of the card
             background:
-              "linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 20%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.1) 90%, transparent 100%)",
+              "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 80%, transparent 100%)",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
+            padding: "20px 16px 16px 16px", // Add padding for better spacing
           }}
         >
           <div className="dev-card-info">
@@ -492,36 +494,73 @@ const Card = ({
             )}
 
             {userData.bio && (
-              <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
+              <div className="dev-card-bio-section">
+                <div className="dev-card-bio-header">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                    <polyline points="14,2 14,8 20,8"></polyline>
+                  </svg>
+                </div>
+                <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
+              </div>
             )}
 
             {userData.skills && userData.skills.length > 0 && (
-              <div className="dev-card-skills">
-                {getDisplaySkills(userData.skills).map((skill, index) => (
-                  <motion.span
-                    key={index}
-                    className="dev-skill-tag"
-                    variants={skillVariants}
-                    initial="initial"
-                    animate="animate"
-                    whileHover="hover"
-                    transition={{ delay: index * 0.05 }}
+              <div className="dev-card-skills-section">
+                <div className="dev-card-skills-header">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    {skill}
-                  </motion.span>
-                ))}
-                {getAdditionalSkillsCount(userData.skills) > 0 && (
-                  <motion.span
-                    className="dev-skill-more"
-                    variants={skillVariants}
-                    initial="initial"
-                    animate="animate"
-                    whileHover="hover"
-                    transition={{ delay: 0.1 }}
-                  >
-                    +{getAdditionalSkillsCount(userData.skills)}
-                  </motion.span>
-                )}
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z"></path>
+                    <path d="M3 12v7c0 .552.448 1 1 1h16c.552 0 1-.448 1-1v-7"></path>
+                  </svg>
+                </div>
+                <div className="dev-card-skills">
+                  {getDisplaySkills(userData.skills).map((skill, index) => (
+                    <motion.span
+                      key={index}
+                      className="dev-skill-tag"
+                      variants={skillVariants}
+                      initial="initial"
+                      animate="animate"
+                      whileHover="hover"
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      {skill}
+                    </motion.span>
+                  ))}
+                  {getAdditionalSkillsCount(userData.skills) > 0 && (
+                    <motion.span
+                      className="dev-skill-more"
+                      variants={skillVariants}
+                      initial="initial"
+                      animate="animate"
+                      whileHover="hover"
+                      transition={{ delay: 0.1 }}
+                    >
+                      +{getAdditionalSkillsCount(userData.skills)}
+                    </motion.span>
+                  )}
+                </div>
               </div>
             )}
           </div>

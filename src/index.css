@@ -3178,6 +3178,61 @@ pre,
   transform: none !important;
 }
 
+/* Card info sections with icons */
+.dev-card-bio-section,
+.dev-card-skills-section {
+  margin-top: 8px;
+}
+
+.dev-card-bio-header,
+.dev-card-skills-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.dev-card-bio-header svg,
+.dev-card-skills-header svg {
+  margin-right: 6px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dev-card-bio {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0.9;
+}
+
+/* Improve card info spacing */
+.dev-card-info {
+  padding: 0;
+  margin: 0;
+}
+
+.dev-card-name {
+  margin-bottom: 6px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+}
+
+.dev-card-location,
+.dev-card-age-gender {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dev-card-location svg,
+.dev-card-age-gender svg {
+  margin-right: 6px;
+}
+
 .top-card {
   position: absolute !important;
   width: 100% !important;
