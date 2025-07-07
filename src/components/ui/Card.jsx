@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-
 const Card = ({
   user,
   isNextCard = false,
@@ -344,164 +343,6 @@ const Card = ({
     }
   }, [isNextCard, isPreview]);
 
-  // Drag is now handled by parent component
-  /* const handleDrag = (event, info) => {
-    // Don't process drag if we're already showing the next card
-    if (showingNextCard) return;
-
-    // Calculate swipe progress as a percentage (0-100)
-    const swipeThreshold = 100; // Lower threshold for easier swiping (Tinder-like)
-
-    // Calculate rotation based on drag distance (Tinder-like)
-    // Max rotation of 20 degrees (Tinder uses about 15-20 degrees)
-    const rotate = Math.min(Math.max(info.offset.x * 0.1, -20), 20); // 0.1 is a sensitivity factor, clamp between -20 and 20 degrees
-
-    // Get the card element directly from the event target for better performance
-    // This avoids querySelector which can cause performance issues
-    const element = event.currentTarget;
-    if (element) {
-      // Make sure the card is absolutely positioned in the center
-      element.style.position = "absolute";
-      element.style.left = "0";
-      element.style.right = "0";
-      element.style.top = "0";
-      element.style.bottom = "0";
-      element.style.margin = "auto";
-
-      // Apply rotation and horizontal movement with slight vertical lift (Tinder-like)
-      // Use transform for better performance
-      element.style.transform = `translateX(${info.offset.x}px) translateY(${
-        -Math.abs(info.offset.x) * 0.05
-      }px) rotate(${rotate}deg)`;
-
-      // Apply color overlay based on direction (Tinder-like), but ONLY when actively moving
-      // Check if there's actual movement (velocity) to determine if actively dragging
-      // Use a higher threshold to ensure we only show colors during definite movement
-      const isActivelyDragging = Math.abs(info.velocity.x) > 0.5;
-
-      if (info.offset.x > 50 && isActivelyDragging) {
-        // Green overlay for right swipe (like), only when actively dragging right
-        // Pre-calculate the opacity value to reduce calculations during drag
-        const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
-        // More pronounced green shadow/glow effect
-        element.style.boxShadow = `0 0 20px 5px rgba(52, 199, 89, ${opacity})`;
-        element.style.borderColor = `rgba(52, 199, 89, ${opacity})`;
-        // Add a subtle green border
-        element.style.border = `2px solid rgba(52, 199, 89, ${opacity})`;
-        // Set data attribute for CSS targeting
-        element.setAttribute("data-drag", "right");
-      } else if (info.offset.x < -50 && isActivelyDragging) {
-        // Red overlay for left swipe (nope), only when actively dragging left
-        // Pre-calculate the opacity value to reduce calculations during drag
-        const opacity = Math.min(Math.abs(info.offset.x) / 300, 0.9);
-        // More pronounced red shadow/glow effect
-        element.style.boxShadow = `0 0 20px 5px rgba(255, 59, 48, ${opacity})`;
-        // Add a subtle red border
-        element.style.border = `2px solid rgba(255, 59, 48, ${opacity})`;
-        // Set data attribute for CSS targeting
-        element.setAttribute("data-drag", "left");
-      } else {
-        // Reset overlay when not actively dragging or near center
-        element.style.boxShadow = "";
-        element.style.border = "none";
-        // Reset data attribute
-        element.setAttribute("data-drag", "none");
-      }
-    }
-
-    // Calculate progress with dampened velocity influence (Tinder-like)
-    // Use Math.floor to reduce unnecessary state updates for small changes
-    const progress = Math.floor(
-      Math.min((Math.abs(info.offset.x) / swipeThreshold) * 100, 100)
-    );
-
-    // Only update state if progress has changed significantly to reduce renders
-    if (Math.abs(progress - swipeProgress) > 5) {
-      setSwipeProgress(progress);
-    }
-
-    // Set direction based on drag direction (Tinder-like), but ONLY when actively moving
-    // Use a larger threshold to reduce flickering between states
-    // Check if there's actual movement (velocity) to determine if actively dragging
-    // Use a higher threshold to ensure we only show colors during definite movement
-    const isActivelyDragging = Math.abs(info.velocity.x) > 0.5;
-
-    if (info.offset.x > 30 && isActivelyDragging) {
-      if (dragDirection !== "right") setDragDirection("right");
-    } else if (info.offset.x < -30 && isActivelyDragging) {
-      if (dragDirection !== "left") setDragDirection("left");
-    } else {
-      // Reset when not actively dragging, regardless of position
-      // This ensures the card has no color when at rest or just being held
-      setDragDirection("none");
-    }
-  };
-
-  const handleSwipe = async (direction) => {
-    try {
-      const status = direction === "right" ? "interested" : "ignored";
-      console.log(`${status} with the ID: ${user.id}`);
-
-      await axios.post(
-        `/user/request/send/${status}/${user.id}`,
-        {},
-        { withCredentials: true }
-      );
-    } catch (error) {
-      console.error(`Error sending ${direction} swipe request:`, error.message);
-    }
-  }; */
-
-  // Drag end is now handled by parent component
-  /* const handleDragEnd = (event, { offset, velocity }) => {
-    // Don't process drag end if we're already showing the next card
-    if (showingNextCard) return;
-
-    const swipe = offset.x;
-    const swipeVelocity = Math.abs(velocity.x);
-    const swipeThreshold = 80; // Lower threshold for easier swiping (Tinder uses ~80px)
-
-    // Get the card element directly from the event for better performance
-    const element = event.currentTarget;
-
-    // Consider both distance and velocity for a more natural feel (Tinder-like)
-    // Tinder allows quick flicks with less distance
-    const isSwipeLeft =
-      swipe < -swipeThreshold || (swipe < -40 && swipeVelocity > 0.8);
-    const isSwipeRight =
-      swipe > swipeThreshold || (swipe > 40 && swipeVelocity > 0.8);
-
-    if (isSwipeLeft) {
-      handleSwipe("left");
-      if (onSwipeLeft) onSwipeLeft();
-    } else if (isSwipeRight) {
-      handleSwipe("right");
-      if (onSwipeRight) onSwipeRight();
-    } else {
-      // Spring back to center if not swiped far enough (Tinder-like)
-      if (element) {
-        // Tinder uses a spring animation for the return
-        element.style.cssText = `
-          position: absolute !important;
-          left: 50% !important;
-          top: 50% !important;
-          transform: translate(-50%, -50%) rotate(0deg) !important;
-          margin: 0 !important;
-          transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000) !important;
-          box-shadow: none !important;
-          z-index: 10 !important;
-          border: none !important;
-        `;
-
-        // Reset progress
-        setSwipeProgress(0);
-
-        // Force a reflow to apply the changes immediately
-        void element.offsetWidth;
-      }
-    }
-  }; */
-
   return (
     <motion.div
       className={`dev-card ${isNextCard ? "next-card" : ""} ${
@@ -517,10 +358,12 @@ const Card = ({
       style={{
         width: "100%",
         height: "100%",
+        minHeight: "100%",
+        maxHeight: "100%",
         position: "absolute",
         left: 0,
         top: 0,
-        borderRadius: "10px",
+        borderRadius: "1px",
         overflow: "hidden",
         background: "white", // Ensure white background
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow

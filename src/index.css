@@ -3126,12 +3126,51 @@ pre,
   will-change: transform !important;
 }
 
+/* Ensure all card content fits within Tinder card boundaries */
+.tinder-card .dev-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+/* Ensure card content wrapper fits properly */
+.tinder-card .dev-card-content {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Ensure card image fits properly */
+.tinder-card .dev-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
 .top-card {
-  z-index: 10 !important;
-  pointer-events: auto !important;
-  cursor: grab !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: white !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
 }
+
 
 .background-card {
   pointer-events: none !important;
@@ -3151,7 +3190,25 @@ pre,
   margin: 0 !important;
   border-radius: 10px !important;
   overflow: hidden !important;
-  background: white !important; /* Ensure white background */
+  background: white !important;
+  min-height: 100% !important;
+  max-height: 100% !important;/* Ensure it doesn't exceed container */
+}
+
+/* Ensure background cards also fit properly */
+.background-card .dev-card {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  transform: none !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: white !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
 }
 
 /* Style for background cards */
