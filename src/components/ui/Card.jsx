@@ -19,6 +19,7 @@ const Card = ({
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
     location: "San Francisco, CA",
   };
+  console.log("User from card: ", user);
 
   // Use provided user data or default
   const userData = user || defaultUser;
@@ -428,11 +429,11 @@ const Card = ({
           style={{
             zIndex: 2,
             position: "absolute",
-            top:"50%",
+            top:"0",
             bottom: 0,
             left: 0,
             right: 0,
-            height: "50%", // Only cover bottom 40% of the card
+            height: "100%", // Only cover bottom 40% of the card
             background:
               "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 80%, transparent 100%)",
             display: "flex",
@@ -511,7 +512,7 @@ const Card = ({
                     <polyline points="14,2 14,8 20,8"></polyline>
                   </svg>
                 </div>
-                <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
+                <p className="dev-card-bio">dpdf{truncateBio(userData.bio)}</p>
               </div>
             )}
 
@@ -545,7 +546,7 @@ const Card = ({
                       whileHover="hover"
                       transition={{ delay: index * 0.05 }}
                     >
-                      {skill}
+                      {skill} fgg
                     </motion.span>
                   ))}
                   {getAdditionalSkillsCount(userData.skills) > 0 && (
