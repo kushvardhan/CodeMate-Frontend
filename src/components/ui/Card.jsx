@@ -432,7 +432,9 @@ const Card = ({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "40%", // Only bottom 40%
+    top:"40%",
+    height: "60%", 
+    overflowY: "auto",  
     background:
       "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
     display: "flex",

@@ -3160,9 +3160,7 @@ pre,
   transform: none !important;
 }
 
-.dev-card-overlay{
-  overflowY: "auto";
-}
+
 
 /* Prevent all card content from moving during swipe */
 .tinder-card .dev-card-content,
@@ -3204,6 +3202,7 @@ pre,
 
 .dev-card-bio {
   margin: 0;
+  display:flex;
   font-size: 0.85rem;
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.9);
