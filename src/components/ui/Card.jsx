@@ -28,8 +28,8 @@ const Card = ({
   const truncateBio = (bio) => {
     if (!bio) return "";
     const words = bio.split(" ");
-    if (words.length <= 10) return bio;
-    return words.slice(0, 10).join(" ") + "...";
+    if (words.length <= 7) return bio;
+    return words.slice(0, 7).join(" ") + "...";
   };
 
   // Dynamically handle skills display - always show max 2 skills
@@ -429,10 +429,10 @@ const Card = ({
           style={{
              zIndex: 2,
     position: "absolute",
+    top:"40%",
     bottom: 0,
     left: 0,
     right: 0,
-    top:"40%",
     height: "60%",   
     background:
       "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
@@ -512,7 +512,7 @@ const Card = ({
                     <polyline points="14,2 14,8 20,8"></polyline>
                   </svg>
                 </div> */}
-                <p className="dev-card-bio">dpdf{truncateBio(userData.bio)}</p>
+                <p className="dev-card-bio">{truncateBio(userData.bio)}</p>
               </div>
             )}
 
