@@ -24,13 +24,18 @@ const Card = ({
   // Use provided user data or default
   const userData = user || defaultUser;
 
-  // Truncate bio to exactly 10 words
-  const truncateBio = (bio) => {
-    if (!bio) return "";
-    const words = bio.split(" ");
-    if (words.length <= 7) return bio;
-    return words.slice(0, 7).join(" ") + "...";
-  };
+
+
+const truncateBio = (bio) => {
+  if (!bio) return "";
+
+  if (bio.length <= 70) return bio;
+
+  return bio.slice(0, 70) + "...";
+};
+
+
+
 
   // Dynamically handle skills display - always show max 2 skills
   const getDisplaySkills = (skills) => {
@@ -369,7 +374,7 @@ const Card = ({
         top: 0,
         borderRadius: "1px",
         overflow: "hidden",
-        background: "white", // Ensure white background
+        background: "black", // Ensure white background
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow
       }}
     >

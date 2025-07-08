@@ -676,7 +676,7 @@ const Home = () => {
                           style={{
                             position: "absolute",
                             width: "300px",
-                            height: "500px",
+                            height: "600px",
                             borderRadius: "10px",
                             boxShadow: isTopCard
                               ? "0 8px 25px rgba(0, 0, 0, 0.15)"
@@ -859,7 +859,7 @@ const Home = () => {
                                 width: "100%",
                                 height: "100%",
                                 position: "relative",
-                                visibility: "visible", // Ensure the card is always visible
+                                visibility: "visible", 
                               }}
                             >
                               <Card
