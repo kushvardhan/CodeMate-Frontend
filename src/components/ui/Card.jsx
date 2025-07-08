@@ -433,8 +433,7 @@ const Card = ({
     left: 0,
     right: 0,
     top:"40%",
-    height: "60%", 
-    overflowY: "auto",  
+    height: "60%",   
     background:
       "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
     display: "flex",
@@ -497,7 +496,7 @@ const Card = ({
 
             {userData.bio && (
               <div className="dev-card-bio-section">
-                <div className="dev-card-bio-header">
+                {/* <div className="dev-card-bio-header">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -512,7 +511,7 @@ const Card = ({
                     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
                     <polyline points="14,2 14,8 20,8"></polyline>
                   </svg>
-                </div>
+                </div> */}
                 <p className="dev-card-bio">dpdf{truncateBio(userData.bio)}</p>
               </div>
             )}
