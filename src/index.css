@@ -3160,6 +3160,10 @@ pre,
   transform: none !important;
 }
 
+.dev-card-overlay{
+  overflowY: "auto";
+}
+
 /* Prevent all card content from moving during swipe */
 .tinder-card .dev-card-content,
 .tinder-card .dev-card-info,

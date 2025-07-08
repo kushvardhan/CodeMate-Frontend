@@ -427,19 +427,18 @@ const Card = ({
         <div
           className="dev-card-overlay"
           style={{
-            zIndex: 2,
-            position: "absolute",
-            top:"0",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "100%", // Only cover bottom 40% of the card
-            background:
-              "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 80%, transparent 100%)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            padding: "20px 16px 16px 16px", // Add padding for better spacing
+             zIndex: 2,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "40%", // Only bottom 40%
+    background:
+      "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    padding: "20px 16px 16px 16px",
           }}
         >
           <div className="dev-card-info">
