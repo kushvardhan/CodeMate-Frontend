@@ -56,10 +56,10 @@ const Request = () => {
           withCredentials: true,
         });
         console.log("Request:", response.data.data);
-        dispatch(addRequest(response.data.data)); // ✅ This fixes the error
+        dispatch(addRequest(response.data.data)); 
       } catch (error) {
         console.error("Error fetching requests:", error);
-        dispatch(addRequest([])); // ✅ This fixes the error
+        dispatch(addRequest([])); 
       } finally {
         setIsLoading(false);
       }
@@ -70,7 +70,6 @@ const Request = () => {
 
   const handleRequestAction = async (status, request) => {
     try {
-      // Updated endpoint to match backend API structure
       const response = await axios.post(
         `/request/review/${status === "accepted" ? "accepted" : "rejected"}/${
           request._id
@@ -122,14 +121,14 @@ const Request = () => {
     }
   };
 
-  const truncateText = (text, wordLimit = 10) => {
-    if (!text) return ""; // Return an empty string if text is undefined or null
-    const words = text.split(" ");
-    if (words.length > wordLimit) {
-      return words.slice(0, wordLimit).join(" ") + "...";
-    }
-    return text;
-  };
+const truncateText = (bio) => {
+  if (!bio) return "";
+
+  if (bio.length <= 50) return bio;
+
+  return bio.slice(0, 50) + "...";
+};
+
 
   // Loading state
   if (isLoading) {
@@ -460,7 +459,7 @@ const Request = () => {
 
                 {req.fromUserId?.about && (
                   <p className="request-card-about">
-                    {truncateText(req.fromUserId?.about, 10)}
+                    {truncateText(req.fromUserId?.about)}
                   </p>
                 )}
 
