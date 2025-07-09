@@ -508,7 +508,7 @@ const truncateText = (bio) => {
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
-                  <span>View Profile</span>
+                  <span className="action-label">View Profile</span>
                 </motion.button>
                 <div className="request-quick-actions">
                   <motion.button
@@ -530,7 +530,7 @@ const truncateText = (bio) => {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span>Accept</span>
+                    <span className="action-label">Accept</span>
                   </motion.button>
                   <motion.button
                     className="request-action-button reject"
@@ -552,7 +552,7 @@ const truncateText = (bio) => {
                       <line x1="18" y1="6" x2="6" y2="18"></line>
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
-                    <span>Decline</span>
+                    <span className="action-label">Decline</span>
                   </motion.button>
                 </div>
               </div>
