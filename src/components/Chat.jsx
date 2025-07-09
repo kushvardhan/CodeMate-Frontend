@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -23,7 +24,6 @@ const Chat = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
-  const sockdfef = useRef();
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
@@ -386,10 +386,7 @@ useEffect(() => {
 }, [isAuthenticated, userId, loggedInUser]);
 
 
-  // No sample messages needed as we show the welcome message separately
-  const generateSampleMessages = () => {
-    return [];
-  };
+
 
   // Loading state
   if (isLoading) {
