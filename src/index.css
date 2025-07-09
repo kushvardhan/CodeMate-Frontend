@@ -2317,6 +2317,7 @@ pre,
   width: 100%;
   max-width: 340px; /* Match card container width */
   aspect-ratio: 2/3.5; /* Match card aspect ratio */
+  min-height: 480px;
   min-height: 550px; /* Match card height */
   display: flex;
   justify-content: center;
@@ -2655,7 +2656,8 @@ pre,
 .dev-card {
   width: 100%; /* Full width of container */
   aspect-ratio: 2/3.5; /* Taller aspect ratio */
-  min-height: 550px; /* Increased minimum height for better text visibility */
+  height:fit-content;
+  min-height: 480px;
   max-width: 340px; /* Maximum width to prevent oversizing */
   margin: 0 auto !important; /* Center the card */
   left: 0 !important;
@@ -2750,6 +2752,7 @@ pre,
 .dev-card-content {
   position: relative;
   width: 100%;
+  height:fit-content;
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -2875,6 +2878,7 @@ pre,
   flex: 1;
   display: flex;
   flex-direction: column;
+  height:fit-content;
 }
 
 .user-name {
@@ -2938,6 +2942,7 @@ pre,
 
 .dev-card-skills {
   display: flex;
+  height:fit-content;
   flex-wrap: nowrap; /* Prevent wrapping to new line */
   gap: 0.3rem; /* Smaller gap between skills */
   margin-top: 0.5rem; /* Less space above skills */
@@ -3135,6 +3140,7 @@ pre,
 /* Ensure all card content fits within Tinder card boundaries */
 .tinder-card .dev-card {
   width: 100% !important;
+  height:fit-content;
   height: 100% !important;
   min-height: 100% !important;
   max-height: 100% !important;
@@ -3149,6 +3155,7 @@ pre,
 /* Ensure card content wrapper fits properly */
 .tinder-card .dev-card-content {
   width: 100% !important;
+  height:fit-content;
   height: 100% !important;
   position: relative !important;
   overflow: hidden !important;
@@ -3279,6 +3286,7 @@ pre,
 .top-card {
   position: absolute !important;
   width: 100% !important;
+  height:fit-content;
   height: 100% !important;
   left: 0 !important;
   top: 0 !important;
@@ -3299,6 +3307,7 @@ pre,
 /* Ensure the Card component takes up the full space of its container */
 .top-card .dev-card {
   width: 100% !important;
+  height:fit-content;
   height: 100% !important;
   position: absolute !important;
   left: 0 !important;
@@ -3348,6 +3357,7 @@ pre,
   }
 
   .dev-card {
+    height:fit-content;
     min-height: 500px;
   }
 
@@ -3367,6 +3377,7 @@ pre,
   }
 
   .dev-card {
+    height:fit-content;
     min-height: 520px;
   }
 
@@ -3382,6 +3393,7 @@ pre,
   }
 
   .dev-card {
+    height:fit-content;
     min-height: 540px;
   }
 
@@ -3406,6 +3418,7 @@ pre,
   }
 
   .dev-card {
+    height:fit-content;
     min-height: 560px;
   }
 }
@@ -3413,12 +3426,14 @@ pre,
 /* Height-based media queries */
 @media (min-height: 800px) {
   .dev-card {
+    height:fit-content;
     min-height: 550px;
   }
 }
 
 @media (min-height: 1000px) {
   .dev-card {
+    height:fit-content;
     min-height: 650px;
   }
 }
@@ -3629,6 +3644,7 @@ pre,
   width: 100% !important;
   height: 100% !important;
   max-width: 320px !important;
+  height:fit-content !important;
   max-height: 500px !important;
   min-height: 500px !important;
   position: relative !important;
@@ -3640,6 +3656,7 @@ pre,
 /* Ensure preview card content fits properly */
 .card-preview-container .dev-card-content {
   width: 100% !important;
+  height:fit-content !important;
   height: 100% !important;
   position: relative !important;
   overflow: hidden !important;
