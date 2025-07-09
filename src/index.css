@@ -1935,6 +1935,7 @@ pre,
 @media (max-width: 768px) {
   .tinder-card-stack {
     max-width: 320px; /* Adjusted for medium screens */
+    height:fit-content;
     transform: translateX(0) !important; /* Force center alignment */
     margin-left: auto !important;
     margin-right: auto !important;
@@ -1958,6 +1959,7 @@ pre,
     transform: translateX(0) !important;
     border-radius: 30px;
     max-width: 300px !important; /* Increased width on small screens */
+    height:fit-content;
     min-height: 520px !important; /* Adjusted height for small screens */
     margin: 0 auto !important;
     left: 0 !important;
@@ -2109,6 +2111,7 @@ pre,
 .static-card {
   width: 100%; /* Same width as main card */
   aspect-ratio: 2/3.2;
+  height:fit-content;
   min-height: 480px;
   border-radius: 24px;
   overflow: hidden;
