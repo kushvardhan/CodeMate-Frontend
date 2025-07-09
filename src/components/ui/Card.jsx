@@ -143,30 +143,28 @@ const truncateBio = (bio) => {
           "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, box-shadow 0.4s ease-out, border 0.4s ease-out";
 
         if (swipeDirection === "left") {
-          element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-          element.style.opacity = "0";
-          element.style.boxShadow =
-            "10px 10px 40px 20px rgba(255, 59, 48, 0.8)";
-          element.style.border = "3px solid rgba(255, 59, 48, 0.9)";
-          // Set data attribute for CSS targeting
-          element.setAttribute("data-drag", "left");
-        } else if (swipeDirection === "right") {
-          element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-          element.style.opacity = "0";
-          element.style.boxShadow =
-            "10px 10px 40px 20px rgba(52, 199, 89, 0.8)";
-          element.style.border = "3px solid rgba(52, 199, 89, 0.9)";
-          // Set data attribute for CSS targeting
-          element.setAttribute("data-drag", "right");
-        } else if (swipeDirection === "rewind") {
-          // Special animation for rewinding
-          element.style.transform = `translateX(0) rotate(0) scale(1)`;
-          element.style.opacity = "1";
-          element.style.boxShadow = "0 0 30px 10px rgba(99, 102, 241, 0.6)";
-          element.style.border = "3px solid rgba(99, 102, 241, 0.8)";
-          // Set data attribute for CSS targeting
-          element.setAttribute("data-drag", "rewind");
-        }
+  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
+  element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+  element.style.opacity = "0";
+  element.style.boxShadow = "0 0 40px 12px rgba(255, 59, 48, 0.8)";
+  element.style.border = "3px solid rgba(255, 59, 48, 1)";
+  element.setAttribute("data-drag", "left");
+} else if (swipeDirection === "right") {
+  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
+  element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+  element.style.opacity = "0";
+  element.style.boxShadow = "0 0 40px 12px rgba(52, 199, 89, 0.8)";
+  element.style.border = "3px solid rgba(52, 199, 89, 1)";
+  element.setAttribute("data-drag", "right");
+} else if (swipeDirection === "rewind") {
+  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
+  element.style.transform = `translateX(0) rotate(0) scale(1)`;
+  element.style.opacity = "1";
+  element.style.boxShadow = "0 0 40px 12px rgba(99, 102, 241, 0.8)";
+  element.style.border = "3px solid rgba(99, 102, 241, 1)";
+  element.setAttribute("data-drag", "rewind");
+}
+
 
         // Clean up after animation completes
         setTimeout(() => {
@@ -434,11 +432,11 @@ const truncateBio = (bio) => {
           style={{
              zIndex: 2,
     position: "absolute",
-    top:"40%",
+    top:"30%",
     bottom: 0,
     left: 0,
     right: 0,
-    height: "60%",   
+    height: "70%",   
     background:
       "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
     display: "flex",
@@ -522,7 +520,7 @@ const truncateBio = (bio) => {
             )}
 
             {userData.skills && userData.skills.length > 0 && (
-              <div className="dev-card-skills-section">
+              <div className="dev-card-skills-section flex flex-wrap">
                 <div className="dev-card-skills-header">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -551,7 +549,7 @@ const truncateBio = (bio) => {
                       whileHover="hover"
                       transition={{ delay: index * 0.05 }}
                     >
-                      {skill} fgg
+                      {skill}
                     </motion.span>
                   ))}
                   {getAdditionalSkillsCount(userData.skills) > 0 && (

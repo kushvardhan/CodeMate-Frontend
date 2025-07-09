@@ -549,21 +549,23 @@ const Home = () => {
             transition={{ duration: 0.5 }}
           >
             <motion.h1
-              className="text-3xl md:text-4xl font-bold mb-3 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/50 inline-block px-4 py-2 rounded-lg border border-white/20 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              Connect with Developers
-            </motion.h1>
-            <motion.p
-              className="text-lg text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/50 inline-block px-4 py-2 rounded-lg border border-white/20 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              Swipe, match, collaborate
-            </motion.p>
+  className="hero-heading text-4xl md:text-5xl font-extrabold text-white mb-4 px-6 py-3 rounded-xl border border-white/20 bg-gradient-to-r from-purple-600/70 via-indigo-600/60 to-blue-600/70 backdrop-blur-md shadow-lg drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] tracking-tight"
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+>
+  Connect with Developers
+</motion.h1>
+
+<motion.p
+  className="hero-subtext text-lg md:text-xl font-medium text-white px-5 py-2 rounded-lg bg-black/40 border border-white/10 backdrop-blur-md shadow-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mt-2 inline-block"
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+>
+  Swipe. Match. Collaborate. 🚀
+</motion.p>
+
           </motion.div>
 
           {/* Card component */}
@@ -580,9 +582,29 @@ const Home = () => {
             {isLoading ? (
               <div className="flex flex-col items-center justify-center p-8">
                 <div className="w-16 h-16 border-t-4 border-b-4 border-indigo-500 rounded-full animate-spin"></div>
-                <p className="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">
-                  Loading profiles...
-                </p>
+                <div className="no-more-cards-in-place bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg animate-pulse">
+    <div className="no-more-cards-content text-white flex flex-col items-center">
+      <div className="no-more-icon mb-4">
+        <svg
+          className="animate-spin text-white w-8 h-8"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+          <path d="M12 2a10 10 0 0 1 10 10" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-semibold mb-1">Loading Profiles...</h3>
+      <p className="text-center opacity-80">
+        Please wait while we fetch interesting people for you ✨
+      </p>
+    </div>
+  </div>
               </div>
             ) : error ? (
               <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -655,7 +677,7 @@ const Home = () => {
                   style={{
                     position: "relative",
                     width: "300px",
-                    height: "500px", // Increased height
+                    height: "550px", // Increased height
                     margin: "0 auto",
                     overflow: "visible",
                   }}
@@ -676,7 +698,7 @@ const Home = () => {
                           style={{
                             position: "absolute",
                             width: "300px",
-                            height: "600px",
+                            height: "500px",
                             borderRadius: "10px",
                             boxShadow: isTopCard
                               ? "0 8px 25px rgba(0, 0, 0, 0.15)"
