@@ -1935,7 +1935,7 @@ pre,
 @media (max-width: 768px) {
   .tinder-card-stack {
     max-width: 320px; /* Adjusted for medium screens */
-    height:fit-content;
+    height: fit-content;
     transform: translateX(0) !important; /* Force center alignment */
     margin-left: auto !important;
     margin-right: auto !important;
@@ -1959,7 +1959,7 @@ pre,
     transform: translateX(0) !important;
     border-radius: 30px;
     max-width: 300px !important; /* Increased width on small screens */
-    height:fit-content;
+    height: fit-content;
     min-height: 520px !important; /* Adjusted height for small screens */
     margin: 0 auto !important;
     left: 0 !important;
@@ -2021,7 +2021,6 @@ pre,
 /* Current card (top of stack) */
 .tinder-current-card {
   border-radius: 30px;
-
   position: absolute !important;
   z-index: 10 !important; /* Higher than static cards */
   width: 100% !important;
@@ -2111,7 +2110,7 @@ pre,
 .static-card {
   width: 100%; /* Same width as main card */
   aspect-ratio: 2/3.2;
-  height:fit-content;
+  height: fit-content;
   min-height: 480px;
   border-radius: 24px;
   overflow: hidden;
@@ -2664,8 +2663,6 @@ pre,
   transition: none !important; /* Disable transform animations */
 }
 
-
-
 .dev-card:active {
   cursor: grabbing;
 }
@@ -2729,7 +2726,7 @@ pre,
 .dev-card-content {
   position: relative;
   width: 100%;
-  height:fit-content;
+  height: fit-content;
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -2855,7 +2852,7 @@ pre,
   flex: 1;
   display: flex;
   flex-direction: column;
-  height:fit-content;
+  height: fit-content;
 }
 
 .user-name {
@@ -2919,7 +2916,7 @@ pre,
 
 .dev-card-skills {
   display: flex;
-  height:fit-content;
+  height: fit-content;
   flex-wrap: nowrap; /* Prevent wrapping to new line */
   gap: 0.3rem; /* Smaller gap between skills */
   margin-top: 0.5rem; /* Less space above skills */
@@ -3112,12 +3109,24 @@ pre,
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   will-change: transform !important;
+  transform-style: preserve-3d !important; /* Preserve 3D for children */
+}
+
+/* Ensure the draggable motion div doesn't affect content positioning */
+.tinder-card .top-card > div[style*="transform"] {
+  transform-style: preserve-3d !important;
+}
+
+/* Isolate content from parent transforms */
+.tinder-card .dev-card {
+  transform-style: preserve-3d !important;
+  isolation: isolate !important; /* Create new stacking context */
 }
 
 /* Ensure all card content fits within Tinder card boundaries */
 .tinder-card .dev-card {
   width: 100% !important;
-  height:fit-content;
+  height: fit-content;
   height: 100% !important;
   min-height: 100% !important;
   max-height: 100% !important;
@@ -3132,7 +3141,7 @@ pre,
 /* Ensure card content wrapper fits properly */
 .tinder-card .dev-card-content {
   width: 100% !important;
-  height:fit-content;
+  height: fit-content;
   height: 100% !important;
   position: relative !important;
   overflow: hidden !important;
@@ -3147,18 +3156,31 @@ pre,
   top: 0 !important;
   left: 0 !important;
   pointer-events: none !important;
-  transform: none !important;
+  transform: translateZ(0) !important; /* Force GPU layer for stability */
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: auto !important;
 }
-
-
 
 /* Prevent all card content from moving during swipe */
 .tinder-card .dev-card-content,
 .tinder-card .dev-card-info,
 .tinder-card .dev-card-overlay {
   pointer-events: none !important;
-  transform: none !important;
+  transform: translateZ(0) !important; /* Force GPU layer */
   position: relative !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: auto !important; /* Prevent unnecessary GPU layers */
+  contain: layout style paint !important; /* Optimize rendering and prevent content shifts */
+}
+
+/* Prevent content blanking during swipe animations */
+.tinder-card.top-card .dev-card-content {
+  transform: translate3d(0, 0, 0) !important; /* Force hardware acceleration */
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform-style: preserve-3d !important;
+  -webkit-transform-style: preserve-3d !important;
 }
 
 /* Ensure text content stays in place */
@@ -3167,7 +3189,10 @@ pre,
 .tinder-card .dev-card-location,
 .tinder-card .dev-card-skills {
   pointer-events: none !important;
-  transform: none !important;
+  transform: translateZ(0) !important; /* Force GPU layer for text stability */
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: auto !important;
 }
 
 .hero-heading {
@@ -3184,7 +3209,7 @@ pre,
   font-weight: 500;
   color: white;
   text-align: center;
-  margin-bottom:3.5rem;
+  margin-bottom: 3.5rem;
 }
 .hero-heading,
 .hero-subtext {
@@ -3198,15 +3223,14 @@ pre,
   }
 }
 
-
 /* Card info sections with icons */
 .dev-card-bio-section,
 .dev-card-skills-section {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
-  gap: 3px;  
-  width:100%;
+  gap: 3px;
+  width: 100%;
   margin-top: 4px;
 }
 
@@ -3263,7 +3287,7 @@ pre,
 .top-card {
   position: absolute !important;
   width: 100% !important;
-  height:fit-content;
+  height: fit-content;
   height: 100% !important;
   left: 0 !important;
   top: 0 !important;
@@ -3284,7 +3308,7 @@ pre,
 /* Ensure the Card component takes up the full space of its container */
 .top-card .dev-card {
   width: 100% !important;
-  height:fit-content;
+  height: fit-content;
   height: 100% !important;
   position: absolute !important;
   left: 0 !important;
@@ -3334,7 +3358,7 @@ pre,
   }
 
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 500px;
   }
 
@@ -3354,7 +3378,7 @@ pre,
   }
 
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 520px;
   }
 
@@ -3370,7 +3394,7 @@ pre,
   }
 
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 540px;
   }
 
@@ -3395,7 +3419,7 @@ pre,
   }
 
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 560px;
   }
 }
@@ -3403,14 +3427,14 @@ pre,
 /* Height-based media queries */
 @media (min-height: 800px) {
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 550px;
   }
 }
 
 @media (min-height: 1000px) {
   .dev-card {
-    height:fit-content;
+    height: fit-content;
     min-height: 650px;
   }
 }
@@ -3621,7 +3645,7 @@ pre,
   width: 100% !important;
   height: 100% !important;
   max-width: 320px !important;
-  height:fit-content !important;
+  height: fit-content !important;
   max-height: 500px !important;
   min-height: 500px !important;
   position: relative !important;
@@ -3633,7 +3657,7 @@ pre,
 /* Ensure preview card content fits properly */
 .card-preview-container .dev-card-content {
   width: 100% !important;
-  height:fit-content !important;
+  height: fit-content !important;
   height: 100% !important;
   position: relative !important;
   overflow: hidden !important;
@@ -5297,8 +5321,6 @@ pre,
   background-color: #b91c1c; /* Darker red */
 }
 
-
-
 @media (max-width: 640px) {
   /* Hide label text for all */
   .request-action-button span {
@@ -5343,10 +5365,6 @@ pre,
     margin: 0;
   }
 }
-
-
-
-
 
 .request-cards-horizontal {
   display: flex;
@@ -6354,10 +6372,9 @@ pre,
 }
 
 @media (max-width: 480px) {
-
-    .request-card-actions {
+  .request-card-actions {
     width: 100%;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
   }
@@ -6370,12 +6387,12 @@ pre,
     align-items: center;
     gap: 0;
   }
-   .request-action-button.view-profile {
+  .request-action-button.view-profile {
     background-color: var(--color-input); /* Match others */
     box-shadow: none;
     width: 40px;
     height: 40px;
-    padding: 0 2px ;
+    padding: 0 2px;
   }
 
   .request-title {

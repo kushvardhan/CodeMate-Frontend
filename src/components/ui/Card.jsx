@@ -24,18 +24,13 @@ const Card = ({
   // Use provided user data or default
   const userData = user || defaultUser;
 
+  const truncateBio = (bio) => {
+    if (!bio) return "";
 
+    if (bio.length <= 70) return bio;
 
-const truncateBio = (bio) => {
-  if (!bio) return "";
-
-  if (bio.length <= 70) return bio;
-
-  return bio.slice(0, 70) + "...";
-};
-
-
-
+    return bio.slice(0, 70) + "...";
+  };
 
   // Dynamically handle skills display - always show max 2 skills
   const getDisplaySkills = (skills) => {
@@ -129,7 +124,7 @@ const truncateBio = (bio) => {
   React.useEffect(() => {
     if (isCardSwiping && swipeDirection) {
       // Use document.querySelector with a more specific selector for better performance
-     const element = document.querySelector(".tinder-card.top-card");
+      const element = document.querySelector(".tinder-card.top-card");
 
       if (element) {
         // Set will-change to hint browser for optimization
@@ -144,28 +139,30 @@ const truncateBio = (bio) => {
           "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, box-shadow 0.4s ease-out, border 0.4s ease-out";
 
         if (swipeDirection === "left") {
-  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
-  element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
-  element.style.opacity = "0";
-  element.style.boxShadow = "0 0 40px 12px rgba(255, 59, 48, 0.8)";
-  element.style.border = "3px solid rgba(255, 59, 48, 1)";
-  element.setAttribute("data-drag", "left");
-} else if (swipeDirection === "right") {
-  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
-  element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
-  element.style.opacity = "0";
-  element.style.boxShadow = "0 0 40px 12px rgba(52, 199, 89, 0.8)";
-  element.style.border = "3px solid rgba(52, 199, 89, 1)";
-  element.setAttribute("data-drag", "right");
-} else if (swipeDirection === "rewind") {
-  element.style.transition = "box-shadow 0.3s ease, transform 0.4s ease";
-  element.style.transform = `translateX(0) rotate(0) scale(1)`;
-  element.style.opacity = "1";
-  element.style.boxShadow = "0 0 40px 12px rgba(99, 102, 241, 0.8)";
-  element.style.border = "3px solid rgba(99, 102, 241, 1)";
-  element.setAttribute("data-drag", "rewind");
-}
-
+          element.style.transition =
+            "box-shadow 0.3s ease, transform 0.4s ease";
+          element.style.transform = `translateX(-1500px) rotate(-30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 40px 12px rgba(255, 59, 48, 0.8)";
+          element.style.border = "3px solid rgba(255, 59, 48, 1)";
+          element.setAttribute("data-drag", "left");
+        } else if (swipeDirection === "right") {
+          element.style.transition =
+            "box-shadow 0.3s ease, transform 0.4s ease";
+          element.style.transform = `translateX(1500px) rotate(30deg) scale(0.8)`;
+          element.style.opacity = "0";
+          element.style.boxShadow = "0 0 40px 12px rgba(52, 199, 89, 0.8)";
+          element.style.border = "3px solid rgba(52, 199, 89, 1)";
+          element.setAttribute("data-drag", "right");
+        } else if (swipeDirection === "rewind") {
+          element.style.transition =
+            "box-shadow 0.3s ease, transform 0.4s ease";
+          element.style.transform = `translateX(0) rotate(0) scale(1)`;
+          element.style.opacity = "1";
+          element.style.boxShadow = "0 0 40px 12px rgba(99, 102, 241, 0.8)";
+          element.style.border = "3px solid rgba(99, 102, 241, 1)";
+          element.setAttribute("data-drag", "rewind");
+        }
 
         // Clean up after animation completes
         setTimeout(() => {
@@ -377,7 +374,6 @@ const truncateBio = (bio) => {
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow
       }}
     >
-      
       <div
         className="dev-card-content"
         style={{
@@ -389,6 +385,9 @@ const truncateBio = (bio) => {
           position: "relative",
           display: "flex",
           flexDirection: "column",
+          transform: "translateZ(0)", // Force GPU layer to prevent content shifting
+          backfaceVisibility: "hidden", // Prevent flickering
+          WebkitBackfaceVisibility: "hidden",
         }}
       >
         <motion.img
@@ -432,19 +431,19 @@ const truncateBio = (bio) => {
         <div
           className="dev-card-overlay"
           style={{
-             zIndex: 2,
-    position: "absolute",
-    top:"30%",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "70%",   
-    background:
-      "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    padding: "20px 16px 16px 16px",
+            zIndex: 2,
+            position: "absolute",
+            top: "30%",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "70%",
+            background:
+              "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 90%, transparent 100%)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            padding: "20px 16px 16px 16px",
           }}
         >
           <div className="dev-card-info">
