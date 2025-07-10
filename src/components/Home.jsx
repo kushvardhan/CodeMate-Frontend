@@ -7,6 +7,7 @@ import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
 import { addRequest } from "../slice/RequestSlice";
+import { fetchUnseenCounts } from "../slice/unseenSlice";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
@@ -15,6 +16,23 @@ const Home = () => {
   const dispatch = useDispatch();
   const requests = useSelector((state) => state.request) || [];
   const connections = useSelector((state) => state.connection) || [];
+
+  const unseenChats = useSelector((state) => state.unseenMessage.unseenChats) || [];
+  const loggedInUser = useSelector((state) => state.user.user);
+useEffect(() => {
+  if (loggedInUser?._id) {
+    console.log("yeorIR ",loggedInUser._id );
+    dispatch(fetchUnseenCounts(loggedInUser._id));
+  }
+  else{
+console.log("BHS");
+  }
+  
+}, [dispatch, loggedInUser]);
+
+// Render count:
+
+
 
   useEffect(() => {
     if (darkMode) {
@@ -1052,7 +1070,24 @@ const Home = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
               >
-                8
+                 <div className="unseen-summary">
+  {unseenChats && unseenChats.length > 0 ? (
+    <>
+      <p>{unseenChats.length}</p>
+      {/* {unseenChats.map((chat) => (
+        <div key={chat.chatId}>
+          Chat with {chat.userId}
+          {chat.unseenCount > 0 && (
+            <span className="unseen-badge">{chat.unseenCount}</span>
+          )}
+        </div>
+      ))} */}
+    </>
+  ) : (
+    <p>No new messages (0)</p>
+  )}
+</div>
+
               </motion.p>
             </motion.div>
           </motion.div>
