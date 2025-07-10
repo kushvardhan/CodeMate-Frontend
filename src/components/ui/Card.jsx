@@ -129,7 +129,8 @@ const truncateBio = (bio) => {
   React.useEffect(() => {
     if (isCardSwiping && swipeDirection) {
       // Use document.querySelector with a more specific selector for better performance
-      const element = document.querySelector(".tinder-current-card .dev-card");
+     const element = document.querySelector(".tinder-card.top-card");
+
       if (element) {
         // Set will-change to hint browser for optimization
         element.style.willChange = "transform, opacity, box-shadow, border";
@@ -376,6 +377,7 @@ const truncateBio = (bio) => {
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow
       }}
     >
+      
       <div
         className="dev-card-content"
         style={{

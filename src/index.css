@@ -2654,40 +2654,17 @@ pre,
 
 /* Main Card Styles */
 .dev-card {
-  width: 100%; /* Full width of container */
-  aspect-ratio: 2/3.5; /* Taller aspect ratio */
-  height:fit-content;
-  min-height: 480px;
-  max-width: 340px; /* Maximum width to prevent oversizing */
-  margin: 0 auto !important; /* Center the card */
-  left: 0 !important;
-  right: 0 !important;
-  position: relative !important;
-  border-radius: 24px;
-  overflow: hidden;
-  background-color: var(--color-card-bg);
-  /* Default shadow with NO color */
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15);
-  /* NO colored border by default */
-  border: none !important;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    box-shadow 0.5s ease-out, border 0.5s ease-out, opacity 0.5s ease-out;
   position: relative;
-  cursor: grab;
-  touch-action: pan-y;
-  transform-style: preserve-3d;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
   backface-visibility: hidden;
-  will-change: transform, opacity, box-shadow, border;
-  transform-origin: center center; /* Center origin for better animations */
-  /* Add hardware acceleration to reduce jittering */
-  -webkit-transform: translateZ(0);
-  -moz-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  -o-transform: translateZ(0);
-  transform: translateZ(0);
-  /* Ensure card is not transparent */
-  opacity: 1 !important;
+  transform: none !important; /* Important */
+  transition: none !important; /* Disable transform animations */
 }
+
+
 
 .dev-card:active {
   cursor: grabbing;
