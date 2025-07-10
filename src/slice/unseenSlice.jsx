@@ -6,7 +6,7 @@ export const fetchUnseenCounts = createAsyncThunk(
   "unseen/fetchUnseenCounts",
   async (userId) => {
     const res = await axios.get(`/chat/unseen-counts/${userId}`);
-    console.log("Unseen Message: ", res.data);
+    console.log("Unseen Message: ", res.data.data);
     return res.data.data;
   }
 );

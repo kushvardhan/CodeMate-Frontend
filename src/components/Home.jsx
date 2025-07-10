@@ -1084,7 +1084,7 @@ console.log("BHS");
       ))} */}
     </>
   ) : (
-    <p>No new messages (0)</p>
+    <p>0</p>
   )}
 </div>
 
