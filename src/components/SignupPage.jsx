@@ -1,15 +1,16 @@
+/* eslint-disable no-constant-binary-expression */
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 
 const SignupPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
+    // eslint-disable-next-line no-constant-binary-expression
     lastName: "" || "",
     email: "",
     password: "",

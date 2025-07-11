@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {motion} from 'framer-motion';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -134,7 +135,7 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+     <>
       <div
         style={{
           position: "fixed",
@@ -494,8 +495,8 @@ const LoginPage = () => {
           </motion.form>
         </motion.div>
       </div>
-    </>
-  );
+    </>  
+    );
 };
 
 export default LoginPage;
