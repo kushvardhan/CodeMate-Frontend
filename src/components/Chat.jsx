@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import EmojiPicker from "emoji-picker-react";
+import { useDispatch } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
+import { markMessagesAsSeen } from "../slice/unseenSlice";
 
 const Chat = () => {
   const userState = useSelector((state) => state.user);
@@ -323,8 +325,10 @@ const handleSendMessage = (e) => {
     messageInputRef.current?.focus();
   };
 
+
   // Close emoji picker when clicking outside
   useEffect(() => {
+
     const handleClickOutside = (event) => {
       if (
         emojiPickerRef.current &&
