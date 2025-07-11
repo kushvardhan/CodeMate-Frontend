@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.33.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/postcss": "^4.1.4",
