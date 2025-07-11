@@ -16,13 +16,14 @@ const Home = () => {
   const dispatch = useDispatch();
   const requests = useSelector((state) => state.request) || [];
   const connections = useSelector((state) => state.connection) || [];
-
+  const [messageLen, setMessageLen] = useState(0);
   const unseenChats = useSelector((state) => state.unseenMessage.unseenChats) || [];
   const loggedInUser = useSelector((state) => state.user.user);
 useEffect(() => {
   if (loggedInUser?._id) {
     console.log("yeorIR ",loggedInUser._id );
     dispatch(fetchUnseenCounts(loggedInUser._id));
+    
   }
   else{
 console.log("BHS");
@@ -1073,6 +1074,7 @@ console.log("BHS");
                  <div className="unseen-summary">
   {unseenChats && unseenChats.length > 0 ? (
     <>
+      
       <p>{unseenChats.length}</p>
       {/* {unseenChats.map((chat) => (
         <div key={chat.chatId}>
