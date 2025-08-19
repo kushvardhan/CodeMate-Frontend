@@ -12,6 +12,7 @@ import {
 import "./App.css";
 import axios from "./api/axios";
 import Chat from "./components/Chat";
+import Chats from "./components/Chats";
 import Connection from "./components/Connection";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
@@ -187,6 +188,22 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats"
+          element={
+            <ProtectedRoute>
+              <Chats />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats/:userId"
+          element={
+            <ProtectedRoute>
+              <Chats />
             </ProtectedRoute>
           }
         />
