@@ -1,15 +1,13 @@
 /* eslint-disable no-unused-vars */
 import EmojiPicker from "emoji-picker-react";
-import { useDispatch } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
-import { markMessagesAsSeen } from "../slice/unseenSlice";
 
 const Chat = () => {
   const userState = useSelector((state) => state.user);
@@ -30,7 +28,7 @@ const Chat = () => {
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
 
-  const fetchChat = async () => {
+  const fetchChat = useCallback(async () => {
     try {
       const response = await axios.get(`/chat/getChat/${userId}`, {
         withCredentials: true,
@@ -47,7 +45,7 @@ const Chat = () => {
         text: message?.text,
         timestamp: message?.createdAt,
       }));
-      console.log('Chat Messages: ', chatMessages);
+      console.log("Chat Messages: ", chatMessages);
       setMessages(chatMessages);
 
       const firstMessage = chatMessages?.[0];
@@ -63,9 +61,9 @@ const Chat = () => {
       console.error("Error fetching chat: ", err);
       setIsLoading(false);
     }
-  };
+  }, [userId, loggedInUserId]);
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const res = await axios.post(
         `http://localhost:4000/user/chatUser/${userId}`,
@@ -79,16 +77,13 @@ const Chat = () => {
     } catch (err) {
       console.error("Error fetching user data: ", err);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     setIsLoading(true);
     fetchUserData();
     fetchChat();
-  }, []);
-
-
-
+  }, [fetchUserData, fetchChat]);
 
   const currentUser = {
     id: loggedInUser?._id || "current-user-id",
@@ -186,45 +181,44 @@ const Chat = () => {
     }
   };
 
-const handleSendMessage = (e) => {
-  e.preventDefault();
+  const handleSendMessage = (e) => {
+    e.preventDefault();
 
-  const trimmedMessage = newMessage.trim();
-  if (!trimmedMessage) return;
+    const trimmedMessage = newMessage.trim();
+    if (!trimmedMessage) return;
 
-  const message = {
-    id: `msg-${Date.now()}`,
-    senderId: currentUser.id,
-    firstName: currentUser.firstName,
-    text: trimmedMessage,
-    timestamp: new Date().toISOString(),
-  };
+    const message = {
+      id: `msg-${Date.now()}`,
+      senderId: currentUser.id,
+      firstName: currentUser.firstName,
+      text: trimmedMessage,
+      timestamp: new Date().toISOString(),
+    };
 
-  try {
-    if (!isAuthenticated || !loggedInUser?._id) return;
+    try {
+      if (!isAuthenticated || !loggedInUser?._id) return;
 
-    // Emit message through socket
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit("sendMessage", {
-        senderFirstName: currentUser.firstName,
-        senderId: loggedInUser._id,
-        receiverId: userId,
-        content: trimmedMessage,
-        timestamp: message.timestamp,
-      });
+      // Emit message through socket
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("sendMessage", {
+          senderFirstName: currentUser.firstName,
+          senderId: loggedInUser._id,
+          receiverId: userId,
+          content: trimmedMessage,
+          timestamp: message.timestamp,
+        });
+      }
+
+      // Add sent message to local UI immediately
+      setMessages((prevMessages) => [...prevMessages, message]);
+
+      // Clear input
+      setNewMessage("");
+      messageInputRef.current?.focus();
+    } catch (err) {
+      console.error("Error sending message:", err);
     }
-
-    // Add sent message to local UI immediately
-    setMessages((prevMessages) => [...prevMessages, message]);
-
-    // Clear input
-    setNewMessage("");
-    messageInputRef.current?.focus();
-  } catch (err) {
-    console.error("Error sending message:", err);
-  }
-};
-
+  };
 
   const formatMessageTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -325,10 +319,8 @@ const handleSendMessage = (e) => {
     messageInputRef.current?.focus();
   };
 
-
   // Close emoji picker when clicking outside
   useEffect(() => {
-
     const handleClickOutside = (event) => {
       if (
         emojiPickerRef.current &&
@@ -347,50 +339,50 @@ const handleSendMessage = (e) => {
   // Create a ref to store the socket instance
   const socketRef = useRef(null);
 
-useEffect(() => {
-  if (!isAuthenticated || !userId || !loggedInUser?._id) return;
+  useEffect(() => {
+    if (!isAuthenticated || !userId || !loggedInUser?._id) return;
 
-  const socket = createSocketConnection();
-  socketRef.current = socket;
+    const socket = createSocketConnection();
+    socketRef.current = socket;
 
-  socket.on("connect", () => {
-    console.log("Socket connected with ID:", socket.id);
-    socket.emit("joinChat", {
-      firstName: loggedInUser.firstName || "User",
-      loggedInUserId: loggedInUser._id,
-      userId,
+    socket.on("connect", () => {
+      console.log("Socket connected with ID:", socket.id);
+      socket.emit("joinChat", {
+        firstName: loggedInUser.firstName || "User",
+        loggedInUserId: loggedInUser._id,
+        userId,
+      });
     });
-  });
 
-  socket.on("receiveMessage", ({ senderFirstName, content, senderId, timestamp }) => {
-    if (!content || content.trim() === "") return;
+    socket.on(
+      "receiveMessage",
+      ({ senderFirstName, content, senderId, timestamp }) => {
+        if (!content || content.trim() === "") return;
 
-    const newMessage = {
-      id: `msg-${Date.now()}`,
-      senderId,
-      firstName: senderFirstName,
-      text: content,
-      timestamp: timestamp || new Date().toISOString(),
+        const newMessage = {
+          id: `msg-${Date.now()}`,
+          senderId,
+          firstName: senderFirstName,
+          text: content,
+          timestamp: timestamp || new Date().toISOString(),
+        };
+
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    );
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    return () => {
+      if (socket) {
+        console.log("Disconnecting socket:", socket.id);
+        socket.disconnect();
+        socketRef.current = null;
+      }
     };
-
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  });
-
-  socket.on("connect_error", (error) => {
-    console.error("Socket connection error:", error);
-  });
-
-  return () => {
-    if (socket) {
-      console.log("Disconnecting socket:", socket.id);
-      socket.disconnect();
-      socketRef.current = null;
-    }
-  };
-}, [isAuthenticated, userId, loggedInUser]);
-
-
-
+  }, [isAuthenticated, userId, loggedInUser]);
 
   // Loading state
   if (isLoading) {
@@ -677,8 +669,8 @@ useEffect(() => {
                 >
                   <div className="message-content">
                     {message.text && message.text.trim() !== "" && (
-                    <p>{linkifyText(message.text)}</p>
-                        )}
+                      <p>{linkifyText(message.text)}</p>
+                    )}
 
                     {formatMessageTime(message.timestamp) && (
                       <span className="message-time">
