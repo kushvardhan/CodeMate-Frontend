@@ -1,21 +1,18 @@
 /* eslint-disable no-unused-vars */
-import {motion} from 'framer-motion';
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { clearUser, setUser } from "../slice/UserSlice";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-
 
   useEffect(() => {
     dispatch(clearUser());
@@ -88,11 +85,9 @@ const LoginPage = () => {
 
     try {
       setIsSubmitting(true);
-      const res = await axios.post(
-        "http://localhost:4000/login",
-        formData,
-        { withCredentials: true } 
-      );
+      const res = await axios.post("http://localhost:4000/login", formData, {
+        withCredentials: true,
+      });
 
       dispatch(setUser(res.data.user));
       setIsSubmitting(false);
@@ -135,7 +130,7 @@ const LoginPage = () => {
   };
 
   return (
-     <>
+    <>
       <div
         style={{
           position: "fixed",
@@ -303,93 +298,6 @@ const LoginPage = () => {
             </div>
           </motion.div>
 
-          <motion.div className="social-buttons" variants={itemVariants}>
-            <button
-              className={`social-button ${
-                darkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-white hover:bg-gray-100"
-              }`}
-              title="Login with Google"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"
-                />
-              </svg>
-            </button>
-            <button
-              className={`social-button ${
-                darkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-white hover:bg-gray-100"
-              }`}
-              title="Login with Facebook"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                  fill="#1877F2"
-                />
-              </svg>
-            </button>
-            <button
-              className={`social-button ${
-                darkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-white hover:bg-gray-100"
-              }`}
-              title="Login with GitHub"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 0C5.373 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.6.113.793-.261.793-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.386-1.332-1.755-1.332-1.755-1.087-.744.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.382 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23.956-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.838 1.234 1.91 1.234 3.22 0 4.61-2.807 5.625-5.479 5.92.43.372.824 1.102.824 2.222 0 1.604-.015 2.897-.015 3.293 0 .319.192.694.8.577C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"
-                  fill={darkMode ? "#ffffff" : "#333333"}
-                />
-              </svg>
-            </button>
-          </motion.div>
-
-          <motion.div
-            className={`form-divider ${
-              darkMode ? "text-gray-400" : "text-gray-500"
-            }`}
-            variants={itemVariants}
-          >
-            or log-in with email
-          </motion.div>
-
           <motion.form onSubmit={handleSubmit} variants={itemVariants}>
             {errors.general && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded shadow-sm animate-fadeIn">
@@ -412,33 +320,31 @@ const LoginPage = () => {
             </div>
 
             <div className="form-group">
-
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
-                className={`form-input relative ${errors.password ? "error" : ""} ${
-                  darkMode ? "bg-gray-700 border-gray-600 text-white" : ""
-                }`}
+                className={`form-input relative ${
+                  errors.password ? "error" : ""
+                } ${darkMode ? "bg-gray-700 border-gray-600 text-white" : ""}`}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
               />
-              
-                <div className="eye-icon">
-                  {
-                    !showPassword ? (
+
+              <div className="eye-icon">
+                {!showPassword ? (
                   <FaEyeSlash
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   />
-                ) : (< FaEye
+                ) : (
+                  <FaEye
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
-                  />)
-                  }
-                </div>
-              
+                  />
+                )}
+              </div>
 
               {errors.password && (
                 <p className="error-message">{errors.password}</p>
@@ -495,8 +401,8 @@ const LoginPage = () => {
           </motion.form>
         </motion.div>
       </div>
-    </>  
-    );
+    </>
+  );
 };
 
 export default LoginPage;
