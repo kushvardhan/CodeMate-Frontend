@@ -1,9 +1,9 @@
-/* eslint-disable no-undef */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
+import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const ChatList = ({ selectedUserId, onUserSelect }) => {
@@ -87,7 +87,7 @@ const ChatList = ({ selectedUserId, onUserSelect }) => {
         socketRef.current = null;
       }
     };
-  }, [loggedInUser]);
+  }, [loggedInUser, fetchChatData]);
 
   // Filter chat data based on active tab and search query
   const filteredChatData = chatData.filter((chat) => {
