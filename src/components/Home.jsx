@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "../api/axios";
@@ -8,6 +8,7 @@ import { useTheme } from "../context/ThemeContext";
 import { addConnection } from "../slice/ConnectionSlice";
 import { addRequest } from "../slice/RequestSlice";
 import { fetchUnseenCounts } from "../slice/unseenSlice";
+import { createSocketConnection } from "../utils/socket";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
 
@@ -17,23 +18,53 @@ const Home = () => {
   const requests = useSelector((state) => state.request) || [];
   const connections = useSelector((state) => state.connection) || [];
   const [messageLen, setMessageLen] = useState(0);
-  const unseenChats = useSelector((state) => state.unseenMessage.unseenChats) || [];
+  const unseenChats =
+    useSelector((state) => state.unseenMessage.unseenChats) || [];
   const loggedInUser = useSelector((state) => state.user.user);
-useEffect(() => {
-  if (loggedInUser?._id) {
-    console.log("yeorIR ",loggedInUser._id );
-    dispatch(fetchUnseenCounts(loggedInUser._id));
-    
-  }
-  else{
-console.log("BHS");
-  }
-  
-}, [dispatch, loggedInUser]);
+  const socketRef = useRef(null);
 
-// Render count:
+  // Fetch initial unseen counts
+  useEffect(() => {
+    if (loggedInUser?._id) {
+      console.log("Fetching unseen counts for user:", loggedInUser._id);
+      dispatch(fetchUnseenCounts(loggedInUser._id));
+    }
+  }, [dispatch, loggedInUser]);
 
+  // Setup socket connection for real-time updates
+  useEffect(() => {
+    if (!loggedInUser?._id) return;
 
+    const socket = createSocketConnection();
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("Home socket connected:", socket.id);
+      // Join a room for this user to receive unseen count updates
+      socket.emit("joinUserRoom", { userId: loggedInUser._id });
+    });
+
+    // Listen for unseen count updates
+    socket.on("unseenCountUpdate", ({ userId }) => {
+      console.log("Received unseen count update for user:", userId);
+      // Refresh unseen counts when there's an update
+      dispatch(fetchUnseenCounts(loggedInUser._id));
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Home socket connection error:", error);
+    });
+
+    return () => {
+      if (socket) {
+        console.log("Disconnecting home socket:", socket.id);
+        socket.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [loggedInUser, dispatch]);
+
+  // Render count:
 
   useEffect(() => {
     if (darkMode) {
@@ -569,23 +600,22 @@ console.log("BHS");
             transition={{ duration: 0.5 }}
           >
             <motion.h1
-  className="hero-heading text-4xl md:text-5xl font-extrabold text-white mb-4 px-6 py-3 rounded-xl border border-white/20 bg-gradient-to-r from-purple-600/70 via-indigo-600/60 to-blue-600/70 backdrop-blur-md shadow-lg drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] tracking-tight"
-  initial={{ opacity: 0, y: -20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
->
-  Connect with Developers
-</motion.h1>
+              className="hero-heading text-4xl md:text-5xl font-extrabold text-white mb-4 px-6 py-3 rounded-xl border border-white/20 bg-gradient-to-r from-purple-600/70 via-indigo-600/60 to-blue-600/70 backdrop-blur-md shadow-lg drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] tracking-tight"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+            >
+              Connect with Developers
+            </motion.h1>
 
-<motion.p
-  className="hero-subtext text-lg md:text-xl font-medium text-white px-5 py-2 rounded-lg bg-black/40 border border-white/10 backdrop-blur-md shadow-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mt-2 inline-block"
-  initial={{ opacity: 0, y: 10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
->
-  Swipe. Match. Collaborate. 🚀
-</motion.p>
-
+            <motion.p
+              className="hero-subtext text-lg md:text-xl font-medium text-white px-5 py-2 rounded-lg bg-black/40 border border-white/10 backdrop-blur-md shadow-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] mt-2 inline-block"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+            >
+              Swipe. Match. Collaborate. 🚀
+            </motion.p>
           </motion.div>
 
           {/* Card component */}
@@ -603,28 +633,30 @@ console.log("BHS");
               <div className="flex flex-col items-center justify-center p-8">
                 <div className="w-16 h-16 border-t-4 border-b-4 border-indigo-500 rounded-full animate-spin"></div>
                 <div className="no-more-cards-in-place bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg animate-pulse">
-    <div className="no-more-cards-content text-white flex flex-col items-center">
-      <div className="no-more-icon mb-4">
-        <svg
-          className="animate-spin text-white w-8 h-8"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-          <path d="M12 2a10 10 0 0 1 10 10" />
-        </svg>
-      </div>
-      <h3 className="text-xl font-semibold mb-1">Loading Profiles...</h3>
-      <p className="text-center opacity-80">
-        Please wait while we fetch interesting people for you ✨
-      </p>
-    </div>
-  </div>
+                  <div className="no-more-cards-content text-white flex flex-col items-center">
+                    <div className="no-more-icon mb-4">
+                      <svg
+                        className="animate-spin text-white w-8 h-8"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                        <path d="M12 2a10 10 0 0 1 10 10" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-1">
+                      Loading Profiles...
+                    </h3>
+                    <p className="text-center opacity-80">
+                      Please wait while we fetch interesting people for you ✨
+                    </p>
+                  </div>
+                </div>
               </div>
             ) : error ? (
               <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -901,7 +933,7 @@ console.log("BHS");
                                 width: "100%",
                                 height: "100%",
                                 position: "relative",
-                                visibility: "visible", 
+                                visibility: "visible",
                               }}
                             >
                               <Card
@@ -1043,40 +1075,40 @@ console.log("BHS");
               </Link>
             </motion.div>
 
-            <motion.div
-              className="stats-card bg-black/40 shadow-lg relative"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
-            >
-              <div className="stats-icon messages-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-              </div>
-              <h3 className="stats-title">Messages</h3>
-              <motion.p
-                className="stats-value"
-                initial={{ scale: 0.5 }}
-                animate={{ scale: 1 }}
+            <Link to="/chats">
+              <motion.div
+                className="stats-card bg-black/40 shadow-lg relative cursor-pointer hover:scale-105 transition-transform"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
               >
-                 <div className="unseen-summary">
-  {unseenChats && unseenChats.length > 0 ? (
-    <>
-      
-      <p>{unseenChats.length}</p>
-      {/* {unseenChats.map((chat) => (
+                <div className="stats-icon messages-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </div>
+                <h3 className="stats-title">Messages</h3>
+                <motion.p
+                  className="stats-value"
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.7 }}
+                >
+                  <div className="unseen-summary">
+                    {unseenChats && unseenChats.length > 0 ? (
+                      <>
+                        <p>{unseenChats.length}</p>
+                        {/* {unseenChats.map((chat) => (
         <div key={chat.chatId}>
           Chat with {chat.userId}
           {chat.unseenCount > 0 && (
@@ -1084,14 +1116,14 @@ console.log("BHS");
           )}
         </div>
       ))} */}
-    </>
-  ) : (
-    <p>0</p>
-  )}
-</div>
-
-              </motion.p>
-            </motion.div>
+                      </>
+                    ) : (
+                      <p>0</p>
+                    )}
+                  </div>
+                </motion.p>
+              </motion.div>
+            </Link>
           </motion.div>
         </div>
       </div>

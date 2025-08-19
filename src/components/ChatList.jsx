@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-undef */
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
@@ -8,43 +9,84 @@ import DefaultAvatar from "./ui/DefaultAvatar";
 const ChatList = ({ selectedUserId, onUserSelect }) => {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [connections, setConnections] = useState([]);
   const [chatData, setChatData] = useState([]);
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const loggedInUser = useSelector((state) => state.user.user);
+  const socketRef = useRef(null);
 
   // Fetch chat list data
+  const fetchChatData = useCallback(async () => {
+    if (!loggedInUser?._id) return;
+
+    try {
+      setLoading(true);
+
+      // Use the new efficient chat-list endpoint
+      const response = await axios.get("/chat/chat-list", {
+        withCredentials: true,
+      });
+
+      const chatListData = response.data?.data || [];
+      setChatData(chatListData);
+
+      // Extract connections for backward compatibility
+      const connectionsData = chatListData.map((chat) => chat.user);
+      setConnections(connectionsData);
+    } catch (error) {
+      console.error("Error fetching chat data:", error);
+      // Fallback to empty data
+      setChatData([]);
+      setConnections([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [loggedInUser]);
+
   useEffect(() => {
-    const fetchChatData = async () => {
-      if (!loggedInUser?._id) return;
+    fetchChatData();
+  }, [fetchChatData]);
 
-      try {
-        setLoading(true);
+  // Setup socket connection for real-time updates
+  useEffect(() => {
+    if (!loggedInUser?._id) return;
 
-        // Use the new efficient chat-list endpoint
-        const response = await axios.get("/chat/chat-list", {
-          withCredentials: true,
-        });
+    const socket = createSocketConnection();
+    socketRef.current = socket;
 
-        const chatListData = response.data?.data || [];
-        setChatData(chatListData);
+    socket.on("connect", () => {
+      console.log("ChatList socket connected:", socket.id);
+      socket.emit("joinUserRoom", { userId: loggedInUser._id });
+    });
 
-        // Extract connections for backward compatibility
-        const connectionsData = chatListData.map((chat) => chat.user);
-        setConnections(connectionsData);
-      } catch (error) {
-        console.error("Error fetching chat data:", error);
-        // Fallback to empty data
-        setChatData([]);
-        setConnections([]);
-      } finally {
-        setLoading(false);
+    // Listen for new messages to update chat list
+    socket.on("receiveMessage", ({ senderId }) => {
+      console.log("ChatList received new message from:", senderId);
+      // Refresh chat data when new message arrives
+      fetchChatData();
+    });
+
+    // Listen for unseen count updates
+    socket.on("unseenCountUpdate", () => {
+      console.log("ChatList received unseen count update");
+      // Refresh chat data when unseen counts change
+      fetchChatData();
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("ChatList socket connection error:", error);
+    });
+
+    return () => {
+      if (socket) {
+        console.log("Disconnecting ChatList socket:", socket.id);
+        socket.disconnect();
+        socketRef.current = null;
       }
     };
-
-    fetchChatData();
   }, [loggedInUser]);
 
   // Filter chat data based on active tab and search query
