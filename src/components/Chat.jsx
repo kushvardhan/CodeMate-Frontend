@@ -80,11 +80,32 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
     }
   }, [userId]);
 
+  // Mark messages as seen when chat is opened
+  const markMessagesAsSeen = useCallback(async () => {
+    if (!userId || !loggedInUser?._id) return;
+
+    try {
+      await axios.post(
+        `/chat/mark-seen/${userId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(`Messages marked as seen for chat with ${userId}`);
+    } catch (error) {
+      console.error("Error marking messages as seen:", error);
+    }
+  }, [userId, loggedInUser]);
+
   useEffect(() => {
     setIsLoading(true);
     fetchUserData();
     fetchChat();
-  }, [fetchUserData, fetchChat]);
+
+    // Mark messages as seen when chat is opened
+    markMessagesAsSeen();
+  }, [fetchUserData, fetchChat, markMessagesAsSeen]);
 
   const currentUser = {
     id: loggedInUser?._id || "current-user-id",

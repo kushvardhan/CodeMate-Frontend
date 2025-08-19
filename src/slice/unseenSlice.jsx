@@ -24,7 +24,13 @@ const unseenSlice = createSlice({
     markChatAsSeen: (state, action) => {
       const { userId } = action.payload;
       const chat = state.unseenChats.find((c) => c.userId === userId);
-      if (chat) chat.unseenCount = 0;
+      if (chat) {
+        chat.unseenCount = 0;
+      }
+    },
+    removeChatFromUnseen: (state, action) => {
+      const { userId } = action.payload;
+      state.unseenChats = state.unseenChats.filter((c) => c.userId !== userId);
     },
   },
   extraReducers: (builder) => {
@@ -43,5 +49,5 @@ const unseenSlice = createSlice({
   },
 });
 
-export const { markChatAsSeen } = unseenSlice.actions;
+export const { markChatAsSeen, removeChatFromUnseen } = unseenSlice.actions;
 export default unseenSlice.reducer;
