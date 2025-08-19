@@ -9,11 +9,12 @@ import { useTheme } from "../context/ThemeContext";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
-const Chat = () => {
+const Chat = ({ userId: propUserId, isEmbedded = false }) => {
   const userState = useSelector((state) => state.user);
   const { isAuthenticated, user: currentAuthUser } = userState;
   const loggedInUser = currentAuthUser; // Don't provide fallback to ensure we only use real user data
-  const { userId } = useParams();
+  const { userId: paramUserId } = useParams();
+  const userId = propUserId || paramUserId; // Use prop userId if provided, otherwise use param
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
   const [chatPartner, setChatPartner] = useState(null);
@@ -535,26 +536,28 @@ const Chat = () => {
       <div className="chat-top-nav">
         <div className="msg-cont">
           <div className="chat-top-left">
-            <button
-              onClick={() => navigate(-1)}
-              className="back-button"
-              aria-label="Go back"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+            {!isEmbedded && (
+              <button
+                onClick={() => navigate(-1)}
+                className="back-button"
+                aria-label="Go back"
               >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-              <span>Back</span>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <span>Back</span>
+              </button>
+            )}
           </div>
 
           <div className="chat-top-center">
