@@ -2,10 +2,11 @@
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
+import { markChatAsSeen } from "../slice/unseenSlice";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
@@ -17,6 +18,7 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
   const userId = propUserId || paramUserId; // Use prop userId if provided, otherwise use param
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
+  const dispatch = useDispatch();
   const [chatPartner, setChatPartner] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -93,10 +95,21 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
         }
       );
       console.log(`Messages marked as seen for chat with ${userId}`);
+
+      // Update Redux state to remove unseen count for this user
+      dispatch(markChatAsSeen({ userId }));
+
+      // Emit socket event to notify other components about unseen count update
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("unseenCountUpdate", {
+          userId: loggedInUser._id,
+          chatPartnerId: userId,
+        });
+      }
     } catch (error) {
       console.error("Error marking messages as seen:", error);
     }
-  }, [userId, loggedInUser]);
+  }, [userId, loggedInUser, dispatch]);
 
   useEffect(() => {
     setIsLoading(true);

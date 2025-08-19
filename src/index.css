@@ -8142,11 +8142,15 @@ pre,
   padding: 0.75rem 0.75rem 0.75rem 2.5rem;
   border: 1px solid var(--color-border);
   border-radius: 20px;
-  background-color: var(--color-muted);
+  background-color: var(--color-input);
   color: var(--color-foreground);
   font-size: 0.9rem;
   outline: none;
   transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: var(--color-muted);
 }
 
 .search-input:focus {
@@ -8156,13 +8160,17 @@ pre,
 
 .chat-list-container.dark .search-input {
   border-color: var(--color-dark-border);
-  background-color: var(--color-dark-muted);
+  background-color: var(--color-dark-card);
   color: var(--color-dark-text);
+}
+
+.chat-list-container.dark .search-input::placeholder {
+  color: var(--color-dark-muted);
 }
 
 .chat-list-container.dark .search-input:focus {
   border-color: var(--color-primary);
-  background-color: var(--color-dark-card);
+  background-color: var(--color-dark-bg);
 }
 
 .chat-tabs {
