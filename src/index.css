@@ -8427,6 +8427,13 @@ pre,
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  gap: 2rem;
+}
+
+.footer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .footer-brand {
@@ -8440,6 +8447,24 @@ pre,
 
 .footer-container.dark .footer-brand {
   color: var(--color-dark-text);
+}
+
+.footer-tagline {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.footer-container.dark .footer-tagline {
+  color: var(--color-dark-muted);
+}
+
+.footer-credits {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
 }
 
 .brand-icon {
@@ -8472,7 +8497,7 @@ pre,
   background-clip: text;
 }
 
-.footer-credit {
+.developer-credit {
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -8480,8 +8505,14 @@ pre,
   color: var(--color-muted);
 }
 
-.footer-container.dark .footer-credit {
+.footer-container.dark .developer-credit {
   color: var(--color-dark-muted);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .heart-icon {
