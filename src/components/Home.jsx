@@ -11,6 +11,7 @@ import { fetchUnseenCounts } from "../slice/unseenSlice";
 import { createSocketConnection } from "../utils/socket";
 import Card from "./ui/Card";
 import Nav from "./ui/Nav";
+import Footer from "./ui/Footer";
 
 const Home = () => {
   const { darkMode } = useTheme();
