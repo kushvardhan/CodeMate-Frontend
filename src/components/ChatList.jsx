@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
+import { createSocketConnection } from "../utils/socket";
 
 const ChatList = ({ selectedUserId, onUserSelect }) => {
   const { darkMode } = useTheme();
