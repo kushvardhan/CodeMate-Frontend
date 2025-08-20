@@ -8546,70 +8546,53 @@ pre,
   transform: translateY(-1px);
 }
 
-.footer-social {
+.github-link {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
   background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
   color: var(--color-muted);
   text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
-.footer-container.dark .social-link {
+.footer-container.dark .github-link {
   background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.2);
   color: var(--color-dark-muted);
 }
 
-.social-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--hover-color, var(--color-primary));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 50%;
-}
-
-.social-link:hover::before {
-  opacity: 0.1;
-}
-
-.social-link:hover {
+.github-link:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: var(--color-foreground);
 }
 
-.footer-container.dark .social-link:hover {
+.footer-container.dark .github-link:hover {
   background: rgba(148, 163, 184, 0.2);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: var(--color-dark-text);
 }
 
-.footer-copyright {
-  text-align: center;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.github-icon {
+  font-size: 1rem;
+}
+
+.footer-year {
   font-size: 0.8rem;
   color: var(--color-muted);
+  font-weight: 500;
 }
 
-.footer-container.dark .footer-copyright {
-  border-top-color: rgba(148, 163, 184, 0.1);
+.footer-container.dark .footer-year {
   color: var(--color-dark-muted);
 }
 
@@ -8625,28 +8608,22 @@ pre,
     text-align: center;
   }
 
-  .footer-brand {
+  .footer-main {
+    align-items: center;
     order: 1;
   }
 
-  .footer-credit {
-    order: 3;
+  .footer-credits {
+    align-items: center;
+    order: 2;
+  }
+
+  .developer-credit {
     font-size: 0.85rem;
   }
 
-  .footer-social {
-    order: 2;
+  .footer-links {
     gap: 1.5rem;
-  }
-
-  .social-link {
-    width: 40px;
-    height: 40px;
-  }
-
-  .footer-copyright {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
   }
 }
 
@@ -8668,13 +8645,17 @@ pre,
     height: 28px;
   }
 
-  .footer-credit {
+  .developer-credit {
     font-size: 0.8rem;
   }
 
-  .social-link {
-    width: 36px;
-    height: 36px;
+  .github-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .footer-links {
+    gap: 1rem;
   }
 }
 

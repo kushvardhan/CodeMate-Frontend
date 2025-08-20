@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { FaCode, FaGithub, FaHeart } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
