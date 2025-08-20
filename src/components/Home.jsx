@@ -191,7 +191,6 @@ const Home = () => {
   // State to track if a card is being swiped
   const [isCardSwiping, setIsCardSwiping] = useState(false);
   // State to track the previous index for animation (used in swipe handlers)
-  // eslint-disable-next-line no-unused-vars
   const [prevIndex, setPrevIndex] = useState(null);
   // State to track the swipe direction for animation
   const [swipeDirection, setSwipeDirection] = useState(null);
