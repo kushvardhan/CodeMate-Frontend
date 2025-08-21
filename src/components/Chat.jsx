@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { markChatAsSeen } from "../slice/unseenSlice";
-import { createSocketConnection } from "../utils/socket";
+import { createSocketConnection, getSocketInstance } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = ({ userId: propUserId, isEmbedded = false }) => {
