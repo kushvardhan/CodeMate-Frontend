@@ -10,8 +10,8 @@ import { addRequest } from "../slice/RequestSlice";
 import { fetchUnseenCounts } from "../slice/unseenSlice";
 import { createSocketConnection } from "../utils/socket";
 import Card from "./ui/Card";
-import Nav from "./ui/Nav";
 import Footer from "./ui/Footer";
+import Nav from "./ui/Nav";
 
 const Home = () => {
   const { darkMode } = useTheme();
@@ -190,8 +190,7 @@ const Home = () => {
   const [allCardsFinished, setAllCardsFinished] = useState(false);
   // State to track if a card is being swiped
   const [isCardSwiping, setIsCardSwiping] = useState(false);
-  // State to track the previous index for animation (used in swipe handlers)
-  const [prevIndex, setPrevIndex] = useState(null);
+
   // State to track the swipe direction for animation
   const [swipeDirection, setSwipeDirection] = useState(null);
 
@@ -255,7 +254,6 @@ const Home = () => {
 
     setIsCardSwiping(true);
     setSwipeDirection("left");
-    setPrevIndex(currentIndex);
 
     const currentCard = users[currentIndex];
     setPreviousCards((prev) => [
@@ -316,7 +314,6 @@ const Home = () => {
 
     setIsCardSwiping(true);
     setSwipeDirection("right");
-    setPrevIndex(currentIndex);
 
     const currentCard = users[currentIndex];
     setPreviousCards((prev) => [
