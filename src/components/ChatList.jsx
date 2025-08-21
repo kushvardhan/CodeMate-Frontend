@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import DefaultAvatar from "./ui/DefaultAvatar";
 import { createSocketConnection } from "../utils/socket";
+import DefaultAvatar from "./ui/DefaultAvatar";
 
 const ChatList = ({ selectedUserId, onUserSelect }) => {
   const { darkMode } = useTheme();
@@ -57,35 +57,51 @@ const ChatList = ({ selectedUserId, onUserSelect }) => {
     const socket = createSocketConnection();
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      console.log("ChatList socket connected:", socket.id);
-      socket.emit("joinUserRoom", { userId: loggedInUser._id });
-    });
+    // Join user room for real-time updates
+    const joinUserRoom = () => {
+      if (socket.connected) {
+        socket.emit("joinUserRoom", { userId: loggedInUser._id });
+      }
+    };
+
+    // Join immediately if connected, or wait for connection
+    if (socket.connected) {
+      joinUserRoom();
+    } else {
+      socket.on("connect", joinUserRoom);
+    }
+
+    // Debounce chat data updates to prevent excessive API calls
+    let updateTimeout;
+    const debouncedFetchChatData = () => {
+      clearTimeout(updateTimeout);
+      updateTimeout = setTimeout(() => {
+        fetchChatData();
+      }, 500);
+    };
 
     // Listen for new messages to update chat list
-    socket.on("receiveMessage", ({ senderId }) => {
+    const handleReceiveMessage = ({ senderId }) => {
       console.log("ChatList received new message from:", senderId);
-      // Refresh chat data when new message arrives
-      fetchChatData();
-    });
+      debouncedFetchChatData();
+    };
 
     // Listen for unseen count updates
-    socket.on("unseenCountUpdate", () => {
+    const handleUnseenCountUpdate = () => {
       console.log("ChatList received unseen count update");
-      // Refresh chat data when unseen counts change
-      fetchChatData();
-    });
+      debouncedFetchChatData();
+    };
 
-    socket.on("connect_error", (error) => {
-      console.error("ChatList socket connection error:", error);
-    });
+    socket.on("receiveMessage", handleReceiveMessage);
+    socket.on("unseenCountUpdate", handleUnseenCountUpdate);
 
     return () => {
-      if (socket) {
-        console.log("Disconnecting ChatList socket:", socket.id);
-        socket.disconnect();
-        socketRef.current = null;
-      }
+      // Clean up event listeners and timeout
+      clearTimeout(updateTimeout);
+      socket.off("receiveMessage", handleReceiveMessage);
+      socket.off("unseenCountUpdate", handleUnseenCountUpdate);
+      socket.off("connect", joinUserRoom);
+      socketRef.current = null;
     };
   }, [loggedInUser, fetchChatData]);
 
