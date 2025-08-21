@@ -39,29 +39,40 @@ const Home = () => {
     const socket = createSocketConnection();
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      console.log("Home socket connected:", socket.id);
-      // Join a room for this user to receive unseen count updates
-      socket.emit("joinUserRoom", { userId: loggedInUser._id });
-    });
+    // Join user room for real-time updates
+    const joinUserRoom = () => {
+      if (socket.connected) {
+        socket.emit("joinUserRoom", { userId: loggedInUser._id });
+      }
+    };
 
-    // Listen for unseen count updates
-    socket.on("unseenCountUpdate", ({ userId }) => {
+    // Join immediately if connected, or wait for connection
+    if (socket.connected) {
+      joinUserRoom();
+    } else {
+      socket.on("connect", joinUserRoom);
+    }
+
+    // Listen for unseen count updates with debouncing
+    let updateTimeout;
+    const handleUnseenCountUpdate = ({ userId }) => {
       console.log("Received unseen count update for user:", userId);
-      // Refresh unseen counts when there's an update
-      dispatch(fetchUnseenCounts(loggedInUser._id));
-    });
 
-    socket.on("connect_error", (error) => {
-      console.error("Home socket connection error:", error);
-    });
+      // Debounce rapid updates to prevent excessive API calls
+      clearTimeout(updateTimeout);
+      updateTimeout = setTimeout(() => {
+        dispatch(fetchUnseenCounts(loggedInUser._id));
+      }, 300);
+    };
+
+    socket.on("unseenCountUpdate", handleUnseenCountUpdate);
 
     return () => {
-      if (socket) {
-        console.log("Disconnecting home socket:", socket.id);
-        socket.disconnect();
-        socketRef.current = null;
-      }
+      // Clean up event listeners and timeout
+      clearTimeout(updateTimeout);
+      socket.off("unseenCountUpdate", handleUnseenCountUpdate);
+      socket.off("connect", joinUserRoom);
+      socketRef.current = null;
     };
   }, [loggedInUser, dispatch]);
 
