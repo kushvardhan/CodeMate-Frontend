@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
 import { markChatAsSeen } from "../slice/unseenSlice";
-import { createSocketConnection, getSocketInstance } from "../utils/socket";
+import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
 const Chat = ({ userId: propUserId, isEmbedded = false }) => {
@@ -380,42 +380,55 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
     const socket = createSocketConnection();
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      console.log("Socket connected with ID:", socket.id);
-      socket.emit("joinChat", {
-        firstName: loggedInUser.firstName || "User",
-        loggedInUserId: loggedInUser._id,
-        userId,
-      });
-    });
-
-    socket.on(
-      "receiveMessage",
-      ({ senderFirstName, content, senderId, timestamp }) => {
-        if (!content || content.trim() === "") return;
-
-        const newMessage = {
-          id: `msg-${Date.now()}`,
-          senderId,
-          firstName: senderFirstName,
-          text: content,
-          timestamp: timestamp || new Date().toISOString(),
-        };
-
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+    // Join chat room for this specific conversation
+    const joinChat = () => {
+      if (socket.connected) {
+        socket.emit("joinChat", {
+          firstName: loggedInUser.firstName || "User",
+          loggedInUserId: loggedInUser._id,
+          userId,
+        });
       }
-    );
+    };
 
-    socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
-    });
+    // Join immediately if already connected, or wait for connection
+    if (socket.connected) {
+      joinChat();
+    } else {
+      socket.on("connect", joinChat);
+    }
+
+    // Handle incoming messages with optimized performance
+    const handleReceiveMessage = ({
+      senderFirstName,
+      content,
+      senderId,
+      timestamp,
+    }) => {
+      if (!content || content.trim() === "") return;
+
+      const newMessage = {
+        id: `msg-${Date.now()}-${Math.random()}`,
+        senderId,
+        firstName: senderFirstName,
+        text: content,
+        timestamp: timestamp || new Date().toISOString(),
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      // Auto-scroll to bottom for new messages
+      setTimeout(() => scrollToBottom("smooth"), 100);
+    };
+
+    socket.on("receiveMessage", handleReceiveMessage);
 
     return () => {
-      if (socket) {
-        console.log("Disconnecting socket:", socket.id);
-        socket.disconnect();
-        socketRef.current = null;
-      }
+      // Clean up event listeners but don't disconnect the socket
+      // as it might be used by other components
+      socket.off("receiveMessage", handleReceiveMessage);
+      socket.off("connect", joinChat);
+      socketRef.current = null;
     };
   }, [isAuthenticated, userId, loggedInUser]);
 
