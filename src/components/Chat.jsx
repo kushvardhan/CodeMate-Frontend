@@ -82,7 +82,7 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
     }
   }, [userId]);
 
-  // Mark messages as seen when chat is opened
+  // Mark messages as seen when chat is opened (with debouncing)
   const markMessagesAsSeen = useCallback(async () => {
     if (!userId || !loggedInUser?._id) return;
 
