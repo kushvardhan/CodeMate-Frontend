@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import ChatList from "./ChatList";
 import Chat from "./Chat";
+import ChatList from "./ChatList";
+import Footer from "./ui/Footer";
 import Nav from "./ui/Nav";
 
 const Chats = () => {
@@ -18,8 +19,8 @@ const Chats = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Update selected user when URL changes
@@ -31,7 +32,7 @@ const Chats = () => {
     setSelectedUserId(newUserId);
     if (!isMobile) {
       // On desktop, update URL without navigation
-      window.history.replaceState(null, '', `/chats/${newUserId}`);
+      window.history.replaceState(null, "", `/chats/${newUserId}`);
     } else {
       // On mobile, navigate to individual chat
       navigate(`/chat/${newUserId}`);
@@ -41,7 +42,12 @@ const Chats = () => {
   const ChatWelcome = () => (
     <div className="chat-welcome">
       <div className="chat-welcome-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           <path d="M8 10h.01"></path>
           <path d="M12 10h.01"></path>
@@ -56,12 +62,12 @@ const Chats = () => {
   if (isMobile) {
     // On mobile, show only the chat list (individual chats are handled by separate Chat component)
     return (
-      <div className={`chat-layout ${darkMode ? 'dark' : ''}`}>
+      <div className={`chat-layout ${darkMode ? "dark" : ""}`}>
         <Nav />
         <div className="navbar-spacer"></div>
         <div className="chat-sidebar">
-          <ChatList 
-            selectedUserId={selectedUserId} 
+          <ChatList
+            selectedUserId={selectedUserId}
             onUserSelect={handleUserSelect}
           />
         </div>
@@ -71,13 +77,13 @@ const Chats = () => {
 
   // Desktop layout with sidebar and chat area
   return (
-    <div className={`chat-layout ${darkMode ? 'dark' : ''}`}>
+    <div className={`chat-layout ${darkMode ? "dark" : ""}`}>
       <Nav />
       <div className="navbar-spacer"></div>
       <div className="chat-layout-content">
         <div className="chat-sidebar">
-          <ChatList 
-            selectedUserId={selectedUserId} 
+          <ChatList
+            selectedUserId={selectedUserId}
             onUserSelect={handleUserSelect}
           />
         </div>
@@ -89,6 +95,7 @@ const Chats = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
