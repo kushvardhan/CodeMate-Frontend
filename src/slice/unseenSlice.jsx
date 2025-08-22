@@ -1,6 +1,6 @@
 // unseenSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios  from "../api/axios";
+import axios from "../api/axios";
 
 export const fetchUnseenCounts = createAsyncThunk(
   "unseen/fetchUnseenCounts",
@@ -11,7 +11,19 @@ export const fetchUnseenCounts = createAsyncThunk(
   }
 );
 
-
+export const markMessagesAsSeen = createAsyncThunk(
+  "unseen/markMessagesAsSeen",
+  async (userId) => {
+    const res = await axios.post(
+      `/chat/mark-seen/${userId}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    return { userId, response: res.data };
+  }
+);
 
 const unseenSlice = createSlice({
   name: "unseen",
@@ -45,6 +57,17 @@ const unseenSlice = createSlice({
       .addCase(fetchUnseenCounts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(markMessagesAsSeen.fulfilled, (state, action) => {
+        const { userId } = action.payload;
+        const chat = state.unseenChats.find((c) => c.userId === userId);
+        if (chat) {
+          chat.unseenCount = 0;
+        }
+        // Also remove from unseen chats if count is 0
+        state.unseenChats = state.unseenChats.filter(
+          (c) => c.userId !== userId
+        );
       });
   },
 });
