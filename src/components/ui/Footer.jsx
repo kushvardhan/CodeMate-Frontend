@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { FaCode, FaGithub, FaHeart } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
@@ -43,7 +44,8 @@ const Footer = () => {
       <div className="footer-content">
         {/* Brand Section */}
         <motion.div className="footer-brand" variants={itemVariants}>
-          <div className="brand-icon">
+          <Link to="/" >
+          <div className='braaind'>
             <svg
                   width="32"
                   height="32"
@@ -78,8 +80,9 @@ const Footer = () => {
                     />
                   </g>
                 </svg>
-          </div>
           <span className="brand-text">CodeMate</span>
+          </div>
+          </Link>
           <div className="footer-tagline">Connect • Code • Collaborate</div>
         </motion.div>
 
