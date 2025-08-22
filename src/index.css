@@ -8430,13 +8430,14 @@ pre,
   gap: 2rem;
 }
 
-.footer-main {
+.footer-brand {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 0.5rem;
 }
 
-.footer-brand {
+.footer-brand > div:first-child {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -8445,7 +8446,7 @@ pre,
   color: var(--color-foreground);
 }
 
-.footer-container.dark .footer-brand {
+.footer-container.dark .footer-brand > div:first-child {
   color: var(--color-dark-text);
 }
 
@@ -8460,7 +8461,13 @@ pre,
   color: var(--color-dark-muted);
 }
 
-.footer-credits {
+.footer-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-links-section {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
