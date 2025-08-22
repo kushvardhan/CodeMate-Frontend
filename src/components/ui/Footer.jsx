@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { FaCode, FaGithub, FaHeart } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const { darkMode } = useTheme();
