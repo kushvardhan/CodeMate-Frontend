@@ -15,6 +15,7 @@ const ChatList = ({ selectedUserId, onUserSelect }) => {
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState(new Set());
   const loggedInUser = useSelector((state) => state.user.user);
   const socketRef = useRef(null);
 
@@ -92,14 +93,37 @@ const ChatList = ({ selectedUserId, onUserSelect }) => {
       debouncedFetchChatData();
     };
 
+    // Listen for online status updates
+    const handleUserOnline = ({ userId }) => {
+      setOnlineUsers((prev) => new Set([...prev, userId]));
+    };
+
+    const handleUserOffline = ({ userId }) => {
+      setOnlineUsers((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(userId);
+        return newSet;
+      });
+    };
+
+    const handleOnlineUsers = ({ users }) => {
+      setOnlineUsers(new Set(users));
+    };
+
     socket.on("receiveMessage", handleReceiveMessage);
     socket.on("unseenCountUpdate", handleUnseenCountUpdate);
+    socket.on("userOnline", handleUserOnline);
+    socket.on("userOffline", handleUserOffline);
+    socket.on("onlineUsers", handleOnlineUsers);
 
     return () => {
       // Clean up event listeners and timeout
       clearTimeout(updateTimeout);
       socket.off("receiveMessage", handleReceiveMessage);
       socket.off("unseenCountUpdate", handleUnseenCountUpdate);
+      socket.off("userOnline", handleUserOnline);
+      socket.off("userOffline", handleUserOffline);
+      socket.off("onlineUsers", handleOnlineUsers);
       socket.off("connect", joinUserRoom);
       socketRef.current = null;
     };
@@ -253,7 +277,9 @@ const ChatList = ({ selectedUserId, onUserSelect }) => {
                     name={`${chat.user.firstName} ${chat.user.lastName}`}
                   />
                 )}
-                <div className="online-indicator"></div>
+                {onlineUsers.has(chat.user._id) && (
+                  <div className="online-indicator"></div>
+                )}
               </div>
 
               <div className="chat-content">
