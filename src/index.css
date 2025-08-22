@@ -6935,11 +6935,17 @@ pre,
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: transparent;
+  background-color: var(--color-background);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
   position: relative;
   overflow: hidden; /* Prevent page scrolling */
+  padding: 0;
+  margin: 0;
+}
+
+.chat-page.dark-mode {
+  background-color: var(--color-dark-bg);
 }
 
 .chat-page.dark-mode {
@@ -7140,7 +7146,7 @@ pre,
   align-items: center;
   padding: 0;
   width: 100%;
-  margin-top: 50px; /* Space for top nav only */
+  margin-top: 0; /* Remove extra margin */
   margin-bottom: 70px; /* Space for input area */
   overflow: hidden;
   position: relative;
@@ -8522,35 +8528,38 @@ pre,
   gap: 1rem;
 }
 
-.heart-icon {
-  color: #ef4444;
-  font-size: 0.8rem;
-  animation: heartbeat 2s ease-in-out infinite;
+.heart-wrapper {
+  display: inline-block;
 }
 
-@keyframes heartbeat {
-  0%,
-  50%,
-  100% {
-    transform: scale(1);
-  }
-  25%,
-  75% {
-    transform: scale(1.1);
-  }
+.heart-icon {
+  color: #ef4444;
+  font-size: 0.9rem;
+  border: 1px solid #ef4444;
+  border-radius: 50%;
+  padding: 2px;
+  background: transparent;
 }
 
 .developer-name {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
 }
 
+.footer-container.dark .developer-name {
+  color: var(--color-dark-text);
+}
+
 .developer-name:hover {
-  color: var(--color-secondary);
+  color: var(--color-primary);
   transform: translateY(-1px);
+}
+
+.footer-container.dark .developer-name:hover {
+  color: var(--color-secondary);
 }
 
 .github-link {
@@ -8587,6 +8596,12 @@ pre,
   background: rgba(148, 163, 184, 0.2);
   border-color: rgba(148, 163, 184, 0.3);
   color: var(--color-dark-text);
+}
+
+.braaind {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .github-icon {
@@ -8629,6 +8644,12 @@ pre,
     font-size: 0.85rem;
   }
 
+  .braaind {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
   .footer-links {
     gap: 1.5rem;
   }
@@ -8652,6 +8673,12 @@ pre,
     height: 28px;
   }
 
+  .braaind {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .developer-credit {
     font-size: 0.8rem;
   }
@@ -8664,6 +8691,80 @@ pre,
   .footer-links {
     gap: 1rem;
   }
+}
+
+/* Chat Header Styles */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.chat-layout.dark .chat-header {
+  background: var(--color-dark-bg);
+  border-bottom-color: var(--color-dark-border);
+}
+
+.chat-header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.chat-layout.dark .chat-header-title {
+  color: var(--color-secondary);
+}
+
+.back-button,
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover,
+.theme-toggle-btn:hover {
+  background: var(--color-hover);
+  color: var(--color-foreground);
+}
+
+.chat-layout.dark .back-button:hover,
+.chat-layout.dark .theme-toggle-btn:hover {
+  background: var(--color-dark-hover);
+  color: var(--color-dark-text);
+}
+
+.chat-user-header {
+  padding: 1rem 1.5rem;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-layout.dark .chat-user-header {
+  background: var(--color-dark-bg);
+  border-bottom-color: var(--color-dark-border);
+}
+
+.chat-content {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
 }
 
 /* Chat Layout Styles */

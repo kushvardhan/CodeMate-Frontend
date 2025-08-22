@@ -1,17 +1,40 @@
 import { useEffect, useState } from "react";
+import { FaArrowLeft, FaMoon, FaSun } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
-import Footer from "./ui/Footer";
-import Nav from "./ui/Nav";
 
 const Chats = () => {
-  const { darkMode } = useTheme();
+  const { darkMode, toggleDarkMode } = useTheme();
   const { userId } = useParams();
   const navigate = useNavigate();
   const [selectedUserId, setSelectedUserId] = useState(userId || null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const ChatHeader = () => (
+    <div className="chat-header">
+      <button
+        className="back-button"
+        onClick={() => navigate("/")}
+        title="Back to Home"
+      >
+        <FaArrowLeft />
+      </button>
+
+      <div className="chat-header-title">
+        <span>CodeMate</span>
+      </div>
+
+      <button
+        className="theme-toggle-btn"
+        onClick={toggleDarkMode}
+        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      >
+        {darkMode ? <FaSun /> : <FaMoon />}
+      </button>
+    </div>
+  );
 
   // Handle window resize
   useEffect(() => {
@@ -63,9 +86,8 @@ const Chats = () => {
     // On mobile, show only the chat list (individual chats are handled by separate Chat component)
     return (
       <div className={`chat-layout ${darkMode ? "dark" : ""}`}>
-        <Nav />
-        <div className="navbar-spacer"></div>
-        <div className="chat-sidebar">
+        <ChatHeader />
+        <div className="chat-content">
           <ChatList
             selectedUserId={selectedUserId}
             onUserSelect={handleUserSelect}
@@ -78,8 +100,7 @@ const Chats = () => {
   // Desktop layout with sidebar and chat area
   return (
     <div className={`chat-layout ${darkMode ? "dark" : ""}`}>
-      <Nav />
-      <div className="navbar-spacer"></div>
+      <ChatHeader />
       <div className="chat-layout-content">
         <div className="chat-sidebar">
           <ChatList
@@ -95,7 +116,6 @@ const Chats = () => {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

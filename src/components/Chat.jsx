@@ -2,11 +2,11 @@
 import EmojiPicker from "emoji-picker-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { FaArrowLeft, FaMoon, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { useTheme } from "../context/ThemeContext";
-import { markChatAsSeen } from "../slice/unseenSlice";
 import { createSocketConnection } from "../utils/socket";
 import DefaultAvatar from "./ui/DefaultAvatar";
 
@@ -30,6 +30,30 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
   const messagesContainerRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const loggedInUserId = loggedInUser ? loggedInUser._id : null;
+
+  const ChatHeader = () => (
+    <div className="chat-header">
+      <button
+        className="back-button"
+        onClick={() => navigate("/chats")}
+        title="Back to Chats"
+      >
+        <FaArrowLeft />
+      </button>
+
+      <div className="chat-header-title">
+        <span>CodeMate</span>
+      </div>
+
+      <button
+        className="theme-toggle-btn"
+        onClick={toggleDarkMode}
+        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      >
+        {darkMode ? <FaSun /> : <FaMoon />}
+      </button>
+    </div>
+  );
 
   const fetchChat = useCallback(async () => {
     try {
@@ -96,8 +120,8 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
       );
       console.log(`Messages marked as seen for chat with ${userId}`);
 
-      // Update Redux state to remove unseen count for this user
-      dispatch(markChatAsSeen({ userId }));
+      // Update Redux state and backend to remove unseen count for this user
+      dispatch(markMessagesAsSeen(userId));
 
       // Emit socket event to notify other components about unseen count update
       if (socketRef.current && socketRef.current.connected) {
@@ -579,11 +603,13 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
 
   return (
     <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-      {/* Fixed Top Navigation */}
-      <div className="chat-top-nav">
-        <div className="msg-cont">
-          <div className="chat-top-left">
-            {!isEmbedded && (
+      {!isEmbedded && <ChatHeader />}
+
+      {/* Fixed Top Navigation - Only show when embedded */}
+      {isEmbedded && (
+        <div className="chat-top-nav">
+          <div className="msg-cont">
+            <div className="chat-top-left">
               <button
                 onClick={() => navigate(-1)}
                 className="back-button"
@@ -604,74 +630,100 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
                 </svg>
                 <span>Back</span>
               </button>
-            )}
-          </div>
+            </div>
 
-          <div className="chat-top-center">
-            <div className="chat-user-info">
-              {chatPartner?.photoUrl ? (
-                <img
-                  src={chatPartner?.photoUrl}
-                  alt={`${chatPartner?.firstName || ""} ${
+            <div className="chat-top-center">
+              <div className="chat-user-info">
+                {chatPartner?.photoUrl ? (
+                  <img
+                    src={chatPartner?.photoUrl}
+                    alt={`${chatPartner?.firstName || ""} ${
+                      chatPartner?.lastName || ""
+                    }`}
+                    className="chat-user-avatar"
+                  />
+                ) : (
+                  <div className="chat-user-avatar">
+                    <DefaultAvatar />
+                  </div>
+                )}
+                <h2 className="chat-user-name">
+                  {`${chatPartner?.firstName || "Unknown"} ${
                     chatPartner?.lastName || ""
                   }`}
-                  className="chat-user-avatar"
-                />
-              ) : (
-                <div className="chat-user-avatar">
-                  <DefaultAvatar />
-                </div>
-              )}
-              <h2 className="chat-user-name">
-                {`${chatPartner?.firstName || "Unknown"} ${
-                  chatPartner?.lastName || ""
-                }`}
-              </h2>
+                </h2>
+              </div>
+            </div>
+
+            <div className="chat-top-right">
+              <button
+                onClick={toggleDarkMode}
+                className="theme-toggle"
+                aria-label={
+                  darkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+              >
+                {darkMode ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
+        </div>
+      )}
 
-          <div className="chat-top-right">
-            <button
-              onClick={toggleDarkMode}
-              className="theme-toggle"
-              aria-label={
-                darkMode ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
-              {darkMode ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="5"></circle>
-                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              )}
-            </button>
+      {/* User Info Header for non-embedded */}
+      {!isEmbedded && chatPartner && (
+        <div className="chat-user-header">
+          <div className="chat-user-info">
+            {chatPartner?.photoUrl ? (
+              <img
+                src={chatPartner?.photoUrl}
+                alt={`${chatPartner?.firstName || ""} ${
+                  chatPartner?.lastName || ""
+                }`}
+                className="chat-user-avatar"
+              />
+            ) : (
+              <div className="chat-user-avatar">
+                <DefaultAvatar />
+              </div>
+            )}
+            <h2 className="chat-user-name">
+              {`${chatPartner?.firstName || "Unknown"} ${
+                chatPartner?.lastName || ""
+              }`}
+            </h2>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Chat Container */}
       <div className="chat-main-container">
