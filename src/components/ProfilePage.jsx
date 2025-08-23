@@ -186,7 +186,7 @@ const ProfilePage = () => {
       const response = await axios.put("/profile/update-profile", formData, {
         withCredentials: true,
       });
-
+      console.log(response);
       setShowSuccessPopup(true);
       setPopupMessage("Profile updated successfully!");
     } catch (error) {
@@ -206,6 +206,7 @@ const ProfilePage = () => {
       new URL(url);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
