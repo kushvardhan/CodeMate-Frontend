@@ -92,6 +92,57 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
     </div>
   );
 
+  const MobileChatHeader = () => (
+    <div className="mobile-chat-header">
+      <button
+        onClick={() => navigate("/chats")}
+        className="mobile-back-button"
+        aria-label="Go back to chats"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      {chatPartner && (
+        <div
+          className="mobile-chat-user-info"
+          onClick={() => navigate(`/user/info/${chatPartner._id}`)}
+        >
+          <div className="mobile-chat-avatar">
+            {chatPartner?.photoUrl ? (
+              <img
+                src={chatPartner?.photoUrl}
+                alt={`${chatPartner?.firstName || ""} ${
+                  chatPartner?.lastName || ""
+                }`}
+              />
+            ) : (
+              <DefaultAvatar />
+            )}
+          </div>
+          <div className="mobile-chat-user-details">
+            <h3 className="mobile-chat-user-name">
+              {`${chatPartner?.firstName || "Unknown"} ${
+                chatPartner?.lastName || ""
+              }`}
+            </h3>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   const fetchChat = useCallback(async () => {
     try {
       const response = await axios.get(`/chat/getChat/${userId}`, {
@@ -497,8 +548,6 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
   if (isLoading) {
     return (
       <div className={`chat-page ${darkMode ? "dark-mode" : "light-mode"}`}>
-
-
         {/* Main Chat Container */}
         <div className="chat-main-container">
           <div className="messages-container">
