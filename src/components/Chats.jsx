@@ -137,7 +137,8 @@ const Chats = () => {
   // Desktop layout with sidebar and chat area
   return (
     <div className={`chat-layout ${darkMode ? "dark" : ""}`}>
-      <ChatHeader />
+      {/* Only show header when no chat is selected */}
+      {!selectedUserId && <ChatHeader />}
       <div className="chat-layout-content">
         <div className="chat-sidebar">
           <ChatList
