@@ -181,7 +181,7 @@ const Chat = ({ userId: propUserId, isEmbedded = false }) => {
   const fetchUserData = useCallback(async () => {
     try {
       const res = await axios.post(
-        `http://localhost:4000/user/chatUser/${userId}`,
+        `https://code-mate-backend-seven.vercel.app/user/chatUser/${userId}`,
         { userId },
         {
           withCredentials: true,
