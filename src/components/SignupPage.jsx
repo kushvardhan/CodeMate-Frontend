@@ -103,7 +103,7 @@ const SignupPage = () => {
       setErrors({
         success: "Account created successfully! Please log in.",
       });
-
+      console.log(res);
       // Navigate to login page after successful signup
       setTimeout(() => {
         navigate("/login");
