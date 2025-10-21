@@ -10,7 +10,7 @@ export const createSocketConnection = () => {
   }
 
   // Create new connection if none exists or previous one is disconnected
-  socketInstance = io("https://code-mate-backend-seven.vercel.app/", {
+  socketInstance = io("https://code-mate-backend-topaz.vercel.app/", {
     transports: ["websocket", "polling"],
     timeout: 20000,
     forceNew: false,
