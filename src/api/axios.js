@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://code-mate-backend-seven.vercel.app",
+  baseURL: "https://code-mate-backend-topaz.vercel.app/",
   withCredentials: true, // Ensure cookies are sent with every request
   headers: {
     "Content-Type": "application/json",
